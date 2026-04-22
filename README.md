@@ -6,7 +6,7 @@ Backend snaps screen every 5s, guesses user intent, frontend asks for royal cons
 
 https://liush2yuxjtu.github.io/front-simple-screen-monitor/
 
-## Three chambers
+## Four chambers
 
 | Path | 中文 | English | UI pattern |
 |------|------|---------|------------|
@@ -14,14 +14,14 @@ https://liush2yuxjtu.github.io/front-simple-screen-monitor/
 | [`/swipe/`](./swipe/) | 御前羊皮卷 | Royal Parchment | Full-screen 3-column, scroll unfurls, swipe + vibrate on mobile |
 | [`/popout/`](./popout/) | 密函天降 | Popout Envelope | Corner bell toast, tap opens letter modal, fly-away on verdict |
 | [`/island/`](./island/) | 灵动岛御批 | Dynamic Island | Apple-style morphing pill, iOS buttons, device frame on desktop |
-| [`/island-swipe/`](./island-swipe/) | 灵动岛滑驱 | Swipe Island | Same pill, swipe left=burn, swipe right=seal, no buttons |
+| [`/island-swipe/`](./island-swipe/) | 灵动岛滑驱 | Swipe Island | Terminal Noir pill, swipe left=BLOCK, swipe right=ALLOW, no buttons |
 
-All three share:
+Island variants share:
 
 - Same mock `REQUEST_POOL` (Chrome / Terminal / Mail / VS Code / Slack / Twitter scenarios)
-- Approve → red wax seal · Reject → burn/eject
-- `navigator.vibrate(40)` on approve, `[80, 40, 80]` on reject
-- Hotkeys: `A` seal · `D` burn · `SPACE` summon · `ESC` close (where relevant)
+- Swipe or key: `←/A` deny · `→/D` approve
+- `navigator.vibrate(40)` on approve, `[80, 40, 80]` on deny
+- `SPACE` summon · `ESC` collapse (where relevant)
 
 ## Hosting
 
