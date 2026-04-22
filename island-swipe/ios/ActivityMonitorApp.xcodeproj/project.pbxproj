@@ -1,0 +1,406 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		15D5F1DDA4ADA225FD254B31 /* HintPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D9DEC105EE0282323DE95 /* HintPanelView.swift */; };
+		216C36436DBE25259154576A /* ActivityMonitorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F7EF20D43385A41A4E253F /* ActivityMonitorApp.swift */; };
+		25C0C6C184EDFCE5DC9A8687 /* HapticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90345A299049EDB0CEC832B6 /* HapticsClient.swift */; };
+		28CB49CF66813DF07931A788 /* StatsPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C0ACC965EA4157CE6EC1C6 /* StatsPanelView.swift */; };
+		308503015BE9AA3C8D66A8E4 /* MonitorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 565E545727A6015BD74684AE /* MonitorViewModel.swift */; };
+		45CFCEB892B1AD2CEDDFF61C /* DynamicIslandMonitorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15222F8196E66C708B6C991 /* DynamicIslandMonitorView.swift */; };
+		6D5DBBE800069F15E05542E8 /* ActivityScenePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DFE2489569DC54E77701A06 /* ActivityScenePreview.swift */; };
+		7EB4F071E23BB2CBE12A5397 /* MonitorStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58EE17EEB131EE8A85A0B0ED /* MonitorStateMachine.swift */; };
+		8605D2330247BB6C9D51258C /* TerminalNoirTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027BE328DB7EF3BE3D9B990B /* TerminalNoirTheme.swift */; };
+		A8CED721EA15BCC07893062A /* MonitorDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FD2130BF3103898BB8D4ED /* MonitorDashboardView.swift */; };
+		D03F5E18FCC536EC94AB40FC /* ActivityCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734A741FAA320A9700ADC45E /* ActivityCatalog.swift */; };
+		EC4717745405E8972FA6C36A /* MonitorActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5834E3BC7E2C60FB68A28CC /* MonitorActivity.swift */; };
+		F401ECE9FCEC48EF3CA6EBF3 /* HistoryPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D93DEA9378BD232CCF766AA /* HistoryPanelView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		027BE328DB7EF3BE3D9B990B /* TerminalNoirTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalNoirTheme.swift; sourceTree = "<group>"; };
+		0D93DEA9378BD232CCF766AA /* HistoryPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryPanelView.swift; sourceTree = "<group>"; };
+		228DB59BE923D0DCD5B29373 /* ActivityMonitorApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ActivityMonitorApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		37F7EF20D43385A41A4E253F /* ActivityMonitorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityMonitorApp.swift; sourceTree = "<group>"; };
+		565E545727A6015BD74684AE /* MonitorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorViewModel.swift; sourceTree = "<group>"; };
+		58EE17EEB131EE8A85A0B0ED /* MonitorStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorStateMachine.swift; sourceTree = "<group>"; };
+		695D9DEC105EE0282323DE95 /* HintPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintPanelView.swift; sourceTree = "<group>"; };
+		6DFE2489569DC54E77701A06 /* ActivityScenePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityScenePreview.swift; sourceTree = "<group>"; };
+		734A741FAA320A9700ADC45E /* ActivityCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCatalog.swift; sourceTree = "<group>"; };
+		90345A299049EDB0CEC832B6 /* HapticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsClient.swift; sourceTree = "<group>"; };
+		A3FD2130BF3103898BB8D4ED /* MonitorDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorDashboardView.swift; sourceTree = "<group>"; };
+		C15222F8196E66C708B6C991 /* DynamicIslandMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicIslandMonitorView.swift; sourceTree = "<group>"; };
+		D3C0ACC965EA4157CE6EC1C6 /* StatsPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsPanelView.swift; sourceTree = "<group>"; };
+		E5834E3BC7E2C60FB68A28CC /* MonitorActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorActivity.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		22D889120BE89E9E4F0C13DB /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				027BE328DB7EF3BE3D9B990B /* TerminalNoirTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		254A6DCC3F69B091913C21C3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				228DB59BE923D0DCD5B29373 /* ActivityMonitorApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5A41FAF2482AB2424D9E8640 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6DFE2489569DC54E77701A06 /* ActivityScenePreview.swift */,
+				C15222F8196E66C708B6C991 /* DynamicIslandMonitorView.swift */,
+				695D9DEC105EE0282323DE95 /* HintPanelView.swift */,
+				0D93DEA9378BD232CCF766AA /* HistoryPanelView.swift */,
+				A3FD2130BF3103898BB8D4ED /* MonitorDashboardView.swift */,
+				D3C0ACC965EA4157CE6EC1C6 /* StatsPanelView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7A6BF5BE268CF3DA213F91CA /* ActivityMonitorApp */ = {
+			isa = PBXGroup;
+			children = (
+				37F7EF20D43385A41A4E253F /* ActivityMonitorApp.swift */,
+				90524A7847776F7A9CCE1486 /* Core */,
+				956AB164CA06C0A9BCF534CB /* Support */,
+				22D889120BE89E9E4F0C13DB /* Theme */,
+				8529DE192D90F43C84EE8016 /* ViewModels */,
+				5A41FAF2482AB2424D9E8640 /* Views */,
+			);
+			path = ActivityMonitorApp;
+			sourceTree = "<group>";
+		};
+		8529DE192D90F43C84EE8016 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				565E545727A6015BD74684AE /* MonitorViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		90524A7847776F7A9CCE1486 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				734A741FAA320A9700ADC45E /* ActivityCatalog.swift */,
+				E5834E3BC7E2C60FB68A28CC /* MonitorActivity.swift */,
+				58EE17EEB131EE8A85A0B0ED /* MonitorStateMachine.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		956AB164CA06C0A9BCF534CB /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				90345A299049EDB0CEC832B6 /* HapticsClient.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		A51A878820EF324344FB35FA /* ActivityMonitorApp */ = {
+			isa = PBXGroup;
+			children = (
+				7A6BF5BE268CF3DA213F91CA /* ActivityMonitorApp */,
+			);
+			path = ActivityMonitorApp;
+			sourceTree = "<group>";
+		};
+		DAAF96239E1B9045EB467100 = {
+			isa = PBXGroup;
+			children = (
+				A51A878820EF324344FB35FA /* ActivityMonitorApp */,
+				254A6DCC3F69B091913C21C3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		722061EF603F9D95947591CE /* ActivityMonitorApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F8C83D681A95D49372781D8C /* Build configuration list for PBXNativeTarget "ActivityMonitorApp" */;
+			buildPhases = (
+				954C9797DCA2F5ED51F218C1 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ActivityMonitorApp;
+			packageProductDependencies = (
+			);
+			productName = ActivityMonitorApp;
+			productReference = 228DB59BE923D0DCD5B29373 /* ActivityMonitorApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8B1FA864F6979B492F9B17F5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					722061EF603F9D95947591CE = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = AB5CAD0BEB3DB0EA611D77B1 /* Build configuration list for PBXProject "ActivityMonitorApp" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DAAF96239E1B9045EB467100;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 254A6DCC3F69B091913C21C3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				722061EF603F9D95947591CE /* ActivityMonitorApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		954C9797DCA2F5ED51F218C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D03F5E18FCC536EC94AB40FC /* ActivityCatalog.swift in Sources */,
+				216C36436DBE25259154576A /* ActivityMonitorApp.swift in Sources */,
+				6D5DBBE800069F15E05542E8 /* ActivityScenePreview.swift in Sources */,
+				45CFCEB892B1AD2CEDDFF61C /* DynamicIslandMonitorView.swift in Sources */,
+				25C0C6C184EDFCE5DC9A8687 /* HapticsClient.swift in Sources */,
+				15D5F1DDA4ADA225FD254B31 /* HintPanelView.swift in Sources */,
+				F401ECE9FCEC48EF3CA6EBF3 /* HistoryPanelView.swift in Sources */,
+				EC4717745405E8972FA6C36A /* MonitorActivity.swift in Sources */,
+				A8CED721EA15BCC07893062A /* MonitorDashboardView.swift in Sources */,
+				7EB4F071E23BB2CBE12A5397 /* MonitorStateMachine.swift in Sources */,
+				308503015BE9AA3C8D66A8E4 /* MonitorViewModel.swift in Sources */,
+				28CB49CF66813DF07931A788 /* StatsPanelView.swift in Sources */,
+				8605D2330247BB6C9D51258C /* TerminalNoirTheme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		147952A33554100D38AD35A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ActivityMonitorApp;
+				PRODUCT_NAME = ActivityMonitorApp;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		663787AA4B3C0616FDE1EC29 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C6EAB79CCE481343D13BDA63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ActivityMonitorApp;
+				PRODUCT_NAME = ActivityMonitorApp;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		EC527D0E54D7D9F68510FAAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AB5CAD0BEB3DB0EA611D77B1 /* Build configuration list for PBXProject "ActivityMonitorApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC527D0E54D7D9F68510FAAB /* Debug */,
+				663787AA4B3C0616FDE1EC29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F8C83D681A95D49372781D8C /* Build configuration list for PBXNativeTarget "ActivityMonitorApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				147952A33554100D38AD35A6 /* Debug */,
+				C6EAB79CCE481343D13BDA63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8B1FA864F6979B492F9B17F5 /* Project object */;
+}
