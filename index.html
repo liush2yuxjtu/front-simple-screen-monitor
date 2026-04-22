@@ -270,7 +270,15 @@
     position: relative;
     transform-style: preserve-3d;
     animation: unfurl 1.2s cubic-bezier(0.22, 0.9, 0.3, 1.2);
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.22s ease-out;
+    touch-action: pan-y;
   }
+
+  .scroll.dragging { transition: none; }
+
+  /* Swipe affordance glow on edges during drag */
+  .scroll.drag-right .parchment { box-shadow: inset 0 0 80px rgba(160,24,24,0.5), inset 0 0 20px rgba(107,74,31,0.25), 0 30px 60px rgba(0,0,0,0.7); }
+  .scroll.drag-left  .parchment { box-shadow: inset 0 0 80px rgba(196,74,24,0.55), inset 0 0 20px rgba(107,74,31,0.25), 0 30px 60px rgba(0,0,0,0.7); }
 
   @keyframes unfurl {
     0% { transform: rotateX(-70deg) translateY(-200px) scale(0.6); opacity: 0; }
@@ -837,6 +845,13 @@
     color: var(--gold-hi);
   }
 
+  /* Swipe hint: phone-only (touch devices). Hotkey hints: desktop only. */
+  .hk-swipe { display: none; }
+  @media (hover: none) and (pointer: coarse) {
+    .hk-key { display: none; }
+    .hk-swipe { display: inline-flex; align-items: center; gap: 6px; }
+  }
+
   /* Snapshot mock windows */
   .mock-win {
     position: absolute;
@@ -1101,9 +1116,10 @@
   <div class="footer">
     <div>SCREEN MONITOR · 屏察御史 · v0.1</div>
     <div class="hotkeys">
-      <span><kbd>A</kbd> 盖印</span>
-      <span><kbd>D</kbd> 焚毁</span>
-      <span><kbd>SPACE</kbd> 召请</span>
+      <span class="hk-key"><kbd>A</kbd> 盖印</span>
+      <span class="hk-key"><kbd>D</kbd> 焚毁</span>
+      <span class="hk-key"><kbd>SPACE</kbd> 召请</span>
+      <span class="hk-swipe"><kbd>滑</kbd> ← 焚毁 · 盖印 →</span>
     </div>
   </div>
 
@@ -1360,10 +1376,18 @@
     document.getElementById('btn-reject').addEventListener('click', reject);
   }
 
+  // === Haptics ===
+  function vibrate(pattern) {
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate(pattern); } catch (_) {}
+    }
+  }
+
   // === Approve ===
   function approve() {
-    if (state.locked) return;
+    if (state.locked || !state.currentRequest) return;
     state.locked = true;
+    vibrate(40);
 
     const scroll = document.getElementById('scroll');
     const parchment = document.getElementById('parchment');
@@ -1389,8 +1413,9 @@
 
   // === Reject (burn) ===
   function reject() {
-    if (state.locked) return;
+    if (state.locked || !state.currentRequest) return;
     state.locked = true;
+    vibrate([80, 40, 80]);
 
     const scroll = document.getElementById('scroll');
     const embers = document.getElementById('embers');
@@ -1522,6 +1547,68 @@
     if (k === 'a') approve();
     else if (k === 'd') reject();
   });
+
+  // === Swipe gesture (phone/tablet) ===
+  (function setupSwipe() {
+    const scroll = document.getElementById('scroll');
+    const THRESHOLD = 80;         // px to trigger verdict
+    const AXIS_LOCK = 1.2;        // |dx| must exceed |dy|*lock to count as horizontal
+    const MAX_FADE = 420;         // px at which opacity reaches min
+    let startX = 0, startY = 0, dx = 0, dy = 0, active = false, axisDecided = false;
+
+    function resetTransform() {
+      scroll.style.transform = '';
+      scroll.style.opacity = '';
+      scroll.classList.remove('dragging', 'drag-left', 'drag-right');
+    }
+
+    scroll.addEventListener('touchstart', (e) => {
+      if (state.locked || !state.currentRequest) return;
+      if (e.touches.length !== 1) return;
+      const t = e.touches[0];
+      startX = t.clientX; startY = t.clientY;
+      dx = 0; dy = 0; active = true; axisDecided = false;
+      scroll.classList.add('dragging');
+    }, { passive: true });
+
+    scroll.addEventListener('touchmove', (e) => {
+      if (!active) return;
+      const t = e.touches[0];
+      dx = t.clientX - startX;
+      dy = t.clientY - startY;
+
+      if (!axisDecided && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+        axisDecided = true;
+        if (Math.abs(dy) > Math.abs(dx) * AXIS_LOCK) {
+          // vertical scroll — bail
+          active = false;
+          resetTransform();
+          return;
+        }
+      }
+      if (!axisDecided) return;
+
+      const rot = dx / 36;
+      const fade = Math.max(0.35, 1 - Math.abs(dx) / MAX_FADE);
+      scroll.style.transform = `translateX(${dx}px) rotate(${rot}deg)`;
+      scroll.style.opacity = fade;
+      scroll.classList.toggle('drag-right', dx > 24);
+      scroll.classList.toggle('drag-left', dx < -24);
+    }, { passive: true });
+
+    function finish() {
+      if (!active) return;
+      active = false;
+      const committed = Math.abs(dx) > THRESHOLD;
+      resetTransform();
+      if (!committed) return;
+      if (dx > 0) approve();
+      else reject();
+    }
+
+    scroll.addEventListener('touchend', finish);
+    scroll.addEventListener('touchcancel', () => { active = false; resetTransform(); });
+  })();
 
   // === Boot ===
   nextRound();
