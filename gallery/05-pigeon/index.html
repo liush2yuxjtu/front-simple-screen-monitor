@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0f06">
+<title>飞鸽 · Carrier Pigeons</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%F0%9F%95%8A%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background:
+      linear-gradient(180deg, #1a2840 0%, #3b2812 60%, #120904 100%);
+    overflow: hidden;
+  }
+
+  .cloud {
+    position: absolute;
+    color: rgba(200, 180, 140, 0.1);
+    font-size: 140px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .sky {
+    position: fixed;
+    inset: 0;
+  }
+
+  .pigeon {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    user-select: none;
+  }
+  .pigeon:hover { transform: scale(1.15); }
+  .pigeon svg { width: 100%; height: 100%; display: block; }
+
+  .pigeon .body {
+    fill: #f4ead6;
+    stroke: #3b2812;
+    stroke-width: 1.5;
+  }
+  .pigeon.dark .body { fill: #3b2812; stroke: #1a0f06; }
+
+  .pigeon .wing {
+    transform-origin: center;
+    animation: flap 0.4s ease-in-out infinite alternate;
+  }
+  @keyframes flap {
+    from { transform: rotate(-12deg) translateY(0); }
+    to { transform: rotate(20deg) translateY(-3px); }
+  }
+
+  .pigeon .scroll-tube {
+    fill: var(--wax);
+    stroke: #3b2812;
+    stroke-width: 1;
+  }
+  .pigeon.dark .scroll-tube { fill: var(--jade); }
+
+  .pigeon.flying {
+    animation: fly-across 18s linear infinite;
+  }
+  @keyframes fly-across {
+    0% { transform: translateX(-140px); }
+    100% { transform: translateX(calc(100vw + 140px)); }
+  }
+
+  .label {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-brush);
+    font-size: 16px;
+    letter-spacing: 4px;
+    white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  }
+  .pigeon .label { color: var(--wax-hi); }
+  .pigeon.dark .label { color: var(--jade-hi); }
+
+  .scroll {
+    position: absolute;
+    left: 50%;
+    top: 28%;
+    transform: translate(-50%, 0);
+    max-width: 480px;
+    text-align: center;
+    padding: 24px 28px;
+    background: rgba(20, 12, 6, 0.7);
+    border: 1px solid rgba(184, 137, 42, 0.35);
+    backdrop-filter: blur(14px);
+    z-index: 5;
+    pointer-events: none;
+  }
+  .scroll .app {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold-hi);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .scroll .intent {
+    font-family: var(--font-brush);
+    font-size: 20px;
+    color: var(--parch-hi);
+    letter-spacing: 2px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .scroll .reason {
+    font-size: 13px;
+    color: #b4a080;
+    line-height: 1.7;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  .instruction {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232, 195, 107, 0.55);
+    text-transform: uppercase;
+    z-index: 10;
+  }
+
+  @keyframes catchApprove {
+    0% { transform: scale(1) translate(0, 0); }
+    50% { transform: scale(1.5) translate(0, -80px); filter: drop-shadow(0 0 20px #e9c36b); }
+    100% { transform: scale(0) translate(0, -200px); opacity: 0; }
+  }
+  @keyframes catchReject {
+    0% { transform: scale(1) translate(0, 0); }
+    50% { transform: scale(1.5) translate(0, -80px); filter: drop-shadow(0 0 20px #c02a2a); }
+    100% { transform: scale(0) translate(0, -200px); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">飞鸽</div><div class="en">Carrier Pigeons</div></div>
+
+<div class="sky">
+  <div class="cloud" style="top:10%;left:8%;">☁</div>
+  <div class="cloud" style="top:20%;right:12%;font-size:100px;">☁</div>
+  <div class="cloud" style="top:65%;left:18%;font-size:80px;opacity:0.06;">☁</div>
+
+  <div class="scroll req-card">
+    <div class="app" id="s-app"></div>
+    <div class="intent" id="s-intent"></div>
+    <div class="reason" id="s-reason"></div>
+    <div><span class="req-risk" id="s-risk"></span></div>
+  </div>
+
+  <div class="pigeon flying" id="p-approve" style="top: 55%; animation-delay: -2s;" data-kind="approve">
+    <svg viewBox="0 0 100 100">
+      <!-- Body -->
+      <ellipse class="body" cx="50" cy="55" rx="22" ry="14"/>
+      <!-- Head -->
+      <circle class="body" cx="70" cy="48" r="10"/>
+      <!-- Beak -->
+      <path d="M78 48 L86 50 L78 52 Z" fill="#e9c36b"/>
+      <!-- Eye -->
+      <circle cx="72" cy="46" r="1.5" fill="#1a0f06"/>
+      <!-- Wing -->
+      <ellipse class="body wing" cx="46" cy="46" rx="18" ry="10"/>
+      <!-- Tail -->
+      <path class="body" d="M28 55 L18 50 L18 60 Z"/>
+      <!-- Scroll tube around neck -->
+      <rect class="scroll-tube" x="56" y="58" width="14" height="6" rx="2"/>
+    </svg>
+    <div class="label">金缕 · 准</div>
+  </div>
+
+  <div class="pigeon flying dark" id="p-reject" style="top: 32%; animation-delay: -9s;" data-kind="reject">
+    <svg viewBox="0 0 100 100">
+      <ellipse class="body" cx="50" cy="55" rx="22" ry="14"/>
+      <circle class="body" cx="70" cy="48" r="10"/>
+      <path d="M78 48 L86 50 L78 52 Z" fill="#8b1a1a"/>
+      <circle cx="72" cy="46" r="1.5" fill="#e9c36b"/>
+      <ellipse class="body wing" cx="46" cy="46" rx="18" ry="10"/>
+      <path class="body" d="M28 55 L18 50 L18 60 Z"/>
+      <rect class="scroll-tube" x="56" y="58" width="14" height="6" rx="2"/>
+    </svg>
+    <div class="label">乌羽 · 驳</div>
+  </div>
+</div>
+
+<div class="instruction">捉一鸽 · 解其密函 · 即下裁决</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  let committed = false;
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('s-app').textContent = r.app;
+    document.getElementById('s-intent').textContent = r.intent;
+    document.getElementById('s-reason').textContent = r.reason;
+    const risk = document.getElementById('s-risk');
+    risk.textContent = '风险 · ' + window.riskLabel(r.risk);
+    risk.className = 'req-risk ' + r.risk;
+  }
+  loadReq();
+
+  document.querySelectorAll('.pigeon').forEach(p => {
+    p.addEventListener('click', (e) => {
+      if (committed) return;
+      committed = true;
+      const kind = p.getAttribute('data-kind');
+      const rect = p.getBoundingClientRect();
+      p.style.animation = 'none';
+      p.style.transition = 'all 0.8s cubic-bezier(0.2, 0.8, 0.3, 1)';
+      p.style.transform = 'scale(0) translate(0, -200px)';
+      p.style.filter = kind === 'approve' ? 'drop-shadow(0 0 20px #e9c36b)' : 'drop-shadow(0 0 20px #c02a2a)';
+      p.style.left = (rect.left) + 'px';
+      p.style.top = (rect.top) + 'px';
+      p.style.position = 'fixed';
+      setTimeout(() => window.cast(kind), 700);
+    });
+  });
+
+  window.nextRequest = () => {
+    committed = false;
+    document.querySelectorAll('.pigeon').forEach(p => {
+      p.style.cssText = '';
+      p.style.top = p.id === 'p-approve' ? '55%' : '32%';
+      p.classList.add('flying');
+    });
+    loadReq();
+  };
+</script>
+</body>
+</html>

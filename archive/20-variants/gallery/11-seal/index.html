@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0f06">
+<title>玉玺 · Jade Seal</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%F0%9F%8F%B5%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background: radial-gradient(ellipse at center, #2a1a0f 0%, #0a0604 80%);
+    perspective: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stage {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    max-width: 640px;
+    padding: 20px;
+  }
+
+  .desk {
+    position: relative;
+    margin: 0 auto;
+    width: min(520px, 92vw);
+    aspect-ratio: 4/3;
+    background:
+      radial-gradient(ellipse at center, #f2e1b8 0%, #c9a35a 100%);
+    border: 2px solid #7a5510;
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7), inset 0 0 60px rgba(90, 58, 24, 0.3);
+    transform: rotateX(8deg);
+    transform-style: preserve-3d;
+  }
+  .desk::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(180deg, transparent 0 24px, rgba(90, 58, 24, 0.1) 24px 25px);
+    pointer-events: none;
+  }
+
+  .paper-content {
+    position: absolute;
+    inset: 24px;
+    padding: 8px;
+    text-align: left;
+  }
+  .paper-app { font-family: var(--font-display); font-size: 10px; letter-spacing: 4px; color: #8b1a1a; text-transform: uppercase; margin-bottom: 6px; }
+  .paper-intent { font-family: var(--font-brush); font-size: 18px; color: var(--ink); letter-spacing: 2px; line-height: 1.5; margin-bottom: 6px; }
+  .paper-reason { font-size: 12px; color: var(--ink-soft); line-height: 1.6; max-width: 70%; }
+
+  .seal-imprint {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    bottom: 24px;
+    right: 30px;
+    border: 4px solid rgba(139, 26, 26, 0);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-brush);
+    font-size: 40px;
+    color: rgba(139, 26, 26, 0);
+    letter-spacing: 2px;
+    text-align: center;
+    line-height: 1;
+    transition: all 0.4s;
+  }
+  .seal-imprint.stamped {
+    border-color: rgba(139, 26, 26, 0.9);
+    color: rgba(139, 26, 26, 0.9);
+    animation: stampDown 0.3s ease-out;
+  }
+  .seal-imprint.stamped.fire {
+    border-color: rgba(40, 40, 40, 0.9);
+    color: rgba(40, 40, 40, 0.9);
+  }
+  @keyframes stampDown {
+    0% { transform: scale(1.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .seal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 120px;
+    cursor: grab;
+    user-select: none;
+    z-index: 10;
+    transform-style: preserve-3d;
+  }
+  .seal:active { cursor: grabbing; }
+
+  .seal-body {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #7a9b7a 0%, #4a6a4a 60%, #2d4a2d 100%);
+    border-radius: 4px;
+    box-shadow:
+      inset -4px 0 8px rgba(0, 0, 0, 0.4),
+      inset 4px 0 8px rgba(255, 255, 255, 0.1),
+      0 12px 20px rgba(0, 0, 0, 0.6);
+    border: 1px solid #1a3a1a;
+  }
+  .seal-body::before {
+    content: '龍';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-brush);
+    font-size: 16px;
+    color: #c9a35a;
+    letter-spacing: 1px;
+  }
+  .seal-body::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 8px;
+    background: linear-gradient(180deg, #8b1a1a, #5a0808);
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 0 4px rgba(255, 100, 100, 0.4);
+  }
+
+  .seal-cap {
+    position: absolute;
+    top: -8px;
+    left: 10%;
+    right: 10%;
+    height: 14px;
+    background: linear-gradient(180deg, #c9a35a, #7a5510);
+    border-radius: 4px 4px 0 0;
+  }
+
+  .switcher {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 28px;
+  }
+
+  .mode-btn {
+    padding: 10px 20px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold-hi);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.25s;
+  }
+  .mode-btn.on { background: rgba(232, 195, 107, 0.15); color: var(--gold-hi); }
+
+  .instruction {
+    margin-top: 16px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232, 195, 107, 0.55);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">玉玺</div><div class="en">Jade Seal</div></div>
+
+<div class="stage">
+  <div class="desk" id="desk">
+    <div class="paper-content">
+      <div class="paper-app" id="p-app"></div>
+      <div class="paper-intent" id="p-intent"></div>
+      <div class="paper-reason" id="p-reason"></div>
+    </div>
+    <div class="seal-imprint" id="imprint"></div>
+    <div class="seal" id="seal">
+      <div class="seal-cap"></div>
+      <div class="seal-body"></div>
+    </div>
+  </div>
+
+  <div class="switcher">
+    <button class="mode-btn on" id="m-approve">朱砂 · 准</button>
+    <button class="mode-btn" id="m-reject">焚书 · 驳</button>
+  </div>
+  <div class="instruction">选印泥 · 拖玺于纸上 · 按压三秒盖印</div>
+</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  const seal = document.getElementById('seal');
+  const desk = document.getElementById('desk');
+  const imprint = document.getElementById('imprint');
+  let mode = 'approve';
+  let dragging = false;
+  let pressing = false;
+  let offset = { x: 0, y: 0 };
+  let pressStart = 0;
+  let committed = false;
+  let pressTimer;
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('p-app').textContent = r.app;
+    document.getElementById('p-intent').textContent = r.intent;
+    document.getElementById('p-reason').textContent = r.reason;
+  }
+  loadReq();
+
+  document.getElementById('m-approve').addEventListener('click', () => {
+    mode = 'approve';
+    document.getElementById('m-approve').classList.add('on');
+    document.getElementById('m-reject').classList.remove('on');
+  });
+  document.getElementById('m-reject').addEventListener('click', () => {
+    mode = 'reject';
+    document.getElementById('m-reject').classList.add('on');
+    document.getElementById('m-approve').classList.remove('on');
+  });
+
+  function startDrag(e) {
+    if (committed) return;
+    dragging = true;
+    const rect = seal.getBoundingClientRect();
+    const pt = e.touches ? e.touches[0] : e;
+    offset = { x: pt.clientX - rect.left, y: pt.clientY - rect.top };
+    seal.style.transition = 'none';
+    seal.style.left = rect.left + 'px';
+    seal.style.top = rect.top + 'px';
+    seal.style.transform = 'none';
+    document.body.appendChild(seal);
+    seal.style.position = 'fixed';
+    e.preventDefault();
+  }
+
+  function moveDrag(e) {
+    if (!dragging) return;
+    const pt = e.touches ? e.touches[0] : e;
+    seal.style.left = (pt.clientX - offset.x) + 'px';
+    seal.style.top = (pt.clientY - offset.y) + 'px';
+  }
+
+  function release(e) {
+    if (!dragging) return;
+    dragging = false;
+    const pt = e.changedTouches ? e.changedTouches[0] : e;
+    const elem = document.elementFromPoint(pt.clientX, pt.clientY);
+    if (elem && elem.closest('#desk')) {
+      // Press animation
+      seal.style.transition = 'transform 0.3s';
+      seal.style.transform = 'scale(1.15)';
+      committed = true;
+      setTimeout(() => {
+        imprint.textContent = mode === 'approve' ? '御准' : '焚驳';
+        imprint.classList.add('stamped');
+        if (mode === 'reject') imprint.classList.add('fire');
+        const rect = desk.getBoundingClientRect();
+        imprint.style.left = (pt.clientX - rect.left - 50) + 'px';
+        imprint.style.top = (pt.clientY - rect.top - 50) + 'px';
+        imprint.style.right = 'auto';
+        imprint.style.bottom = 'auto';
+        seal.style.opacity = '0';
+        setTimeout(() => window.cast(mode), 700);
+      }, 300);
+    }
+  }
+
+  seal.addEventListener('mousedown', startDrag);
+  document.addEventListener('mousemove', moveDrag);
+  document.addEventListener('mouseup', release);
+  seal.addEventListener('touchstart', startDrag, { passive: false });
+  document.addEventListener('touchmove', moveDrag, { passive: false });
+  document.addEventListener('touchend', release);
+
+  window.nextRequest = () => {
+    committed = false;
+    seal.style.cssText = '';
+    imprint.className = 'seal-imprint';
+    imprint.textContent = '';
+    imprint.style.cssText = '';
+    desk.appendChild(seal);
+    loadReq();
+  };
+</script>
+</body>
+</html>

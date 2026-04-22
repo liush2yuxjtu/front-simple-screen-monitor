@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0604">
+<title>龙珠 · Dragon Orb</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%F0%9F%94%AE%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background: radial-gradient(ellipse at center, #1a0f2a 0%, #0a0814 70%, #000 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1400px;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(130, 80, 200, 0.15), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(80, 120, 200, 0.15), transparent 40%);
+    pointer-events: none;
+  }
+
+  .stage {
+    text-align: center;
+    width: 100%;
+    max-width: 620px;
+    padding: 20px;
+  }
+
+  .request {
+    margin-bottom: 24px;
+  }
+  .request .app { font-family: var(--font-display); font-size: 10px; letter-spacing: 4px; color: var(--gold-hi); text-transform: uppercase; margin-bottom: 8px; }
+  .request .intent { font-family: var(--font-brush); font-size: 22px; color: var(--parch-hi); letter-spacing: 2px; line-height: 1.5; margin-bottom: 10px; }
+  .request .reason { font-size: 13px; color: #b4a080; line-height: 1.7; font-style: italic; max-width: 460px; margin: 0 auto 10px; }
+
+  .orb-wrap {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 30px auto;
+    perspective: 1400px;
+  }
+
+  .orb {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.5), transparent 40%),
+      radial-gradient(circle at 60% 70%, rgba(180, 100, 255, 0.6), rgba(60, 20, 100, 0.9) 60%, #1a0828 100%);
+    box-shadow:
+      0 0 80px rgba(180, 100, 255, 0.4),
+      inset -20px -30px 60px rgba(20, 10, 40, 0.8),
+      inset 20px 20px 40px rgba(255, 220, 255, 0.2);
+    cursor: grab;
+    transform: rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg));
+    transition: transform 0.2s;
+    user-select: none;
+  }
+  .orb:active { cursor: grabbing; }
+
+  .orb-rune {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-brush);
+    font-size: 80px;
+    color: rgba(232, 195, 107, 0.9);
+    text-shadow: 0 0 20px rgba(232, 195, 107, 0.6);
+    letter-spacing: 6px;
+    pointer-events: none;
+  }
+
+  .hint-zones {
+    position: absolute;
+    inset: -40px;
+    pointer-events: none;
+  }
+  .hint-zones .zone {
+    position: absolute;
+    font-family: var(--font-brush);
+    font-size: 20px;
+    letter-spacing: 4px;
+    opacity: 0.3;
+    transition: opacity 0.25s;
+  }
+  .hint-zones .zone.top { top: 0; left: 50%; transform: translateX(-50%); color: #a0c0ff; }
+  .hint-zones .zone.bot { bottom: 0; left: 50%; transform: translateX(-50%); color: #c080ff; }
+  .hint-zones .zone.left { left: 0; top: 50%; transform: translateY(-50%); color: var(--wax-hi); }
+  .hint-zones .zone.right { right: 0; top: 50%; transform: translateY(-50%); color: var(--gold-hi); }
+  .zone.active { opacity: 0.95; text-shadow: 0 0 12px currentColor; }
+
+  .ring {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    border: 1px dashed rgba(232, 195, 107, 0.2);
+    animation: spin 20s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .instruction {
+    margin-top: 30px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232, 195, 107, 0.55);
+    text-transform: uppercase;
+  }
+  .hint-secondary {
+    margin-top: 6px;
+    font-family: var(--font-brush);
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: #8a7650;
+  }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">龙珠</div><div class="en">Dragon Orb</div></div>
+
+<div class="stage">
+  <div class="request req-card">
+    <div class="app" id="r-app"></div>
+    <div class="intent" id="r-intent"></div>
+    <div class="reason" id="r-reason"></div>
+  </div>
+
+  <div class="orb-wrap">
+    <div class="ring"></div>
+    <div class="hint-zones">
+      <div class="zone left" id="z-l">驳</div>
+      <div class="zone right" id="z-r">准</div>
+    </div>
+    <div class="orb" id="orb">
+      <div class="orb-rune" id="rune">龍</div>
+    </div>
+  </div>
+
+  <div class="instruction">旋转龙珠</div>
+  <div class="hint-secondary">左转九十度为驳 · 右转九十度为准</div>
+</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  const orb = document.getElementById('orb');
+  const rune = document.getElementById('rune');
+  const zL = document.getElementById('z-l');
+  const zR = document.getElementById('z-r');
+
+  let ry = 0, rx = 0;
+  let dragging = false;
+  let startX = 0, startY = 0;
+  let startRy = 0, startRx = 0;
+  let committed = false;
+
+  function update() {
+    orb.style.setProperty('--ry', ry + 'deg');
+    orb.style.setProperty('--rx', rx + 'deg');
+    zL.classList.toggle('active', ry < -45);
+    zR.classList.toggle('active', ry > 45);
+    if (ry > 60) rune.textContent = '准';
+    else if (ry < -60) rune.textContent = '驳';
+    else rune.textContent = '龍';
+  }
+
+  function start(e) {
+    if (committed) return;
+    dragging = true;
+    const pt = e.touches ? e.touches[0] : e;
+    startX = pt.clientX; startY = pt.clientY;
+    startRy = ry; startRx = rx;
+    orb.style.transition = 'none';
+    e.preventDefault();
+  }
+  function move(e) {
+    if (!dragging) return;
+    const pt = e.touches ? e.touches[0] : e;
+    ry = Math.max(-100, Math.min(100, startRy + (pt.clientX - startX) * 0.5));
+    rx = Math.max(-40, Math.min(40, startRx - (pt.clientY - startY) * 0.3));
+    update();
+    if (Math.abs(ry) > 85 && !committed) {
+      committed = true;
+      const verdict = ry > 0 ? 'approve' : 'reject';
+      setTimeout(() => window.cast(verdict), 400);
+    }
+  }
+  function end() {
+    if (!dragging || committed) { dragging = false; return; }
+    dragging = false;
+    orb.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1)';
+    ry = 0; rx = 0;
+    update();
+  }
+
+  orb.addEventListener('mousedown', start);
+  document.addEventListener('mousemove', move);
+  document.addEventListener('mouseup', end);
+  orb.addEventListener('touchstart', start, { passive: false });
+  document.addEventListener('touchmove', move, { passive: false });
+  document.addEventListener('touchend', end);
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('r-app').textContent = r.app;
+    document.getElementById('r-intent').textContent = r.intent;
+    document.getElementById('r-reason').textContent = r.reason;
+  }
+  loadReq();
+  update();
+
+  window.nextRequest = () => {
+    committed = false;
+    ry = 0; rx = 0;
+    update();
+    loadReq();
+  };
+</script>
+</body>
+</html>

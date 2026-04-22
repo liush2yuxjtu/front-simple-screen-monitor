@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="灵动岛滑驱御批 · Dynamic Island swipe-to-verdict variant.">
+<title>灵动岛滑驱御批 · Swipe Island</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='22' y='34' width='56' height='32' rx='16' fill='%23000'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sys-blue: #0a84ff;
+    --sys-green: #34c759;
+    --sys-red: #ff3b30;
+    --sys-orange: #ff9f0a;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(235,235,245,0.6);
+    --text-tertiary: rgba(235,235,245,0.3);
+    --island-bg: #050505;
+    --glass: rgba(30,30,35,0.72);
+
+    --font-ui: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'PingFang SC', 'Noto Sans SC', sans-serif;
+    --font-display: -apple-system, 'SF Pro Display', 'Inter', 'PingFang SC', sans-serif;
+    --font-brush: 'Ma Shan Zheng', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    min-height: 100vh;
+    font-family: var(--font-ui);
+    color: var(--text-primary);
+    background: #000;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .desktop-bg {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(88,28,135,0.4), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(14,116,144,0.4), transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(0,0,0,0.5), transparent 70%),
+      #000;
+    z-index: 0;
+  }
+
+  .phone {
+    position: relative;
+    width: min(430px, 92vw);
+    height: min(930px, 92vh);
+    max-height: 930px;
+    border-radius: 58px;
+    padding: 12px;
+    background: linear-gradient(145deg, #2a2a2e 0%, #0f0f11 40%, #2a2a2e 100%);
+    box-shadow:
+      0 0 0 2px #1a1a1c,
+      0 0 0 4px #3a3a3c,
+      0 40px 120px rgba(0,0,0,0.8),
+      0 0 60px rgba(138,92,250,0.15);
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 46px;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 0% 0%, #4a2a7a 0%, transparent 50%),
+      radial-gradient(ellipse at 100% 100%, #0a4a6a 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 20%, #d86ba8 0%, transparent 35%),
+      linear-gradient(180deg, #1a0a2a 0%, #050515 100%);
+  }
+
+  .status-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 30px 8px;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .status-time { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; font-family: var(--font-display); }
+
+  .status-right { display: flex; align-items: center; gap: 6px; }
+  .status-right svg { width: 18px; height: 12px; fill: #fff; }
+
+  .battery {
+    width: 26px; height: 13px;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 3.5px;
+    padding: 1.2px;
+    position: relative;
+  }
+  .battery::after {
+    content: '';
+    position: absolute;
+    right: -3px; top: 3.5px;
+    width: 2px; height: 5px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 0 1px 1px 0;
+  }
+  .battery-fill { width: 78%; height: 100%; background: #fff; border-radius: 1.5px; }
+
+  /* === Dynamic Island === */
+  .island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 126px;
+    height: 37px;
+    background: var(--island-bg);
+    border-radius: 22px;
+    z-index: 10;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    overflow: hidden;
+    transition:
+      width 0.55s cubic-bezier(0.32, 0.72, 0, 1),
+      height 0.55s cubic-bezier(0.32, 0.72, 0, 1),
+      border-radius 0.55s cubic-bezier(0.32, 0.72, 0, 1),
+      top 0.55s cubic-bezier(0.32, 0.72, 0, 1);
+    user-select: none;
+  }
+
+  .island.notif  { width: 340px; height: 37px; border-radius: 22px; }
+  .island.expanded { width: 370px; height: 480px; border-radius: 38px; top: 58px; }
+  .island.confirmed { width: 200px; height: 37px; border-radius: 22px; }
+
+  /* === Island Content Layers === */
+  .island-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease-out;
+  }
+  .island-content.visible { opacity: 1; pointer-events: auto; }
+
+  /* State: notification pill */
+  .state-notif {
+    padding: 0 16px;
+    align-items: center;
+    gap: 10px;
+  }
+  .state-notif .app-glyph {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--sys-orange), var(--sys-red));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .state-notif .notif-text {
+    flex: 1;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .state-notif .notif-tag {
+    flex-shrink: 0;
+    font-size: 10px;
+    color: var(--sys-orange);
+    font-weight: 600;
+  }
+
+  /* State: expanded — swipe card */
+  .state-expanded {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px 18px 14px;
+    gap: 10px;
+  }
+
+  .exp-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .exp-glyph {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--sys-orange), var(--sys-red));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .exp-title-wrap { flex: 1; min-width: 0; }
+  .exp-app { font-size: 11px; color: var(--text-secondary); font-weight: 500; letter-spacing: 0.3px; text-transform: uppercase; }
+  .exp-intent { font-size: 15px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.2px; margin-top: 2px; line-height: 1.3; }
+
+  .exp-risk {
+    flex-shrink: 0;
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 6px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .exp-risk.low { background: rgba(52,199,89,0.2); color: var(--sys-green); }
+  .exp-risk.med { background: rgba(255,159,10,0.2); color: var(--sys-orange); }
+  .exp-risk.high { background: rgba(255,59,48,0.2); color: var(--sys-red); }
+
+  /* Screenshot mock */
+  .exp-screenshot {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #1a1a1a;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .exp-screenshot .mock { position: absolute; inset: 0; }
+
+  .exp-reason {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    letter-spacing: -0.1px;
+  }
+
+  /* Swipe hint inside expanded */
+  .swipe-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding: 0 4px;
+  }
+
+  .swipe-dir {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+  .swipe-dir.left { color: var(--sys-red); }
+  .swipe-dir.right { color: var(--sys-green); }
+
+  .swipe-arrow {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .swipe-arrow.left {
+    background: rgba(255,59,48,0.2);
+    border: 1.5px solid rgba(255,59,48,0.4);
+  }
+  .swipe-arrow.right {
+    background: rgba(52,199,89,0.2);
+    border: 1.5px solid rgba(52,199,89,0.4);
+  }
+
+  .swipe-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    margin: 0 12px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .swipe-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: left 0.05s, background 0.2s;
+    left: 50%;
+  }
+
+  /* State: confirmed */
+  .state-confirm {
+    padding: 0 22px;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  .state-confirm .check-glyph {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .state-confirm.seal .check-glyph { background: var(--sys-green); color: #000; }
+  .state-confirm.burn .check-glyph { background: var(--sys-red); color: #fff; }
+  .state-confirm .verdict-text { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+
+  /* Swipe overlays — color flash */
+  .swipe-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 38px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s;
+    z-index: 1;
+  }
+  .swipe-overlay.left { background: rgba(255,59,48,0.25); }
+  .swipe-overlay.right { background: rgba(52,199,89,0.25); }
+  .swipe-overlay.active.left { opacity: 1; }
+  .swipe-overlay.active.right { opacity: 1; }
+
+  /* Home area */
+  .home {
+    position: absolute;
+    top: 180px; left: 0; right: 0; bottom: 30px;
+    padding: 30px 28px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .home-title {
+    font-family: var(--font-brush);
+    font-size: 42px;
+    letter-spacing: 8px;
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .home-sub {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    font-weight: 500;
+    margin-top: 8px;
+  }
+
+  .tally-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .tcell {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .tcell .num { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .tcell.s .num { color: var(--sys-green); }
+  .tcell.b .num { color: var(--sys-red); }
+  .tcell .lbl { font-size: 10px; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; font-weight: 500; }
+
+  .hint-card {
+    margin-top: 22px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 16px 18px;
+  }
+
+  .hint-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.2px; }
+
+  .hint-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .hint-steps span { display: flex; align-items: center; gap: 8px; }
+
+  .hint-num {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(10,132,255,0.25);
+    color: var(--sys-blue);
+    font-size: 10px; font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .history-list {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 120px;
+    overflow-y: auto;
+    padding-top: 16px;
+  }
+
+  .hrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    font-size: 12px;
+    animation: hrowIn 0.3s ease-out;
+  }
+  @keyframes hrowIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hrow .hmark { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .hrow.seal .hmark { background: var(--sys-green); }
+  .hrow.burn .hmark { background: var(--sys-red); }
+  .hrow .hlabel { flex: 1; color: var(--text-primary); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hrow .htime { color: var(--text-tertiary); font-size: 11px; font-variant-numeric: tabular-nums; }
+
+  .home-indicator {
+    position: absolute;
+    bottom: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 134px; height: 5px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 999px;
+    z-index: 5;
+  }
+
+  .back {
+    position: fixed;
+    top: 20px; left: 20px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    z-index: 100;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: background 0.2s;
+  }
+  .back:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+  /* Scene backgrounds */
+  .scene-browser { background: linear-gradient(180deg, #1e1e2e 0%, #313244 100%); }
+  .scene-terminal { background: #0a0a0a; }
+  .scene-code { background: #282c34; }
+  .scene-chat { background: linear-gradient(180deg, #1a2332, #0f1520); }
+  .scene-doc { background: #f5f0e4; color: #333; }
+
+  @media (max-width: 500px) {
+    .phone { width: 100vw; height: 100vh; height: 100dvh; max-height: none; border-radius: 0; padding: 0; box-shadow: none; background: transparent; }
+    .screen { border-radius: 0; }
+    .home { padding: 24px 20px; }
+    .home-title { font-size: 36px; letter-spacing: 6px; }
+    .back { top: auto; bottom: 22px; left: 16px; font-size: 11px; padding: 7px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="desktop-bg"></div>
+
+<a class="back" href="../">← 回殿前</a>
+
+<div class="phone">
+  <div class="screen">
+
+    <div class="status-bar">
+      <span class="status-time" id="clock">9:41</span>
+      <div class="status-right">
+        <svg viewBox="0 0 18 12"><path d="M17 10 L 17 12 L 15 12 L 15 10 Z M 14 8 L 14 12 L 12 12 L 12 8 Z M 11 5 L 11 12 L 9 12 L 9 5 Z M 8 2 L 8 12 L 6 12 L 6 2 Z"/></svg>
+        <svg viewBox="0 0 18 12"><path d="M9 2 C 6 2 4 4 2 6 L 3 7 C 5 5 7 4 9 4 C 11 4 13 5 15 7 L 16 6 C 14 4 12 2 9 2 Z M 9 6 C 7.5 6 6.5 7 5.5 8 L 6.5 9 C 7 8.5 8 8 9 8 C 10 8 11 8.5 11.5 9 L 12.5 8 C 11.5 7 10.5 6 9 6 Z M 9 9 A 1.2 1.2 0 0 0 9 11.4 A 1.2 1.2 0 0 0 9 9 Z"/></svg>
+        <div class="battery"><div class="battery-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- Dynamic Island -->
+    <div class="island" id="island" role="button" tabindex="0" aria-label="屏察奏疏">
+      <div class="swipe-overlay left" id="overlay-left"></div>
+      <div class="swipe-overlay right" id="overlay-right"></div>
+
+      <!-- Notif state -->
+      <div class="island-content state-notif" id="state-notif">
+        <div class="app-glyph">📜</div>
+        <div class="notif-text" id="notif-intent">—</div>
+        <div class="notif-tag">屏察</div>
+      </div>
+
+      <!-- Expanded state — swipe card -->
+      <div class="island-content state-expanded" id="state-expanded">
+        <div class="exp-header">
+          <div class="exp-glyph">📜</div>
+          <div class="exp-title-wrap">
+            <div class="exp-app" id="exp-app">—</div>
+            <div class="exp-intent" id="exp-intent">—</div>
+          </div>
+          <div class="exp-risk" id="exp-risk">—</div>
+        </div>
+        <div class="exp-screenshot">
+          <div class="mock" id="exp-mock"></div>
+        </div>
+        <div class="exp-reason" id="exp-reason">—</div>
+
+        <!-- Swipe track -->
+        <div class="swipe-hint">
+          <div class="swipe-dir left">
+            <div class="swipe-arrow left">←</div>
+            <span>焚毁</span>
+          </div>
+          <div class="swipe-track">
+            <div class="swipe-thumb" id="swipe-thumb"></div>
+          </div>
+          <div class="swipe-dir right">
+            <div class="swipe-arrow right">→</div>
+            <span>盖印</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirmed state -->
+      <div class="island-content state-confirm" id="state-confirm">
+        <div class="check-glyph" id="confirm-glyph">✓</div>
+        <div class="verdict-text" id="confirm-text">已盖印</div>
+      </div>
+    </div>
+
+    <main class="home">
+      <div class="home-title">灵动岛滑驱</div>
+      <div class="home-sub">Swipe · Left = 焚毁 · Right = 盖印</div>
+
+      <div class="tally-row">
+        <div class="tcell s">
+          <div class="num" id="tally-seal">0</div>
+          <div class="lbl">Sealed</div>
+        </div>
+        <div class="tcell b">
+          <div class="num" id="tally-burn">0</div>
+          <div class="lbl">Burned</div>
+        </div>
+        <div class="tcell">
+          <div class="num" id="tally-total">0</div>
+          <div class="lbl">Total</div>
+        </div>
+      </div>
+
+      <div class="hint-card">
+        <h4>How to use</h4>
+        <div class="hint-steps">
+          <span><span class="hint-num">1</span>灵动岛弹出通知，自动展开详情</span>
+          <span><span class="hint-num">2</span>手指向左滑 → 焚毁 deny</span>
+          <span><span class="hint-num">3</span>手指向右滑 → 盖印 approve</span>
+        </div>
+      </div>
+
+      <div class="history-list" id="history"></div>
+    </main>
+
+    <div class="home-indicator"></div>
+  </div>
+</div>
+
+<script>
+  const REQUESTS = [
+    {
+      intent: '访问 YouTube',
+      reasonShort: '察 Dock 近 Chrome 图标，午后欲解乏',
+      reason: '鼠标停留在 Dock 的 Chrome 图标附近，结合历史与时辰，推测欲看视频放松。',
+      app: 'Chrome', risk: 'low', scene: 'browser',
+      mock: `<div style="position:absolute;top:0;left:0;right:0;height:10px;background:#2a2a3a;"></div>
+        <div style="position:absolute;top:12px;left:6px;right:6px;">
+          <div style="background:#2a2a3a;padding:3px;color:#9ca0c0;font-size:9px;">youtube.com</div>
+          <div style="margin-top:4px;display:grid;grid-template-columns:1fr 1fr;gap:2px;">
+            <div style="background:#3a3a4a;height:20px;"></div>
+            <div style="background:#4a3a5a;height:20px;"></div>
+          </div>
+        </div>`
+    },
+    {
+      intent: 'rm -rf node_modules',
+      reasonShort: '终端键入删除指令未回车',
+      reason: '终端光标驻项目根目录，已键入 rm -rf，尚未敲回车。此举不可逆，须慎之。',
+      app: 'iTerm2', risk: 'high', scene: 'terminal',
+      mock: `<div style="position:absolute;inset:0;padding:8px;font-family:monospace;font-size:9px;color:#aaffaa;line-height:1.6;">
+        <div>~/app $ ls</div>
+        <div style="color:#ccc;">node_modules/ src/</div>
+        <div>~/app $ <span style="background:#ff0;color:#000;padding:0 2px;">rm -rf node_modules</span></div>
+      </div>`
+    },
+    {
+      intent: '撰写 Anthropic 邮件',
+      reasonShort: '草稿反复删改问候语',
+      reason: '草稿填有收件人，正文数次重写。欲求措辞稳妥得体。',
+      app: 'Mail', risk: 'med', scene: 'doc',
+      mock: `<div style="position:absolute;inset:0;padding:8px;font-size:10px;color:#333;">
+        <div style="border-bottom:1px solid #ccc;padding:0 0 3px;margin-bottom:4px;"><b>To:</b> recruiting@anthropic</div>
+        <div style="color:#666;">Dear hiring team,</div>
+        <div style="color:#999;font-style:italic;">| _</div>
+      </div>`
+    },
+    {
+      intent: '编辑 auth.ts',
+      reasonShort: 'token 校验未写完',
+      reason: '上次编辑中断于第 42 行 token 校验，时辰已过半小时，当续笔。',
+      app: 'VS Code', risk: 'low', scene: 'code',
+      mock: `<div style="position:absolute;inset:0;padding:8px;font-family:monospace;font-size:9px;color:#abb2bf;line-height:1.6;">
+        <div><span style="color:#c678dd;">function</span> <span style="color:#e06c75;">verify</span>(t){</div>
+        <div>&nbsp;&nbsp;<span style="color:#c678dd;">if</span>(!t) <span style="color:#c678dd;">return null</span>;</div>
+        <div><span style="background:#3a3f4b;">&nbsp;&nbsp;<span style="color:#888;">// cursor</span></span></div>
+      </div>`
+    },
+    {
+      intent: 'Slack 私信同僚',
+      reasonShort: '输入「要不要下班后」后停滞',
+      reason: '敲入「要不要下班后一起去...」停三分钟未续，似欲相邀而踌躇。',
+      app: 'Slack', risk: 'med', scene: 'chat',
+      mock: `<div style="position:absolute;inset:0;padding:8px;font-size:9px;color:#ccc;">
+        <div style="color:#888;">#dm · @liuwei</div>
+        <div style="margin-top:8px;background:#1a2332;padding:5px;border:1px solid #2a4262;border-radius:3px;">
+          要不要下班后一起去<span style="background:#ff0;color:#000;">|</span>
+        </div>
+      </div>`
+    },
+    {
+      intent: '发推文涉战略',
+      reasonShort: '推文 180 字涉未宣战略',
+      reason: '推文编辑框已 180 字，涉及公司未宣战略。警觉：或泄商密。',
+      app: 'Twitter', risk: 'high', scene: 'browser',
+      mock: `<div style="position:absolute;inset:0;padding:8px;font-size:9px;color:#ddd;background:#15202b;">
+        <div style="background:#22303c;padding:5px;border-radius:4px;">刚听说我司下季度要... [182字]</div>
+        <div style="text-align:right;margin-top:4px;color:#1d9bf0;">Tweet →</div>
+      </div>`
+    }
+  ];
+
+  const state = {
+    current: null,
+    sealed: 0,
+    burned: 0,
+    locked: false,
+    timer: null,
+    total: 0,
+    islandState: 'compact'
+  };
+
+  const island = document.getElementById('island');
+  const stateNotif = document.getElementById('state-notif');
+  const stateExp = document.getElementById('state-expanded');
+  const stateConfirm = document.getElementById('state-confirm');
+  const notifIntent = document.getElementById('notif-intent');
+  const expApp = document.getElementById('exp-app');
+  const expIntent = document.getElementById('exp-intent');
+  const expRisk = document.getElementById('exp-risk');
+  const expMock = document.getElementById('exp-mock');
+  const expReason = document.getElementById('exp-reason');
+  const confirmGlyph = document.getElementById('confirm-glyph');
+  const confirmText = document.getElementById('confirm-text');
+  const historyEl = document.getElementById('history');
+  const clockEl = document.getElementById('clock');
+  const swipeThumb = document.getElementById('swipe-thumb');
+  const overlayLeft = document.getElementById('overlay-left');
+  const overlayRight = document.getElementById('overlay-right');
+
+  // Swipe state
+  let touchStartX = 0;
+  let touchCurrentX = 0;
+  let isDragging = false;
+  const SWIPE_THRESHOLD = 90;
+
+  function tickClock() {
+    const d = new Date();
+    const hh = d.getHours();
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    clockEl.textContent = `${hh}:${mm}`;
+  }
+  tickClock();
+  setInterval(tickClock, 60000);
+
+  function vibrate(p) {
+    if ('vibrate' in navigator) { try { navigator.vibrate(p); } catch(_) {} }
+  }
+
+  function setIslandState(s, data) {
+    stateNotif.classList.remove('visible');
+    stateExp.classList.remove('visible');
+    stateConfirm.classList.remove('visible');
+    island.classList.remove('notif', 'expanded', 'confirmed');
+    state.islandState = s;
+
+    if (s === 'compact') {
+      resetSwipeThumb();
+    } else if (s === 'notif') {
+      island.classList.add('notif');
+      setTimeout(() => stateNotif.classList.add('visible'), 200);
+      notifIntent.textContent = data.intent;
+    } else if (s === 'expanded') {
+      island.classList.add('expanded');
+      setTimeout(() => stateExp.classList.add('visible'), 200);
+      expApp.textContent = data.app;
+      expIntent.textContent = data.intent;
+      expRisk.textContent = { low: '低', med: '慎', high: '危' }[data.risk];
+      expRisk.className = 'exp-risk ' + data.risk;
+      expMock.innerHTML = data.mock;
+      expMock.className = 'mock scene-' + data.scene;
+      expReason.textContent = data.reason;
+      resetSwipeThumb();
+    } else if (s === 'confirmed-seal') {
+      island.classList.add('confirmed');
+      stateConfirm.className = 'island-content state-confirm seal';
+      confirmGlyph.textContent = '✓';
+      confirmText.textContent = '已盖印 Sealed';
+      setTimeout(() => stateConfirm.classList.add('visible'), 150);
+    } else if (s === 'confirmed-burn') {
+      island.classList.add('confirmed');
+      stateConfirm.className = 'island-content state-confirm burn';
+      confirmGlyph.textContent = '✕';
+      confirmText.textContent = '已焚毁 Burned';
+      setTimeout(() => stateConfirm.classList.add('visible'), 150);
+    }
+  }
+
+  function resetSwipeThumb() {
+    swipeThumb.style.left = '50%';
+    swipeThumb.style.background = '#fff';
+    overlayLeft.classList.remove('active');
+    overlayRight.classList.remove('active');
+  }
+
+  function summon() {
+    if (state.current) return;
+    const r = REQUESTS[Math.floor(Math.random() * REQUESTS.length)];
+    state.current = r;
+    state.total++;
+    setIslandState('notif', { intent: r.reasonShort });
+    // Auto-expand after 1.2s
+    setTimeout(() => {
+      if (state.islandState === 'notif') expand();
+    }, 1200);
+  }
+
+  function expand() {
+    if (!state.current) return;
+    if (state.islandState !== 'notif' && state.islandState !== 'compact') return;
+    vibrate(10);
+    setIslandState('expanded', state.current);
+  }
+
+  function collapseToNotif() {
+    if (!state.current) return;
+    setIslandState('notif', { intent: state.current.reasonShort });
+  }
+
+  function seal() {
+    if (state.locked || !state.current) return;
+    state.locked = true;
+    vibrate(40);
+    state.sealed++;
+    pushHistory('seal', state.current.intent);
+    updateTally();
+    setIslandState('confirmed-seal');
+    setTimeout(() => {
+      setIslandState('compact');
+      state.current = null;
+      state.locked = false;
+      scheduleNext(5000);
+    }, 1600);
+  }
+
+  function burn() {
+    if (state.locked || !state.current) return;
+    state.locked = true;
+    vibrate([80, 40, 80]);
+    state.burned++;
+    pushHistory('burn', state.current.intent);
+    updateTally();
+    setIslandState('confirmed-burn');
+    setTimeout(() => {
+      setIslandState('compact');
+      state.current = null;
+      state.locked = false;
+      scheduleNext(5000);
+    }, 1600);
+  }
+
+  function pushHistory(kind, intent) {
+    const row = document.createElement('div');
+    row.className = 'hrow ' + kind;
+    const tm = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+    row.innerHTML = `<span class="hmark"></span><span class="hlabel">${intent}</span><span class="htime">${tm}</span>`;
+    historyEl.prepend(row);
+    while (historyEl.children.length > 4) historyEl.removeChild(historyEl.lastElementChild);
+  }
+
+  function updateTally() {
+    document.getElementById('tally-seal').textContent = state.sealed;
+    document.getElementById('tally-burn').textContent = state.burned;
+    document.getElementById('tally-total').textContent = state.sealed + state.burned;
+  }
+
+  function scheduleNext(ms) {
+    clearTimeout(state.timer);
+    state.timer = setTimeout(summon, ms);
+  }
+
+  // === Touch / Mouse Swipe Handling ===
+  function onDragStart(clientX) {
+    if (state.islandState !== 'expanded' || state.locked) return;
+    isDragging = true;
+    touchStartX = clientX;
+    touchCurrentX = clientX;
+  }
+
+  function onDragMove(clientX) {
+    if (!isDragging) return;
+    touchCurrentX = clientX;
+    const islandWidth = island.offsetWidth;
+    const delta = touchCurrentX - touchStartX;
+    // Clamp delta to island width
+    const clampedDelta = Math.max(-islandWidth * 0.4, Math.min(islandWidth * 0.4, delta));
+    const trackWidth = swipeThumb.parentElement.offsetWidth;
+    // Map delta to thumb position 0–100%
+    const percent = 50 + (clampedDelta / islandWidth) * 100;
+    swipeThumb.style.left = Math.max(5, Math.min(95, percent)) + '%';
+
+    // Color + overlay feedback
+    if (delta < -30) {
+      swipeThumb.style.background = 'var(--sys-red)';
+      overlayLeft.classList.add('active');
+      overlayRight.classList.remove('active');
+    } else if (delta > 30) {
+      swipeThumb.style.background = 'var(--sys-green)';
+      overlayRight.classList.add('active');
+      overlayLeft.classList.remove('active');
+    } else {
+      swipeThumb.style.background = '#fff';
+      overlayLeft.classList.remove('active');
+      overlayRight.classList.remove('active');
+    }
+  }
+
+  function onDragEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    const delta = touchCurrentX - touchStartX;
+
+    if (delta < -SWIPE_THRESHOLD) {
+      // Swipe left → burn
+      burn();
+    } else if (delta > SWIPE_THRESHOLD) {
+      // Swipe right → seal
+      seal();
+    } else {
+      // Snap back
+      resetSwipeThumb();
+    }
+  }
+
+  // Touch events
+  island.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    onDragStart(e.touches[0].clientX);
+  }, { passive: false });
+
+  island.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    onDragMove(e.touches[0].clientX);
+  }, { passive: false });
+
+  island.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    onDragEnd();
+  }, { passive: false });
+
+  // Mouse events (desktop)
+  island.addEventListener('mousedown', (e) => {
+    onDragStart(e.clientX);
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) onDragMove(e.clientX);
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isDragging) onDragEnd();
+  });
+
+  // Island tap to expand
+  island.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (state.islandState === 'notif') expand();
+  });
+
+  // Click outside collapses
+  document.addEventListener('click', () => {
+    if (state.islandState === 'expanded') collapseToNotif();
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    const k = e.key.toLowerCase();
+    if (!state.current) {
+      if (k === ' ') { e.preventDefault(); clearTimeout(state.timer); summon(); }
+      return;
+    }
+    if (state.islandState === 'notif' && (k === 'enter' || k === ' ')) { e.preventDefault(); expand(); }
+    else if (state.islandState === 'expanded') {
+      if (k === 'arrowright' || k === 'a') seal();
+      else if (k === 'arrowleft' || k === 'd') burn();
+      else if (k === 'escape') collapseToNotif();
+    }
+  });
+
+  island.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); island.click(); }
+  });
+
+  // Boot
+  scheduleNext(1800);
+</script>
+
+</body>
+</html>

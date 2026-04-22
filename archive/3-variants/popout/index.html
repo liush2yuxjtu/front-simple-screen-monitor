@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a0f06">
+<meta name="description" content="密函天降 · Popout Envelope variant of Screen Monitor UX.">
+<title>密函天降 · Popout</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%E2%9C%89%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #b8892a;
+    --gold-hi: #e9c36b;
+    --parch-1: #f2e1b8;
+    --parch-2: #e4c98a;
+    --parch-3: #c9a35a;
+    --ink: #2b1a08;
+    --ink-soft: #5a3a18;
+    --wax: #8b1a1a;
+    --wax-hi: #c02a2a;
+    --ember: #ff7a2a;
+
+    --font-brush: 'Ma Shan Zheng', 'Noto Serif SC', 'Songti SC', 'STKaiti', serif;
+    --font-display: 'Cinzel', 'Trajan Pro', 'PingFang SC', serif;
+    --font-body: 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: #f0e2bb;
+    background: #0a0604;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at top, #3b2812 0%, #1a0f06 60%, #0a0604 100%),
+      repeating-linear-gradient(90deg, #2a1a0a 0 60px, #1a0f06 60px 120px);
+    position: relative;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(255,140,40,0.2), transparent 24%),
+      radial-gradient(circle at 88% 82%, rgba(255,140,40,0.18), transparent 26%);
+    animation: flicker 5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes flicker { 0%,100% { opacity: 0.85; } 50% { opacity: 1; } }
+
+  .stage {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Back link */
+  .back {
+    position: absolute;
+    top: 22px;
+    left: 24px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #8a7650;
+    text-decoration: none;
+    transition: color 0.2s;
+    z-index: 20;
+  }
+  .back:hover { color: var(--gold-hi); }
+
+  /* Sentry: center idle screen */
+  .sentry {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px 180px;
+    text-align: center;
+  }
+
+  .sentry-crest {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 28px;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 20px rgba(232,195,107,0.35));
+    animation: breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.04); opacity: 1; }
+  }
+
+  .sentry-title-en {
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 8px;
+    color: var(--gold-hi);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .sentry-title {
+    font-family: var(--font-brush);
+    font-size: 42px;
+    letter-spacing: 8px;
+    color: var(--gold-hi);
+    text-shadow: 0 2px 20px rgba(232,195,107,0.3);
+    margin-bottom: 18px;
+  }
+
+  .sentry-sub {
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 5px;
+    color: #8a7650;
+    text-transform: uppercase;
+  }
+
+  .sentry-ornament {
+    margin: 30px auto;
+    width: 200px;
+    height: 16px;
+    background: no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16'><path d='M0 8 H80 M120 8 H200' stroke='%23b8892a' stroke-width='1'/><circle cx='100' cy='8' r='3' fill='%23e9c36b'/></svg>");
+    opacity: 0.7;
+  }
+
+  .sentry-verse {
+    margin-top: 16px;
+    font-family: var(--font-brush);
+    font-size: 18px;
+    color: #8a7650;
+    letter-spacing: 3px;
+    font-style: italic;
+  }
+
+  /* Timer dots pulse */
+  .timer-pulse {
+    margin-top: 40px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .pulse-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.3;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .pulse-dot:nth-child(2) { animation-delay: 0.3s; }
+  .pulse-dot:nth-child(3) { animation-delay: 0.6s; }
+  .pulse-dot:nth-child(4) { animation-delay: 0.9s; }
+  .pulse-dot:nth-child(5) { animation-delay: 1.2s; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    40% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 12px var(--gold-hi); }
+  }
+
+  /* Tally strip */
+  .tally {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 46px;
+    font-family: var(--font-display);
+    color: #8a7650;
+    font-size: 11px;
+    letter-spacing: 3px;
+  }
+  .tally .chunk { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .tally .val { font-size: 28px; color: var(--gold-hi); letter-spacing: 2px; }
+  .tally .chunk.seal .val { color: var(--wax-hi); }
+
+  /* Bell toast: arrives from bottom-right */
+  .bell-toast {
+    position: fixed;
+    right: 28px;
+    bottom: 28px;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 30%, #f5d56b, #8a6010);
+    border-radius: 50%;
+    box-shadow: 0 10px 40px rgba(255,180,40,0.5), inset 0 2px 6px rgba(255,235,180,0.4);
+    cursor: pointer;
+    z-index: 30;
+    opacity: 0;
+    transform: scale(0) translateY(40px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+  }
+  .bell-toast.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    animation: bellRing 1.6s ease-in-out infinite;
+  }
+  @keyframes bellRing {
+    0%, 100% { transform: scale(1) rotate(0); }
+    10% { transform: scale(1.04) rotate(-8deg); }
+    20% { transform: scale(1.04) rotate(8deg); }
+    30% { transform: scale(1.04) rotate(-4deg); }
+    40% { transform: scale(1) rotate(0); }
+  }
+
+  .bell-icon {
+    width: 44px;
+    height: 44px;
+    fill: #3a1f05;
+  }
+
+  .bell-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    background: var(--wax);
+    color: #fff0d0;
+    border-radius: 12px;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    border: 1.5px solid #3b0808;
+  }
+
+  /* Ripples */
+  .bell-toast::before,
+  .bell-toast::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(255,200,100,0.6);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .bell-toast.active::before { animation: ripple 2s ease-out infinite; }
+  .bell-toast.active::after { animation: ripple 2s ease-out 1s infinite; }
+  @keyframes ripple {
+    0% { opacity: 0.8; transform: scale(1); }
+    100% { opacity: 0; transform: scale(2.2); }
+  }
+
+  /* Envelope modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,6,3,0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+    z-index: 40;
+  }
+  .modal-backdrop.active { opacity: 1; pointer-events: auto; }
+
+  .envelope {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 92vw;
+    max-width: 520px;
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.5s cubic-bezier(0.34, 1.3, 0.5, 1), opacity 0.35s;
+    z-index: 41;
+    transform-origin: center;
+    perspective: 1200px;
+  }
+  .envelope.active {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .envelope.flying-up {
+    transition: transform 0.9s cubic-bezier(0.5, -0.2, 0.4, 1), opacity 0.9s;
+    transform: translate(-50%, -140%) scale(0.4) rotate(-10deg);
+    opacity: 0;
+  }
+  .envelope.burning {
+    transition: transform 0.9s ease-in, opacity 0.9s, filter 0.9s;
+    transform: translate(-50%, 40%) scale(0.7) rotate(6deg);
+    opacity: 0;
+    filter: brightness(0.3) sepia(1) hue-rotate(-20deg);
+  }
+
+  /* Envelope exterior (cover) */
+  .env-cover {
+    position: relative;
+    background:
+      radial-gradient(ellipse at 30% 10%, rgba(107,74,31,0.18), transparent 50%),
+      radial-gradient(ellipse at center, var(--parch-1) 0%, var(--parch-2) 70%, var(--parch-3) 100%);
+    padding: 34px 32px 34px;
+    border-radius: 4px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.75), inset 0 0 40px rgba(107,74,31,0.25);
+    clip-path: polygon(
+      0 2%, 3% 0, 8% 2%, 15% 0, 22% 2%, 30% 0, 38% 2%, 46% 0,
+      54% 2%, 62% 0, 70% 2%, 78% 0, 85% 2%, 92% 0, 97% 2%, 100% 2%,
+      100% 98%, 97% 100%, 92% 98%, 85% 100%, 78% 98%, 70% 100%, 62% 98%,
+      54% 100%, 46% 98%, 38% 100%, 30% 98%, 22% 100%, 15% 98%, 8% 100%,
+      3% 100%, 0 98%
+    );
+  }
+
+  .env-cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(107,74,31,0.1) 0 6px, transparent 28px),
+      radial-gradient(circle at 82% 78%, rgba(107,74,31,0.08) 0 5px, transparent 22px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  /* Wax seal badge on cover */
+  .env-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed rgba(122,58,24,0.3);
+  }
+
+  .env-num {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: #7a3a18;
+    text-transform: uppercase;
+  }
+
+  .env-stamp {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #e04a4a, #8b1a1a 60%, #3b0808);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 800;
+    color: #f0d0a0;
+    box-shadow: 0 3px 8px rgba(80,0,0,0.6);
+    transform: rotate(-8deg);
+  }
+
+  .env-title {
+    font-family: var(--font-brush);
+    font-size: 30px;
+    letter-spacing: 6px;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .env-sub {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: #7a3a18;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .env-snapshot {
+    aspect-ratio: 16/9;
+    border: 3px solid #7a4a1a;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    background: #1a1a1a;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+    margin-bottom: 18px;
+  }
+
+  .env-snapshot .mock {
+    position: absolute;
+    inset: 0;
+  }
+
+  .env-intent-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #7a3a18;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .env-intent {
+    font-family: var(--font-brush);
+    font-size: 22px;
+    color: var(--ink);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .env-reason {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+
+  .env-meta {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+
+  .env-chip {
+    font-family: var(--font-display);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #7a3a18;
+    padding: 3px 8px;
+    border: 1px solid rgba(122,58,24,0.35);
+    border-radius: 2px;
+  }
+  .env-chip.risk-high { color: var(--wax); border-color: var(--wax); }
+  .env-chip.risk-med { color: #8b6818; border-color: #8b6818; }
+  .env-chip.risk-low { color: #3a5a18; border-color: #3a5a18; }
+
+  /* Verdict buttons */
+  .env-verdict {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .vbtn {
+    padding: 14px 16px;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-brush);
+    font-size: 18px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 56px;
+  }
+  .vbtn:hover { transform: translateY(-2px); }
+  .vbtn:active { transform: translateY(0) scale(0.98); }
+
+  .vbtn.burn {
+    background: linear-gradient(180deg, #3a2010, #1a0808);
+    color: #d4a88a;
+    border: 1px solid #5a2010;
+    box-shadow: 0 4px 12px rgba(60,20,8,0.4);
+  }
+  .vbtn.burn:hover { box-shadow: 0 6px 18px rgba(196,74,24,0.5), 0 0 0 1px rgba(196,74,24,0.6); color: #ffc89a; }
+
+  .vbtn.seal {
+    background: linear-gradient(180deg, #a01818, #5a0808);
+    color: #fff0d0;
+    border: 1px solid #3b0808;
+    box-shadow: 0 4px 12px rgba(80,0,0,0.5);
+  }
+  .vbtn.seal:hover { box-shadow: 0 6px 20px rgba(224,74,74,0.5), 0 0 0 1px rgba(232,195,107,0.4); }
+
+  /* History strip at bottom */
+  .history {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    max-width: 92vw;
+    overflow-x: auto;
+    padding: 6px 8px;
+    z-index: 5;
+  }
+
+  .hist-pill {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    background: rgba(30,20,10,0.6);
+    border: 1px solid rgba(184,137,42,0.3);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #b4a080;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    animation: histIn 0.4s ease-out;
+  }
+  @keyframes histIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hist-pill .mark { font-size: 12px; }
+  .hist-pill.seal .mark { color: var(--wax-hi); }
+  .hist-pill.burn .mark { color: #a0a090; }
+
+  /* Close button corner of envelope */
+  .env-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 22px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+  .env-close:hover { opacity: 1; }
+
+  /* Ember particles on burn */
+  .embers {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 42;
+  }
+  .ember {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: radial-gradient(circle, #ffdb8a 0%, var(--ember) 45%, transparent 75%);
+    border-radius: 50%;
+  }
+
+  /* Mock snapshot scenes */
+  .scene-browser { background: linear-gradient(180deg, #1e1e2e 0%, #313244 100%); }
+  .scene-terminal { background: #0a0a0a; }
+  .scene-code { background: #282c34; }
+  .scene-chat { background: linear-gradient(180deg, #1a2332, #0f1520); }
+  .scene-doc { background: #f5f0e4; color: #333; }
+  .scene-design { background: linear-gradient(135deg, #2a1a3a, #4a2a3a); }
+
+  /* Phone */
+  @media (max-width: 600px) {
+    .bell-toast { right: 16px; bottom: 86px; width: 64px; height: 64px; }
+    .bell-icon { width: 38px; height: 38px; }
+    .sentry-title { font-size: 32px; letter-spacing: 5px; }
+    .sentry { padding: 60px 16px 160px; }
+    .env-cover { padding: 24px 22px; }
+    .env-title { font-size: 24px; letter-spacing: 4px; }
+    .env-intent { font-size: 19px; }
+    .vbtn { font-size: 16px; letter-spacing: 3px; min-height: 52px; }
+    .history { bottom: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<a class="back" href="../">← 回殿前</a>
+
+<div class="stage">
+
+  <main class="sentry">
+    <svg class="sentry-crest" viewBox="0 0 100 100">
+      <defs>
+        <linearGradient id="gg" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#f5d56b"/>
+          <stop offset="60%" stop-color="#b8892a"/>
+          <stop offset="100%" stop-color="#7a5510"/>
+        </linearGradient>
+      </defs>
+      <path d="M50 8 L 82 20 L 82 52 Q 82 78 50 94 Q 18 78 18 52 L 18 20 Z"
+            fill="url(#gg)" stroke="#5a3a10" stroke-width="1.5"/>
+      <g fill="#5a3a10">
+        <circle cx="50" cy="42" r="3"/>
+        <path d="M50 48 L 46 58 L 50 66 L 54 58 Z"/>
+      </g>
+    </svg>
+    <div class="sentry-title-en">The Night Watch</div>
+    <div class="sentry-title">值夜殿</div>
+    <div class="sentry-sub">Awaiting Missive · 静候密报</div>
+    <div class="sentry-ornament"></div>
+    <div class="sentry-verse">屏察御史，静坐监牢，一有异动，铜铃为报。</div>
+
+    <div class="timer-pulse" aria-hidden="true">
+      <span class="pulse-dot"></span>
+      <span class="pulse-dot"></span>
+      <span class="pulse-dot"></span>
+      <span class="pulse-dot"></span>
+      <span class="pulse-dot"></span>
+    </div>
+
+    <div class="tally">
+      <div class="chunk seal">
+        <div class="val" id="tally-seal">0</div>
+        <div>SEALED · 准奏</div>
+      </div>
+      <div class="chunk">
+        <div class="val" id="tally-burn">0</div>
+        <div>BURNED · 焚毁</div>
+      </div>
+      <div class="chunk">
+        <div class="val" id="tally-total">0</div>
+        <div>TOTAL · 总数</div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- Bell toast (notification button popping from corner) -->
+<button class="bell-toast" id="bell" aria-label="打开密函">
+  <svg class="bell-icon" viewBox="0 0 24 24">
+    <path d="M12 2 C 10 2 9 3 9 5 C 6 5 4 8 4 12 L 4 16 L 3 18 L 3 19 L 21 19 L 21 18 L 20 16 L 20 12 C 20 8 18 5 15 5 C 15 3 14 2 12 2 Z M 10 20 C 10 21 11 22 12 22 C 13 22 14 21 14 20 Z"/>
+  </svg>
+  <span class="bell-badge" id="bell-badge">1</span>
+</button>
+
+<!-- Modal backdrop + envelope -->
+<div class="modal-backdrop" id="backdrop"></div>
+
+<article class="envelope" id="envelope" role="dialog" aria-modal="true" aria-labelledby="env-title">
+  <div class="env-cover">
+    <button class="env-close" id="env-close" aria-label="暂且搁置">✕</button>
+    <div class="env-header">
+      <span class="env-num" id="env-num">PETITION · № 000</span>
+      <div class="env-stamp">REX</div>
+    </div>
+    <h2 class="env-title" id="env-title">屏察奏疏</h2>
+    <div class="env-sub">Missive from the Realm</div>
+    <div class="env-snapshot">
+      <div class="mock" id="env-mock"></div>
+    </div>
+    <div class="env-intent-label">USER INTENT · 观察结论</div>
+    <div class="env-intent" id="env-intent">—</div>
+    <p class="env-reason" id="env-reason">—</p>
+    <div class="env-meta" id="env-meta"></div>
+    <div class="env-verdict">
+      <button class="vbtn burn" id="btn-burn" type="button">🔥 焚 毁</button>
+      <button class="vbtn seal" id="btn-seal" type="button">🟥 盖 印</button>
+    </div>
+  </div>
+</article>
+
+<div class="embers" id="embers"></div>
+
+<!-- History pills -->
+<div class="history" id="history"></div>
+
+<script>
+  // Mock request pool (shared with swipe variant, trimmed).
+  const REQUESTS = [
+    {
+      intent: '开启浏览器，访问 YouTube',
+      reason: '察觉用户将鼠标停于 Dock 中 Chrome 图标近旁。综合上次访问历史，推断欲观览影像以解乏。',
+      app: 'Google Chrome', risk: 'low', scene: 'browser',
+      mock: `<div style="position:absolute;top:0;left:0;right:0;height:14px;background:linear-gradient(180deg,#3a3a4a,#2a2a3a);display:flex;gap:3px;align-items:center;padding:0 4px;">
+        <span style="width:5px;height:5px;border-radius:50%;background:#ff5f56;"></span>
+        <span style="width:5px;height:5px;border-radius:50%;background:#ffbd2e;"></span>
+        <span style="width:5px;height:5px;border-radius:50%;background:#27c93f;"></span>
+      </div>
+      <div style="position:absolute;top:20px;left:8px;right:8px;">
+        <div style="background:#2a2a3a;padding:3px 6px;color:#9ca0c0;font-size:10px;">youtube.com</div>
+        <div style="margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+          <div style="background:#3a3a4a;height:26px;"></div>
+          <div style="background:#4a3a5a;height:26px;"></div>
+          <div style="background:#3a4a5a;height:26px;"></div>
+          <div style="background:#5a3a4a;height:26px;"></div>
+        </div>
+      </div>`
+    },
+    {
+      intent: '以 Terminal 执行 rm -rf node_modules',
+      reason: '终端光标驻留于项目根目录，已键入删除之指令尚未敲回车。此举将摧毁依赖百万，须慎之又慎。',
+      app: 'iTerm2', risk: 'high', scene: 'terminal',
+      mock: `<div style="position:absolute;inset:0;padding:10px;font-family:monospace;font-size:10px;color:#aaffaa;line-height:1.6;">
+        <div>~/projects/app $ ls</div>
+        <div style="color:#ccc;">node_modules/ src/ package.json</div>
+        <div>~/projects/app $ <span style="background:#ffff00;color:#000;padding:0 2px;">rm -rf node_modules</span></div>
+      </div>`
+    },
+    {
+      intent: '向 Anthropic 招聘官撰写邮件',
+      reason: '邮箱草稿栏已填收件人，正文寥寥数语未成。观其反复删改问候语，似求稳妥得体之措辞。',
+      app: 'Mail', risk: 'med', scene: 'doc',
+      mock: `<div style="position:absolute;inset:0;padding:10px;font-size:11px;color:#333;">
+        <div style="border-bottom:1px solid #ccc;padding-bottom:4px;margin-bottom:6px;"><b>To:</b> recruiting@anthropic.com</div>
+        <div style="border-bottom:1px solid #ccc;padding-bottom:4px;margin-bottom:6px;"><b>Subj:</b> Application — SWE</div>
+        <div style="color:#666;">Dear hiring team,</div>
+        <div style="color:#999;font-style:italic;">| _</div>
+      </div>`
+    },
+    {
+      intent: '打开 VS Code，编辑 auth.ts',
+      reason: '察觉上次编辑中断于第 42 行之 token 校验。时辰已过半小时，当续笔完工以免荒废。',
+      app: 'Visual Studio Code', risk: 'low', scene: 'code',
+      mock: `<div style="position:absolute;inset:0;padding:10px;font-family:monospace;font-size:10px;color:#abb2bf;line-height:1.6;">
+        <div><span style="color:#c678dd;">import</span> { verify } from <span style="color:#98c379;">'./auth'</span>;</div>
+        <div><span style="color:#61afef;">function</span> <span style="color:#e06c75;">verify</span>(token) {</div>
+        <div>&nbsp;&nbsp;<span style="color:#c678dd;">if</span> (!token) <span style="color:#c678dd;">return null</span>;</div>
+        <div><span style="background:#3a3f4b;">&nbsp;&nbsp;<span style="color:#888;">// cursor here</span></span></div>
+      </div>`
+    },
+    {
+      intent: '于 Slack 发送私信予同僚',
+      reason: '输入框已敲入："要不要下班后一起去..."，停滞三分钟未续。似欲相邀却踌躇。',
+      app: 'Slack', risk: 'med', scene: 'chat',
+      mock: `<div style="position:absolute;inset:0;padding:10px;font-size:10px;color:#ccc;">
+        <div style="color:#888;">#direct-message · @liuwei</div>
+        <div style="margin-top:10px;background:#1a2332;padding:6px;border:1px solid #2a4262;border-radius:3px;">
+          要不要下班后一起去<span style="background:#ffff00;color:#000;padding:0 2px;">|</span>
+        </div>
+      </div>`
+    },
+    {
+      intent: '于 Twitter 发推文，涉未宣战略',
+      reason: '推文编辑框已撰 180 字，内容涉及公司未宣战略。警觉：此举或泄商密。',
+      app: 'Safari · Twitter', risk: 'high', scene: 'browser',
+      mock: `<div style="position:absolute;inset:0;padding:10px;font-size:10px;color:#ddd;background:#15202b;">
+        <div style="background:#22303c;padding:6px;border-radius:6px;">
+          刚听说我司下季度要... [182字]
+        </div>
+        <div style="text-align:right;margin-top:6px;color:#1d9bf0;">Tweet →</div>
+      </div>`
+    }
+  ];
+
+  const state = {
+    current: null,
+    queue: 0,
+    sealed: 0,
+    burned: 0,
+    total: 0,
+    locked: false,
+    timer: null
+  };
+
+  const bell = document.getElementById('bell');
+  const bellBadge = document.getElementById('bell-badge');
+  const backdrop = document.getElementById('backdrop');
+  const envelope = document.getElementById('envelope');
+  const envMock = document.getElementById('env-mock');
+  const envIntent = document.getElementById('env-intent');
+  const envReason = document.getElementById('env-reason');
+  const envMeta = document.getElementById('env-meta');
+  const envNum = document.getElementById('env-num');
+  const btnSeal = document.getElementById('btn-seal');
+  const btnBurn = document.getElementById('btn-burn');
+  const envClose = document.getElementById('env-close');
+  const history = document.getElementById('history');
+  const embersEl = document.getElementById('embers');
+
+  // Start hidden
+  bell.style.display = 'none';
+
+  function vibrate(pat) {
+    if ('vibrate' in navigator) { try { navigator.vibrate(pat); } catch (_) {} }
+  }
+
+  function scheduleNext(delay) {
+    clearTimeout(state.timer);
+    state.timer = setTimeout(summon, delay);
+  }
+
+  function summon() {
+    if (state.current) return; // already pending
+    const req = REQUESTS[Math.floor(Math.random() * REQUESTS.length)];
+    state.current = req;
+    state.queue++;
+    bellBadge.textContent = state.queue;
+    bell.style.display = 'flex';
+    requestAnimationFrame(() => bell.classList.add('active'));
+    // ding sound (soft — not implemented to avoid autoplay issues)
+  }
+
+  function openEnvelope() {
+    if (!state.current) return;
+    const r = state.current;
+    state.total++;
+    envNum.textContent = `PETITION · № ${String(state.total).padStart(3, '0')}`;
+    envMock.innerHTML = r.mock;
+    envMock.className = 'mock scene-' + r.scene;
+    envIntent.textContent = r.intent;
+    envReason.textContent = r.reason;
+    const riskLabel = { low: 'RISK · 轻微', med: 'RISK · 慎重', high: 'RISK · 凶险' }[r.risk];
+    envMeta.innerHTML = `
+      <span class="env-chip">APP · ${r.app}</span>
+      <span class="env-chip risk-${r.risk}">${riskLabel}</span>
+    `;
+    backdrop.classList.add('active');
+    envelope.classList.remove('flying-up', 'burning');
+    envelope.classList.add('active');
+    bell.classList.remove('active');
+    bell.style.display = 'none';
+  }
+
+  function closeEnvelope(mode) {
+    envelope.classList.remove('active');
+    if (mode === 'seal') envelope.classList.add('flying-up');
+    if (mode === 'burn') envelope.classList.add('burning');
+    backdrop.classList.remove('active');
+  }
+
+  function seal() {
+    if (state.locked || !state.current) return;
+    state.locked = true;
+    vibrate(40);
+    state.sealed++;
+    pushHistory('seal', state.current.intent);
+    updateTally();
+    closeEnvelope('seal');
+    finishRound();
+  }
+
+  function burn() {
+    if (state.locked || !state.current) return;
+    state.locked = true;
+    vibrate([80, 40, 80]);
+    state.burned++;
+    pushHistory('burn', state.current.intent);
+    updateTally();
+    closeEnvelope('burn');
+    // spawn embers from center
+    for (let i = 0; i < 20; i++) {
+      const e = document.createElement('div');
+      e.className = 'ember';
+      const left = 50 + (Math.random() - 0.5) * 30;
+      const top = 50 + (Math.random() - 0.5) * 10;
+      e.style.left = left + 'vw';
+      e.style.top = top + 'vh';
+      embersEl.appendChild(e);
+      const drift = (Math.random() - 0.5) * 200;
+      const rise = 300 + Math.random() * 200;
+      e.animate([
+        { opacity: 0, transform: 'translate(0,0) scale(0.5)' },
+        { opacity: 1, transform: `translate(${drift*0.3}px,-${rise*0.4}px) scale(1.1)`, offset: 0.3 },
+        { opacity: 0, transform: `translate(${drift}px,-${rise}px) scale(1.2)` }
+      ], { duration: 1400 + Math.random() * 400, easing: 'ease-out', fill: 'forwards' })
+      .onfinish = () => e.remove();
+    }
+    finishRound();
+  }
+
+  function finishRound() {
+    setTimeout(() => {
+      state.current = null;
+      state.queue = 0;
+      state.locked = false;
+      bellBadge.textContent = '1';
+      // schedule next in 5s
+      scheduleNext(5000);
+    }, 1000);
+  }
+
+  function dismiss() {
+    // close without verdict — bell returns to corner
+    envelope.classList.remove('active');
+    backdrop.classList.remove('active');
+    setTimeout(() => {
+      bell.style.display = 'flex';
+      requestAnimationFrame(() => bell.classList.add('active'));
+    }, 400);
+  }
+
+  function pushHistory(kind, intent) {
+    const pill = document.createElement('span');
+    pill.className = 'hist-pill ' + kind;
+    const mark = kind === 'seal' ? '●' : '✕';
+    const verb = kind === 'seal' ? '准' : '焚';
+    const short = intent.length > 14 ? intent.slice(0, 13) + '…' : intent;
+    pill.innerHTML = `<span class="mark">${mark}</span>${verb} · ${short}`;
+    history.prepend(pill);
+    while (history.children.length > 6) history.removeChild(history.lastElementChild);
+  }
+
+  function updateTally() {
+    document.getElementById('tally-seal').textContent = state.sealed;
+    document.getElementById('tally-burn').textContent = state.burned;
+    document.getElementById('tally-total').textContent = state.sealed + state.burned;
+  }
+
+  bell.addEventListener('click', openEnvelope);
+  btnSeal.addEventListener('click', seal);
+  btnBurn.addEventListener('click', burn);
+  envClose.addEventListener('click', dismiss);
+  backdrop.addEventListener('click', dismiss);
+
+  document.addEventListener('keydown', (e) => {
+    const k = e.key.toLowerCase();
+    if (!state.current) {
+      if (k === ' ') { e.preventDefault(); clearTimeout(state.timer); summon(); }
+      return;
+    }
+    if (envelope.classList.contains('active')) {
+      if (k === 'a') seal();
+      else if (k === 'd') burn();
+      else if (k === 'escape') dismiss();
+    } else {
+      if (k === 'enter' || k === ' ') { e.preventDefault(); openEnvelope(); }
+    }
+  });
+
+  // Boot
+  scheduleNext(1500);
+</script>
+
+</body>
+</html>

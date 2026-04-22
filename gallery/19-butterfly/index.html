@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a1a12">
+<title>蝶引 · Butterfly Guide</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%F0%9F%A6%8B%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 30% 40%, #1a3a2a 0%, #0a1410 50%, #050806 100%);
+    overflow: hidden;
+    cursor: crosshair;
+  }
+
+  .garden {
+    position: fixed;
+    inset: 0;
+  }
+  .garden::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(2px 2px at 10% 20%, rgba(150, 200, 150, 0.3), transparent),
+      radial-gradient(2px 2px at 25% 65%, rgba(150, 200, 150, 0.2), transparent),
+      radial-gradient(2px 2px at 70% 30%, rgba(150, 200, 150, 0.3), transparent),
+      radial-gradient(2px 2px at 85% 75%, rgba(150, 200, 150, 0.2), transparent);
+    animation: petals 12s ease-in-out infinite alternate;
+  }
+  @keyframes petals { from { opacity: 0.6; } to { opacity: 1; } }
+
+  .card {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 440px;
+    padding: 20px 26px;
+    background: rgba(10, 20, 14, 0.7);
+    border: 1px solid rgba(184, 137, 42, 0.3);
+    backdrop-filter: blur(14px);
+    text-align: center;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .card .app { font-family: var(--font-display); font-size: 10px; letter-spacing: 4px; color: var(--gold-hi); text-transform: uppercase; margin-bottom: 8px; }
+  .card .intent { font-family: var(--font-brush); font-size: 18px; color: var(--parch-hi); letter-spacing: 2px; line-height: 1.5; margin-bottom: 6px; }
+  .card .reason { font-size: 12px; color: #9cb0a0; line-height: 1.6; font-style: italic; }
+
+  .flower {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    margin-left: -60px;
+    margin-top: -60px;
+    transition: transform 0.3s, filter 0.3s;
+    user-select: none;
+  }
+  .flower.lotus { left: 82%; top: 60%; }
+  .flower.poppy { left: 18%; top: 60%; }
+
+  .flower svg { width: 100%; height: 100%; }
+
+  .flower.active {
+    transform: scale(1.3);
+    filter: drop-shadow(0 0 24px currentColor);
+  }
+  .flower.lotus { color: var(--gold-hi); }
+  .flower.poppy { color: var(--wax-hi); }
+
+  .flower-label {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-brush);
+    font-size: 14px;
+    letter-spacing: 3px;
+    white-space: nowrap;
+    color: currentColor;
+  }
+
+  .butterfly {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    margin-left: -30px;
+    margin-top: -30px;
+    z-index: 10;
+    pointer-events: none;
+    transition: transform 0.15s linear;
+    animation: flutter 0.6s ease-in-out infinite alternate;
+  }
+  @keyframes flutter {
+    0% { transform: scale(1) rotate(-3deg); }
+    100% { transform: scale(1.08) rotate(3deg); }
+  }
+  .butterfly svg { width: 100%; height: 100%; }
+
+  .trail {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    margin-top: -2px;
+    border-radius: 50%;
+    background: rgba(232, 195, 107, 0.6);
+    pointer-events: none;
+    animation: trailFade 1s ease-out forwards;
+  }
+  @keyframes trailFade {
+    0% { opacity: 0.8; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.3); }
+  }
+
+  .instruction {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232, 195, 107, 0.55);
+    text-transform: uppercase;
+    z-index: 10;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">蝶引</div><div class="en">Butterfly Guide</div></div>
+
+<div class="garden">
+  <div class="card req-card">
+    <div class="app" id="r-app"></div>
+    <div class="intent" id="r-intent"></div>
+    <div class="reason" id="r-reason"></div>
+  </div>
+
+  <div class="flower poppy" data-kind="reject">
+    <svg viewBox="0 0 100 100">
+      <g transform="translate(50 50)">
+        <ellipse cx="0" cy="-24" rx="14" ry="24" fill="currentColor" opacity="0.85"/>
+        <ellipse cx="22" cy="-8" rx="14" ry="24" fill="currentColor" opacity="0.85" transform="rotate(72 22 -8)"/>
+        <ellipse cx="14" cy="20" rx="14" ry="24" fill="currentColor" opacity="0.85" transform="rotate(144 14 20)"/>
+        <ellipse cx="-14" cy="20" rx="14" ry="24" fill="currentColor" opacity="0.85" transform="rotate(216 -14 20)"/>
+        <ellipse cx="-22" cy="-8" rx="14" ry="24" fill="currentColor" opacity="0.85" transform="rotate(288 -22 -8)"/>
+        <circle r="8" fill="#2a0808"/>
+      </g>
+    </svg>
+    <div class="flower-label">赤罂 · 驳</div>
+  </div>
+
+  <div class="flower lotus" data-kind="approve">
+    <svg viewBox="0 0 100 100">
+      <g transform="translate(50 50)">
+        <ellipse cx="0" cy="-26" rx="12" ry="26" fill="currentColor" opacity="0.9"/>
+        <ellipse cx="22" cy="-12" rx="12" ry="26" fill="currentColor" opacity="0.85" transform="rotate(45 22 -12)"/>
+        <ellipse cx="26" cy="10" rx="12" ry="26" fill="currentColor" opacity="0.8" transform="rotate(90 26 10)"/>
+        <ellipse cx="-22" cy="-12" rx="12" ry="26" fill="currentColor" opacity="0.85" transform="rotate(-45 -22 -12)"/>
+        <ellipse cx="-26" cy="10" rx="12" ry="26" fill="currentColor" opacity="0.8" transform="rotate(-90 -26 10)"/>
+        <circle r="10" fill="#ffeeaa"/>
+        <circle r="5" fill="#aa7700"/>
+      </g>
+    </svg>
+    <div class="flower-label">金莲 · 准</div>
+  </div>
+
+  <div class="butterfly" id="bf">
+    <svg viewBox="0 0 100 100">
+      <g transform="translate(50 50)">
+        <ellipse cx="-18" cy="-8" rx="22" ry="16" fill="#e9c36b" opacity="0.9"/>
+        <ellipse cx="18" cy="-8" rx="22" ry="16" fill="#e9c36b" opacity="0.9"/>
+        <ellipse cx="-16" cy="12" rx="16" ry="12" fill="#b8892a" opacity="0.9"/>
+        <ellipse cx="16" cy="12" rx="16" ry="12" fill="#b8892a" opacity="0.9"/>
+        <circle cx="-18" cy="-8" r="5" fill="#8b1a1a"/>
+        <circle cx="18" cy="-8" r="5" fill="#8b1a1a"/>
+        <line x1="0" y1="-16" x2="0" y2="18" stroke="#3b2812" stroke-width="2.5"/>
+        <circle cx="0" cy="-20" r="2.5" fill="#3b2812"/>
+        <line x1="0" y1="-22" x2="-4" y2="-30" stroke="#3b2812" stroke-width="1"/>
+        <line x1="0" y1="-22" x2="4" y2="-30" stroke="#3b2812" stroke-width="1"/>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<div class="instruction">引蝶栖花 · 金莲为准 · 赤罂为驳</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  const bf = document.getElementById('bf');
+  let x = innerWidth / 2, y = innerHeight - 150;
+  let tx = x, ty = y;
+  let committed = false;
+
+  bf.style.left = x + 'px';
+  bf.style.top = y + 'px';
+
+  document.addEventListener('mousemove', (e) => {
+    tx = e.clientX;
+    ty = e.clientY;
+    if (Math.random() < 0.2) addTrail(x, y);
+  });
+
+  function addTrail(px, py) {
+    const t = document.createElement('div');
+    t.className = 'trail';
+    t.style.left = px + 'px';
+    t.style.top = py + 'px';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 1000);
+  }
+
+  function animate() {
+    if (!committed) {
+      x += (tx - x) * 0.08;
+      y += (ty - y) * 0.08;
+      bf.style.left = x + 'px';
+      bf.style.top = y + 'px';
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  document.querySelectorAll('.flower').forEach(f => {
+    let overTimer;
+    f.addEventListener('mouseenter', () => {
+      if (committed) return;
+      f.classList.add('active');
+      overTimer = setTimeout(() => {
+        committed = true;
+        bf.style.transition = 'all 0.5s';
+        const rect = f.getBoundingClientRect();
+        bf.style.left = (rect.left + rect.width / 2) + 'px';
+        bf.style.top = (rect.top + rect.height / 2) + 'px';
+        bf.style.transform = 'scale(1.3)';
+        setTimeout(() => window.cast(f.dataset.kind), 500);
+      }, 800);
+    });
+    f.addEventListener('mouseleave', () => {
+      clearTimeout(overTimer);
+      f.classList.remove('active');
+    });
+  });
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('r-app').textContent = r.app;
+    document.getElementById('r-intent').textContent = r.intent;
+    document.getElementById('r-reason').textContent = r.reason;
+  }
+  loadReq();
+
+  window.nextRequest = () => {
+    committed = false;
+    bf.style.transition = '';
+    bf.style.transform = '';
+    loadReq();
+  };
+</script>
+</body>
+</html>

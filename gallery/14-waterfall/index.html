@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0f06">
+<title>瀑书 · Cascading Scroll</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%F0%9F%93%9C%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background:
+      linear-gradient(180deg, #3b2812 0%, #1a0f06 50%, #0a0604 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stage {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .scroll-column {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    margin: 20px auto;
+    width: 300px;
+    max-width: 90%;
+  }
+
+  .scroll-column::before, .scroll-column::after {
+    content: '';
+    position: absolute;
+    left: -10px;
+    right: -10px;
+    height: 30px;
+    background: linear-gradient(180deg, #3b2812 0%, transparent 100%);
+    z-index: 10;
+    pointer-events: none;
+  }
+  .scroll-column::before { top: 0; }
+  .scroll-column::after {
+    bottom: 0;
+    background: linear-gradient(0deg, #0a0604 0%, transparent 100%);
+  }
+
+  .rod-top, .rod-bot {
+    position: absolute;
+    left: -20px;
+    right: -20px;
+    height: 14px;
+    background: linear-gradient(180deg, var(--gold) 0%, #3b2812 100%);
+    border-radius: 3px;
+    z-index: 20;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  }
+  .rod-top { top: 0; }
+  .rod-bot { bottom: 0; }
+
+  .rod-top::before, .rod-top::after, .rod-bot::before, .rod-bot::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    width: 20px;
+    height: 22px;
+    background: radial-gradient(circle at 30% 30%, #e9c36b, #5a3a08);
+    border-radius: 50%;
+  }
+  .rod-top::before, .rod-bot::before { left: -6px; }
+  .rod-top::after, .rod-bot::after { right: -6px; }
+
+  .scroll-paper {
+    position: relative;
+    top: 14px;
+    bottom: 14px;
+    width: 100%;
+    background:
+      radial-gradient(ellipse at 50% 10%, #f2e1b8 0%, #c9a35a 100%);
+    border-left: 1px solid #7a5510;
+    border-right: 1px solid #7a5510;
+    min-height: calc(100% - 28px);
+    transform-origin: top;
+    animation: unroll 0.8s cubic-bezier(0.2, 0.8, 0.3, 1) 0.2s both;
+  }
+  @keyframes unroll {
+    from { transform: scaleY(0); opacity: 0; }
+    to { transform: scaleY(1); opacity: 1; }
+  }
+
+  .paper-content {
+    padding: 30px 24px;
+    text-align: center;
+  }
+  .app { font-family: var(--font-display); font-size: 10px; letter-spacing: 4px; color: #8b1a1a; text-transform: uppercase; margin-bottom: 10px; }
+  .intent { font-family: var(--font-brush); font-size: 24px; color: var(--ink); letter-spacing: 3px; line-height: 1.5; margin-bottom: 14px; writing-mode: vertical-rl; white-space: nowrap; margin: 14px auto; }
+  .reason-text { font-size: 12px; color: var(--ink-soft); line-height: 1.6; font-style: italic; }
+
+  .zone-top, .zone-bot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 50px;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-brush);
+    font-size: 18px;
+    letter-spacing: 6px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .zone-top {
+    top: 14px;
+    color: var(--gold-hi);
+    background: linear-gradient(180deg, rgba(232, 195, 107, 0.25), transparent);
+  }
+  .zone-bot {
+    bottom: 14px;
+    color: var(--wax-hi);
+    background: linear-gradient(0deg, rgba(192, 42, 42, 0.25), transparent);
+  }
+  .zone-top.on { opacity: 1; }
+  .zone-bot.on { opacity: 1; }
+
+  .pull-bar {
+    display: flex;
+    gap: 20px;
+    padding: 12px 0;
+    justify-content: center;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold-hi);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.25s;
+  }
+  .btn:hover { background: rgba(232, 195, 107, 0.1); }
+  .btn .cn { font-family: var(--font-brush); font-size: 14px; letter-spacing: 2px; margin-right: 6px; }
+
+  .instruction {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232, 195, 107, 0.55);
+    text-transform: uppercase;
+    padding-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">瀑书</div><div class="en">Cascading Scroll</div></div>
+
+<div class="stage">
+  <div class="pull-bar">
+    <button class="btn" id="btn-up"><span class="cn">升</span>卷上 · 准</button>
+  </div>
+
+  <div class="scroll-column" id="col">
+    <div class="rod-top"></div>
+    <div class="zone-top" id="zt">↑ 升卷 · 准 ↑</div>
+    <div class="scroll-paper" id="paper">
+      <div class="paper-content">
+        <div class="app" id="r-app"></div>
+        <div class="intent" id="r-intent"></div>
+        <div class="reason-text" id="r-reason"></div>
+      </div>
+    </div>
+    <div class="zone-bot" id="zb">↓ 撕毁 · 驳 ↓</div>
+    <div class="rod-bot"></div>
+  </div>
+
+  <div class="pull-bar">
+    <button class="btn" id="btn-down"><span class="cn">撕</span>卷下 · 驳</button>
+  </div>
+
+  <div class="instruction">拖动轴卷上升或下坠</div>
+</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  const paper = document.getElementById('paper');
+  const col = document.getElementById('col');
+  const zt = document.getElementById('zt');
+  const zb = document.getElementById('zb');
+  let committed = false;
+  let dragging = false;
+  let startY = 0;
+  let offsetY = 0;
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('r-app').textContent = r.app;
+    document.getElementById('r-intent').textContent = r.intent;
+    document.getElementById('r-reason').textContent = r.reason;
+  }
+  loadReq();
+
+  function startDrag(e) {
+    if (committed) return;
+    dragging = true;
+    startY = (e.touches ? e.touches[0].clientY : e.clientY) - offsetY;
+    paper.style.transition = 'none';
+    e.preventDefault();
+  }
+  function moveDrag(e) {
+    if (!dragging) return;
+    const y = e.touches ? e.touches[0].clientY : e.clientY;
+    offsetY = y - startY;
+    paper.style.transform = `translateY(${offsetY}px)`;
+    zt.classList.toggle('on', offsetY < -80);
+    zb.classList.toggle('on', offsetY > 80);
+    if (Math.abs(offsetY) > 180 && !committed) {
+      committed = true;
+      const verdict = offsetY < 0 ? 'approve' : 'reject';
+      paper.style.transition = 'transform 0.5s, opacity 0.5s';
+      paper.style.transform = `translateY(${offsetY < 0 ? -500 : 500}px)`;
+      paper.style.opacity = '0';
+      setTimeout(() => window.cast(verdict), 500);
+    }
+  }
+  function endDrag() {
+    if (!dragging || committed) { dragging = false; return; }
+    dragging = false;
+    offsetY = 0;
+    paper.style.transition = 'transform 0.4s';
+    paper.style.transform = '';
+    zt.classList.remove('on');
+    zb.classList.remove('on');
+  }
+
+  paper.addEventListener('mousedown', startDrag);
+  document.addEventListener('mousemove', moveDrag);
+  document.addEventListener('mouseup', endDrag);
+  paper.addEventListener('touchstart', startDrag, { passive: false });
+  document.addEventListener('touchmove', moveDrag, { passive: false });
+  document.addEventListener('touchend', endDrag);
+
+  document.getElementById('btn-up').addEventListener('click', () => {
+    if (committed) return;
+    committed = true;
+    paper.style.transition = 'transform 0.5s, opacity 0.5s';
+    paper.style.transform = 'translateY(-500px)';
+    paper.style.opacity = '0';
+    setTimeout(() => window.cast('approve'), 500);
+  });
+  document.getElementById('btn-down').addEventListener('click', () => {
+    if (committed) return;
+    committed = true;
+    paper.style.transition = 'transform 0.5s, opacity 0.5s';
+    paper.style.transform = 'translateY(500px)';
+    paper.style.opacity = '0';
+    setTimeout(() => window.cast('reject'), 500);
+  });
+
+  window.nextRequest = () => {
+    committed = false;
+    offsetY = 0;
+    paper.style.cssText = '';
+    loadReq();
+  };
+</script>
+</body>
+</html>

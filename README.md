@@ -14,6 +14,7 @@ https://liush2yuxjtu.github.io/front-simple-screen-monitor/
 | [`/swipe/`](./swipe/) | 御前羊皮卷 | Royal Parchment | Full-screen 3-column, scroll unfurls, swipe + vibrate on mobile |
 | [`/popout/`](./popout/) | 密函天降 | Popout Envelope | Corner bell toast, tap opens letter modal, fly-away on verdict |
 | [`/island/`](./island/) | 灵动岛御批 | Dynamic Island | Apple-style morphing pill, iOS buttons, device frame on desktop |
+| [`/island-swipe/`](./island-swipe/) | 灵动岛滑驱 | Swipe Island | Same pill, swipe left=burn, swipe right=seal, no buttons |
 
 All three share:
 

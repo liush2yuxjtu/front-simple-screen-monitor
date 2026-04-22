@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0f06">
+<title>天平 · Scales of Justice</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%E2%9A%96%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background: radial-gradient(ellipse at center, #2a1a0f 0%, #0a0604 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stage {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    max-width: 680px;
+    padding: 20px;
+  }
+
+  .request {
+    margin-bottom: 30px;
+  }
+  .request .app { font-family: var(--font-display); font-size: 10px; letter-spacing: 4px; color: var(--gold-hi); text-transform: uppercase; margin-bottom: 8px; }
+  .request .intent { font-family: var(--font-brush); font-size: 22px; color: var(--parch-hi); letter-spacing: 2px; line-height: 1.5; margin-bottom: 10px; }
+  .request .reason { font-size: 13px; color: #b4a080; line-height: 1.7; font-style: italic; max-width: 480px; margin: 0 auto 10px; }
+
+  .scales-wrap {
+    position: relative;
+    width: 500px;
+    height: 280px;
+    max-width: 92vw;
+    margin: 10px auto;
+  }
+
+  .stand {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 14px;
+    height: 160px;
+    margin-left: -7px;
+    background: linear-gradient(180deg, var(--gold) 0%, #5a3a08 100%);
+    border-radius: 2px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  }
+  .base {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 160px;
+    height: 10px;
+    margin-left: -80px;
+    background: linear-gradient(180deg, var(--gold) 0%, #3b2812 100%);
+    border-radius: 2px;
+  }
+
+  .beam {
+    position: absolute;
+    left: 50%;
+    bottom: 160px;
+    width: 420px;
+    height: 6px;
+    margin-left: -210px;
+    background: linear-gradient(180deg, var(--gold-hi) 0%, var(--gold) 50%, #7a5510 100%);
+    border-radius: 3px;
+    transform-origin: center;
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.3, 1);
+    z-index: 2;
+  }
+  .beam::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -8px;
+    width: 18px;
+    height: 18px;
+    margin-left: -9px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #e9c36b, #8b6510 70%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .pan {
+    position: absolute;
+    top: 100%;
+    width: 140px;
+    height: 40px;
+    margin-left: -70px;
+    border: 2px solid var(--gold);
+    border-top: none;
+    border-radius: 0 0 80px 80px;
+    background: linear-gradient(180deg, rgba(232, 195, 107, 0.15) 0%, rgba(184, 137, 42, 0.3) 100%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  .pan::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background:
+      linear-gradient(135deg, transparent 49%, var(--gold) 49% 51%, transparent 51%),
+      linear-gradient(45deg, transparent 49%, var(--gold) 49% 51%, transparent 51%);
+    opacity: 0.8;
+  }
+
+  .pan.left { left: 0; }
+  .pan.right { right: 0; left: auto; margin-left: 0; margin-right: -70px; }
+
+  .pan-label {
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-brush);
+    font-size: 18px;
+    letter-spacing: 4px;
+    white-space: nowrap;
+  }
+  .pan.left .pan-label { color: var(--wax-hi); }
+  .pan.right .pan-label { color: var(--gold-hi); }
+
+  .weights {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .weight {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.2s;
+  }
+  .weight:active { cursor: grabbing; }
+  .weight:hover { transform: translateY(-4px); }
+  .weight.dragging { position: fixed; z-index: 100; pointer-events: none; }
+
+  .weight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #e9c36b, #8b6510 70%, #3b2812 100%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  }
+  .weight-val {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-brush);
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 700;
+    z-index: 1;
+  }
+
+  .instruction {
+    margin-top: 60px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232, 195, 107, 0.55);
+    text-transform: uppercase;
+  }
+
+  .pan.drop-hover {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 12px var(--gold-hi));
+  }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">天平</div><div class="en">Scales</div></div>
+
+<div class="stage">
+  <div class="request req-card">
+    <div class="app" id="r-app"></div>
+    <div class="intent" id="r-intent"></div>
+    <div class="reason" id="r-reason"></div>
+    <div><span class="req-risk" id="r-risk"></span></div>
+  </div>
+
+  <div class="scales-wrap">
+    <div class="base"></div>
+    <div class="stand"></div>
+    <div class="beam" id="beam">
+      <div class="pan left" id="pan-L">
+        <div class="pan-label">驳 · West</div>
+      </div>
+      <div class="pan right" id="pan-R">
+        <div class="pan-label">准 · East</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="weights" id="weights">
+    <div class="weight" data-w="1"><div class="weight-val">壹</div></div>
+    <div class="weight" data-w="2"><div class="weight-val">贰</div></div>
+    <div class="weight" data-w="3"><div class="weight-val">叁</div></div>
+    <div class="weight" data-w="5"><div class="weight-val">伍</div></div>
+  </div>
+
+  <div class="instruction">拖曳砝码至两盘 · 任一侧重 5 钱即裁</div>
+</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  const beam = document.getElementById('beam');
+  const panL = document.getElementById('pan-L');
+  const panR = document.getElementById('pan-R');
+  let leftWeight = 0, rightWeight = 0;
+  let committed = false;
+  let active = null;
+  let offset = { x: 0, y: 0 };
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('r-app').textContent = r.app;
+    document.getElementById('r-intent').textContent = r.intent;
+    document.getElementById('r-reason').textContent = r.reason;
+    const risk = document.getElementById('r-risk');
+    risk.textContent = '风险 · ' + window.riskLabel(r.risk);
+    risk.className = 'req-risk ' + r.risk;
+  }
+  loadReq();
+
+  function updateBalance() {
+    const diff = rightWeight - leftWeight;
+    const tilt = Math.max(-10, Math.min(10, diff * 2));
+    beam.style.transform = `rotate(${tilt}deg)`;
+    if ((leftWeight >= 5 || rightWeight >= 5) && !committed) {
+      committed = true;
+      const verdict = rightWeight > leftWeight ? 'approve' : 'reject';
+      setTimeout(() => window.cast(verdict), 700);
+    }
+  }
+
+  function pickUp(e, w) {
+    if (committed) return;
+    active = w;
+    const rect = w.getBoundingClientRect();
+    const pt = e.touches ? e.touches[0] : e;
+    offset = { x: pt.clientX - rect.left, y: pt.clientY - rect.top };
+    w.classList.add('dragging');
+    w.style.left = rect.left + 'px';
+    w.style.top = rect.top + 'px';
+    document.body.appendChild(w);
+    e.preventDefault();
+  }
+
+  function moveDrag(e) {
+    if (!active) return;
+    const pt = e.touches ? e.touches[0] : e;
+    active.style.left = (pt.clientX - offset.x) + 'px';
+    active.style.top = (pt.clientY - offset.y) + 'px';
+
+    const elemBelow = document.elementFromPoint(pt.clientX, pt.clientY);
+    [panL, panR].forEach(p => p.classList.remove('drop-hover'));
+    if (elemBelow && elemBelow.closest('#pan-L')) panL.classList.add('drop-hover');
+    else if (elemBelow && elemBelow.closest('#pan-R')) panR.classList.add('drop-hover');
+  }
+
+  function release(e) {
+    if (!active) return;
+    const pt = e.changedTouches ? e.changedTouches[0] : e;
+    const elem = document.elementFromPoint(pt.clientX, pt.clientY);
+    const target = elem && (elem.closest('#pan-L') ? panL : (elem.closest('#pan-R') ? panR : null));
+    const w = parseInt(active.dataset.w);
+    if (target) {
+      const which = target.id === 'pan-L' ? 'L' : 'R';
+      if (which === 'L') leftWeight += w;
+      else rightWeight += w;
+      active.remove();
+      updateBalance();
+    } else {
+      document.getElementById('weights').appendChild(active);
+      active.classList.remove('dragging');
+      active.style.cssText = '';
+    }
+    [panL, panR].forEach(p => p.classList.remove('drop-hover'));
+    active = null;
+  }
+
+  document.querySelectorAll('.weight').forEach(w => {
+    w.addEventListener('mousedown', (e) => pickUp(e, w));
+    w.addEventListener('touchstart', (e) => pickUp(e, w), { passive: false });
+  });
+  document.addEventListener('mousemove', moveDrag);
+  document.addEventListener('touchmove', moveDrag, { passive: false });
+  document.addEventListener('mouseup', release);
+  document.addEventListener('touchend', release);
+
+  window.nextRequest = () => {
+    committed = false;
+    leftWeight = rightWeight = 0;
+    beam.style.transform = '';
+    const wrap = document.getElementById('weights');
+    wrap.innerHTML = '';
+    [1, 2, 3, 5].forEach(w => {
+      const v = { 1: '壹', 2: '贰', 3: '叁', 5: '伍' }[w];
+      const el = document.createElement('div');
+      el.className = 'weight';
+      el.dataset.w = w;
+      el.innerHTML = `<div class="weight-val">${v}</div>`;
+      el.addEventListener('mousedown', (e) => pickUp(e, el));
+      el.addEventListener('touchstart', (e) => pickUp(e, el), { passive: false });
+      wrap.appendChild(el);
+    });
+    loadReq();
+  };
+</script>
+</body>
+</html>

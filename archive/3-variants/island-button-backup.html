@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a0f06">
+<meta name="description" content="屏察御史 · Screen Monitor UX Lab — 三种交互形态：御前羊皮卷、密函召唤、灵动岛。">
+<title>屏察御史 · UX Lab</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%F0%9F%91%91%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700;900&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #b8892a;
+    --gold-hi: #e9c36b;
+    --parch: #e4c98a;
+    --ink: #2b1a08;
+    --wax: #8b1a1a;
+    --ember: #ff7a2a;
+
+    --font-brush: 'Ma Shan Zheng', 'Noto Serif SC', 'Songti SC', 'STKaiti', serif;
+    --font-display: 'Cinzel', 'Trajan Pro', 'PingFang SC', serif;
+    --font-body: 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif;
+    --font-ui: 'Inter', 'PingFang SC', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: #f0e2bb;
+    background: #0a0604;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at top, #3b2812 0%, #1a0f06 60%, #0a0604 100%),
+      repeating-linear-gradient(90deg, #2a1a0a 0 60px, #1a0f06 60px 120px);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 8% 12%, rgba(255,140,40,0.22), transparent 22%),
+      radial-gradient(circle at 92% 12%, rgba(255,140,40,0.22), transparent 22%),
+      radial-gradient(circle at 50% 110%, rgba(255,160,60,0.15), transparent 30%);
+    pointer-events: none;
+    animation: flicker 4s ease-in-out infinite;
+    z-index: 0;
+  }
+
+  @keyframes flicker {
+    0%,100% { opacity: 0.85; }
+    50% { opacity: 1; }
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 40px 100px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 10px;
+    color: var(--gold-hi);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: var(--font-brush);
+    font-size: 64px;
+    color: var(--gold-hi);
+    letter-spacing: 10px;
+    line-height: 1.1;
+    text-shadow: 0 4px 20px rgba(232,195,107,0.3), 0 2px 4px rgba(0,0,0,0.8);
+  }
+
+  .sub {
+    margin-top: 18px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 6px;
+    color: #b4985a;
+    text-transform: uppercase;
+  }
+
+  .blurb {
+    max-width: 640px;
+    margin: 28px auto 0;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #c4a876;
+    font-style: italic;
+  }
+
+  .ornament {
+    margin: 40px auto;
+    width: 220px;
+    height: 18px;
+    background: no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 18'><path d='M0 9 H90 M130 9 H220' stroke='%23b8892a' stroke-width='1'/><circle cx='110' cy='9' r='4' fill='%23e9c36b'/><path d='M110 2 L113 9 L110 16 L107 9 Z' fill='%23b8892a'/></svg>");
+    opacity: 0.8;
+  }
+
+  /* Cards */
+  .chambers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 34px;
+  }
+
+  .chamber {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, rgba(40,26,12,0.85), rgba(14,8,4,0.95));
+    border: 1px solid rgba(184,137,42,0.32);
+    border-radius: 4px;
+    padding: 30px 26px 26px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.2,0.8,0.3,1), border-color 0.3s, box-shadow 0.4s;
+    cursor: pointer;
+  }
+
+  .chamber::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% -20%, rgba(232,195,107,0.15), transparent 70%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .chamber:hover {
+    transform: translateY(-8px);
+    border-color: var(--gold-hi);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(232,195,107,0.2);
+  }
+
+  .chamber:hover::before { opacity: 1; }
+
+  .numeral {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: rgba(232,195,107,0.5);
+  }
+
+  .preview {
+    aspect-ratio: 16/10;
+    border-radius: 2px;
+    margin-bottom: 22px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(184,137,42,0.2);
+  }
+
+  /* Preview 1: parchment mini with swipe arrows */
+  .preview.swipe {
+    background:
+      radial-gradient(ellipse at center, #f2e1b8 0%, #c9a35a 100%);
+  }
+  .preview.swipe::before {
+    content: '';
+    position: absolute;
+    inset: 14% 12%;
+    background: rgba(255,255,255,0.15);
+    border: 1px dashed rgba(90,50,24,0.4);
+  }
+  .preview.swipe::after {
+    content: '← 焚 · 盖 →';
+    position: absolute;
+    left: 0; right: 0; bottom: 12%;
+    text-align: center;
+    font-family: var(--font-brush);
+    color: #5a3a18;
+    font-size: 14px;
+    letter-spacing: 3px;
+  }
+  .swipe-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #8b1a1a;
+    top: 48%;
+    left: 50%;
+    margin-left: -4px;
+    animation: swipeDot 2.4s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(139,26,26,0.6);
+  }
+  @keyframes swipeDot {
+    0%, 20% { transform: translateX(-40px); opacity: 0; }
+    30% { opacity: 1; }
+    60% { transform: translateX(40px); opacity: 1; }
+    70%, 100% { transform: translateX(40px); opacity: 0; }
+  }
+
+  /* Preview 2: envelope popping from corner */
+  .preview.popout {
+    background: linear-gradient(180deg, #1a0f06 0%, #2a1a08 100%);
+  }
+  .envelope-mini {
+    position: absolute;
+    right: 12%;
+    bottom: 14%;
+    width: 70px;
+    height: 48px;
+    background: linear-gradient(135deg, #e4c98a 0%, #c9a35a 100%);
+    border: 1px solid #7a5510;
+    border-radius: 2px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.7);
+    animation: popIn 2.6s ease-in-out infinite;
+  }
+  .envelope-mini::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+    background: linear-gradient(135deg, #d4ba7a 0%, #b59345 100%);
+  }
+  .envelope-mini::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    width: 14px;
+    height: 14px;
+    margin-left: -7px;
+    margin-top: -7px;
+    background: radial-gradient(circle, #e04a4a, #8b1a1a);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+  @keyframes popIn {
+    0%, 15% { transform: scale(0) translateY(40px); opacity: 0; }
+    25% { transform: scale(1.1) translateY(0); opacity: 1; }
+    35% { transform: scale(1) translateY(0); opacity: 1; }
+    75% { transform: scale(1) translateY(0); opacity: 1; }
+    85% { transform: scale(0.9) translateY(-20px); opacity: 0.5; }
+    100% { transform: scale(0) translateY(-40px); opacity: 0; }
+  }
+  .preview.popout::after {
+    content: '叮 · 有新奏疏';
+    position: absolute;
+    top: 14%;
+    left: 14%;
+    font-family: var(--font-brush);
+    color: var(--gold-hi);
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  /* Preview 3: Dynamic Island */
+  .preview.island {
+    background:
+      radial-gradient(ellipse at 30% 20%, #4a2a6a, transparent 60%),
+      radial-gradient(ellipse at 70% 80%, #1a3a6a, transparent 60%),
+      #0a0a14;
+  }
+  .island-pill {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 45%;
+    height: 22px;
+    background: #050505;
+    border-radius: 999px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    animation: islandMorph 3s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    overflow: hidden;
+  }
+  .island-pill::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #34d058;
+    box-shadow: 0 0 4px #34d058;
+  }
+  .island-pill::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff4a4a;
+    box-shadow: 0 0 4px #ff4a4a;
+  }
+  @keyframes islandMorph {
+    0%, 30% { width: 30%; height: 22px; border-radius: 999px; }
+    50%, 80% { width: 78%; height: 68px; border-radius: 28px; }
+    100% { width: 30%; height: 22px; border-radius: 999px; }
+  }
+  .preview.island::after {
+    content: 'Dynamic Island';
+    position: absolute;
+    bottom: 18%;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: var(--font-ui);
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: 300;
+  }
+
+  .chamber-title {
+    font-family: var(--font-brush);
+    font-size: 28px;
+    color: var(--gold-hi);
+    letter-spacing: 4px;
+    margin-bottom: 4px;
+  }
+
+  .chamber-en {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: #8a7650;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .chamber-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #b4a080;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+
+  .chamber-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .tag {
+    font-family: var(--font-display);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #8a7650;
+    padding: 3px 8px;
+    border: 1px solid rgba(184,137,42,0.3);
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .enter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border: 1px solid rgba(232,195,107,0.5);
+    color: var(--gold-hi);
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    transition: background 0.25s;
+  }
+
+  .chamber:hover .enter {
+    background: rgba(232,195,107,0.1);
+  }
+
+  .enter .arrow {
+    transition: transform 0.25s;
+  }
+  .chamber:hover .enter .arrow {
+    transform: translateX(4px);
+  }
+
+  /* Footer */
+  .foot {
+    margin-top: 80px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #6a5a40;
+  }
+  .foot a { color: #8a7650; text-decoration: none; border-bottom: 1px dotted #6a5a40; }
+  .foot a:hover { color: var(--gold-hi); border-color: var(--gold-hi); }
+
+  @media (max-width: 900px) {
+    .page { padding: 50px 20px 60px; }
+    h1 { font-size: 42px; letter-spacing: 6px; }
+    .sub { font-size: 11px; letter-spacing: 4px; }
+    .blurb { font-size: 13px; }
+    header { margin-bottom: 50px; }
+    .chambers { grid-template-columns: 1fr; gap: 24px; }
+    .chamber { padding: 22px 20px 22px; }
+    .chamber-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header>
+    <div class="eyebrow">Screen Monitor · UX Lab</div>
+    <h1>御前决策殿</h1>
+    <div class="sub">Three Chambers of Judgment</div>
+    <p class="blurb">
+      后端每五秒摄取屏影，揣测其意，敬呈三重衙门以待陛下裁夺。<br>
+      Three interaction paradigms for the same consent prompt.
+    </p>
+    <div class="ornament"></div>
+  </header>
+
+  <nav class="chambers" aria-label="Three chambers">
+
+    <a class="chamber" href="./swipe/" aria-label="Chamber I — Swipe parchment">
+      <span class="numeral">CHAMBER · I</span>
+      <div class="preview swipe">
+        <span class="swipe-dot"></span>
+      </div>
+      <div class="chamber-title">御前羊皮卷</div>
+      <div class="chamber-en">Royal Parchment · Swipe</div>
+      <p class="chamber-desc">
+        奏疏徐徐展开于殿前。轻触盖印或焚毁。手机轻扫左右即裁。震动回禀。
+      </p>
+      <div class="chamber-tags">
+        <span class="tag">Desktop-first</span>
+        <span class="tag">Swipe</span>
+        <span class="tag">Haptics</span>
+      </div>
+      <span class="enter">步入殿内 <span class="arrow">→</span></span>
+    </a>
+
+    <a class="chamber" href="./popout/" aria-label="Chamber II — Popout envelope">
+      <span class="numeral">CHAMBER · II</span>
+      <div class="preview popout">
+        <span class="envelope-mini"></span>
+      </div>
+      <div class="chamber-title">密函天降</div>
+      <div class="chamber-en">Popout Envelope</div>
+      <p class="chamber-desc">
+        铜铃一响，密函自角落跃入。抚之即启，裁毕自封飞远。以最小屏影打扰陛下。
+      </p>
+      <div class="chamber-tags">
+        <span class="tag">Corner toast</span>
+        <span class="tag">Tap-to-open</span>
+        <span class="tag">Minimal</span>
+      </div>
+      <span class="enter">步入殿内 <span class="arrow">→</span></span>
+    </a>
+
+    <a class="chamber" href="./island/" aria-label="Chamber III — Dynamic Island">
+      <span class="numeral">CHAMBER · III</span>
+      <div class="preview island">
+        <span class="island-pill"></span>
+      </div>
+      <div class="chamber-title">灵动岛御批</div>
+      <div class="chamber-en">Dynamic Island</div>
+      <p class="chamber-desc">
+        仿苹果灵动岛之形。黑玉凝缩于顶，轻触而展，流体变形展开奏疏。iOS 风骨。
+      </p>
+      <div class="chamber-tags">
+        <span class="tag">iOS inspired</span>
+        <span class="tag">Morph</span>
+        <span class="tag">Pill UI</span>
+      </div>
+      <span class="enter">步入殿内 <span class="arrow">→</span></span>
+    </a>
+
+  </nav>
+
+  <div style="text-align:center; margin-top: 60px;">
+    <a href="./gallery/" style="
+      display:inline-block;
+      padding: 16px 36px;
+      border: 1px solid var(--gold-hi);
+      color: var(--gold-hi);
+      font-family: var(--font-display);
+      font-size: 12px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: rgba(232, 195, 107, 0.06);
+      transition: all 0.3s;
+    "
+    onmouseover="this.style.background='rgba(232,195,107,0.18)';this.style.transform='translateY(-2px)';"
+    onmouseout="this.style.background='rgba(232,195,107,0.06)';this.style.transform='';"
+    >二十廊 · Twenty Chambers →</a>
+    <p style="margin-top:14px;font-size:12px;color:#8a7650;font-style:italic;letter-spacing:2px;">
+      更多交互姿势 · 投卦、铜镜、飞鸽、折扇、天平、烽火、龙珠…
+    </p>
+  </div>
+
+  <div class="foot">
+    屏察御史 · v0.3 · <a href="https://github.com/liush2yuxjtu/front-simple-screen-monitor" target="_blank" rel="noopener">Source</a>
+  </div>
+
+</div>
+
+</body>
+</html>

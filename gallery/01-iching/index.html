@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0f06">
+<title>觉卦 · I Ching</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%E2%98%AF%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at center, #3b2812 0%, #120904 70%, #080302 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 50%, transparent 35%, rgba(0,0,0,0.55) 100%);
+    pointer-events: none;
+  }
+
+  .stage {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 680px;
+    padding: 30px 24px;
+    text-align: center;
+  }
+
+  .request {
+    margin-bottom: 40px;
+  }
+  .request .req-app { margin-bottom: 8px; display: block; }
+  .request .req-intent { margin-bottom: 12px; }
+  .request .req-reason { max-width: 480px; margin: 0 auto; }
+
+  .altar {
+    position: relative;
+    width: 340px;
+    height: 340px;
+    margin: 30px auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bagua {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, rgba(184,137,42,0.08) 0%, transparent 70%);
+    border: 1px solid rgba(184,137,42,0.25);
+    animation: spin 120s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .bagua::before, .bagua::after {
+    content: '';
+    position: absolute;
+    left: 50%; top: 4%;
+    width: 2px;
+    height: 92%;
+    background: rgba(184,137,42,0.15);
+    transform-origin: center 50%;
+  }
+  .bagua::after { transform: translateX(-50%) rotate(90deg); }
+
+  .coins {
+    display: flex;
+    gap: 24px;
+    z-index: 2;
+  }
+
+  .coin {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #e9c36b, #8b6510 70%, #5a3a08 100%);
+    box-shadow:
+      0 8px 20px rgba(0,0,0,0.6),
+      inset 0 2px 4px rgba(255,255,255,0.3),
+      inset 0 -2px 4px rgba(0,0,0,0.4);
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.15s;
+    transform-style: preserve-3d;
+  }
+  .coin:hover { transform: translateY(-4px); }
+  .coin::before {
+    content: '';
+    position: absolute;
+    inset: 22%;
+    border: 1.5px solid #3b2812;
+    border-radius: 4px;
+    background: #7a5510;
+  }
+  .coin::after {
+    content: '阳';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-brush);
+    font-size: 22px;
+    color: #f2e1b8;
+    text-shadow: 0 1px 2px #3b2812;
+  }
+  .coin.yin::after { content: '阴'; color: #3b2812; text-shadow: none; }
+  .coin.tossing { animation: toss 0.9s cubic-bezier(0.3,0.7,0.3,1); }
+  @keyframes toss {
+    0% { transform: translateY(0) rotateY(0); }
+    30% { transform: translateY(-140px) rotateY(540deg); }
+    60% { transform: translateY(-80px) rotateY(1080deg); }
+    100% { transform: translateY(0) rotateY(var(--final, 0deg)); }
+  }
+
+  .hexagram {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 6px;
+    min-height: 60px;
+  }
+  .line {
+    width: 120px;
+    height: 8px;
+    background: var(--gold);
+    position: relative;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s;
+    border-radius: 1px;
+  }
+  .line.yin::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 14px;
+    margin-left: -7px;
+    background: var(--dusk);
+  }
+  .line.show { opacity: 1; transform: translateY(0); }
+
+  .read {
+    margin-top: 22px;
+    font-family: var(--font-brush);
+    font-size: 18px;
+    color: var(--gold-hi);
+    letter-spacing: 4px;
+    min-height: 28px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .read.show { opacity: 1; }
+
+  .instruction {
+    margin-top: 12px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232,195,107,0.55);
+    text-transform: uppercase;
+  }
+
+  .toss-btn {
+    margin-top: 18px;
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid rgba(232,195,107,0.5);
+    color: var(--gold-hi);
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .toss-btn:hover {
+    background: rgba(232,195,107,0.1);
+  }
+  .toss-btn:disabled { opacity: 0.3; cursor: default; }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">觉卦</div><div class="en">I Ching</div></div>
+
+<div class="stage">
+  <div class="req-card request">
+    <span class="req-app" id="req-app"></span>
+    <div class="req-intent" id="req-intent"></div>
+    <div class="req-reason" id="req-reason"></div>
+    <div style="margin-top:10px;"><span class="req-risk" id="req-risk"></span></div>
+  </div>
+
+  <div class="altar">
+    <div class="bagua"></div>
+    <div class="coins" id="coins">
+      <div class="coin" data-i="0"></div>
+      <div class="coin" data-i="1"></div>
+      <div class="coin" data-i="2"></div>
+    </div>
+  </div>
+
+  <div class="hexagram" id="hex"></div>
+  <div class="read" id="read"></div>
+  <button class="toss-btn" id="toss">投卦</button>
+  <div class="instruction">阳多则准 · 阴多则驳</div>
+</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  const coinsEl = document.getElementById('coins');
+  const hex = document.getElementById('hex');
+  const read = document.getElementById('read');
+  const btn = document.getElementById('toss');
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('req-app').textContent = r.app;
+    document.getElementById('req-intent').textContent = r.intent;
+    document.getElementById('req-reason').textContent = r.reason;
+    const risk = document.getElementById('req-risk');
+    risk.textContent = '风险 · ' + window.riskLabel(r.risk);
+    risk.className = 'req-risk ' + r.risk;
+  }
+  loadReq();
+
+  window.nextRequest = () => {
+    hex.innerHTML = '';
+    read.classList.remove('show');
+    read.textContent = '';
+    btn.disabled = false;
+    btn.textContent = '投卦';
+    loadReq();
+  };
+
+  let tossing = false;
+  btn.addEventListener('click', () => {
+    if (tossing) return;
+    tossing = true;
+    btn.disabled = true;
+    btn.textContent = '摇卦中…';
+    hex.innerHTML = '';
+    read.classList.remove('show');
+
+    const coins = [...coinsEl.children];
+    const results = [];
+    coins.forEach((c, i) => {
+      c.classList.remove('yin');
+      c.style.setProperty('--final', '0deg');
+      setTimeout(() => {
+        const yin = Math.random() < 0.5;
+        results[i] = yin;
+        c.style.setProperty('--final', yin ? '180deg' : '0deg');
+        c.classList.add('tossing');
+        setTimeout(() => {
+          c.classList.remove('tossing');
+          if (yin) c.classList.add('yin');
+          drawLine(i, yin);
+        }, 900);
+      }, i * 200);
+    });
+
+    setTimeout(() => {
+      const yinCount = results.filter(x => x).length;
+      const yang = 3 - yinCount;
+      if (yang > yinCount) {
+        read.textContent = '三阳开泰 · 准';
+        setTimeout(() => window.cast('approve'), 900);
+      } else {
+        read.textContent = '阴重压阳 · 驳';
+        setTimeout(() => window.cast('reject'), 900);
+      }
+      read.classList.add('show');
+      tossing = false;
+    }, 900 + 200 * 3 + 400);
+  });
+
+  function drawLine(idx, yin) {
+    const l = document.createElement('div');
+    l.className = 'line' + (yin ? ' yin' : '');
+    hex.appendChild(l);
+    requestAnimationFrame(() => l.classList.add('show'));
+  }
+</script>
+</body>
+</html>

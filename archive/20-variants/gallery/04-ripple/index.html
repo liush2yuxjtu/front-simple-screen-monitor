@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a1a20">
+<title>水纹 · Koi Pond</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%F0%9F%90%A0%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background: radial-gradient(ellipse at center, #1a2e2a 0%, #0a1410 70%, #050806 100%);
+  }
+
+  .pond {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .pond-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(80, 120, 100, 0.15) 0%, transparent 40%),
+      radial-gradient(ellipse at 70% 60%, rgba(60, 100, 80, 0.12) 0%, transparent 40%),
+      linear-gradient(180deg, #1a2e2a 0%, #0a1410 100%);
+  }
+  .pond-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-radial-gradient(circle at 20% 30%, transparent 0 18px, rgba(200, 230, 220, 0.03) 18px 20px),
+      repeating-radial-gradient(circle at 75% 65%, transparent 0 24px, rgba(200, 230, 220, 0.025) 24px 26px);
+    animation: waterBreathe 8s ease-in-out infinite;
+  }
+  @keyframes waterBreathe {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+  }
+
+  .lotus {
+    position: absolute;
+    font-family: var(--font-brush);
+    letter-spacing: 4px;
+    pointer-events: none;
+    transition: all 0.4s;
+    text-shadow: 0 0 20px currentColor;
+  }
+  .lotus.approve {
+    top: 50%;
+    right: 12%;
+    transform: translateY(-50%);
+    color: #e9c36b;
+    font-size: 44px;
+  }
+  .lotus.reject {
+    top: 50%;
+    left: 12%;
+    transform: translateY(-50%);
+    color: #c02a2a;
+    font-size: 44px;
+  }
+  .lotus.active { filter: drop-shadow(0 0 20px currentColor); }
+  .lotus .sub {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    margin-top: 4px;
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+
+  .fish {
+    position: absolute;
+    font-size: 28px;
+    opacity: 0.55;
+    pointer-events: none;
+    animation: swim var(--dur, 18s) linear infinite;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+  }
+  @keyframes swim {
+    0% { transform: translate(-10vw, var(--y, 50vh)) scaleX(1); }
+    49% { transform: translate(110vw, var(--y, 50vh)) scaleX(1); }
+    50% { transform: translate(110vw, var(--y, 50vh)) scaleX(-1); }
+    99% { transform: translate(-10vw, var(--y, 50vh)) scaleX(-1); }
+    100% { transform: translate(-10vw, var(--y, 50vh)) scaleX(1); }
+  }
+
+  .scroll {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 440px;
+    text-align: center;
+    padding: 24px 28px;
+    background: rgba(10, 20, 16, 0.6);
+    border: 1px solid rgba(184, 137, 42, 0.3);
+    backdrop-filter: blur(14px);
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .scroll .app {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold-hi);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .scroll .intent {
+    font-family: var(--font-brush);
+    font-size: 22px;
+    color: var(--parch-hi);
+    letter-spacing: 2px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    text-shadow: 0 0 20px rgba(232, 195, 107, 0.3);
+  }
+  .scroll .reason {
+    font-size: 13px;
+    color: #9cb0a0;
+    line-height: 1.7;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  canvas#ripples {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .instruction {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232, 195, 107, 0.55);
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">水纹</div><div class="en">Koi Pond</div></div>
+
+<div class="pond" id="pond">
+  <div class="pond-bg"></div>
+
+  <span class="fish" style="--y: 18vh; --dur: 22s;">🐟</span>
+  <span class="fish" style="--y: 70vh; --dur: 26s; animation-delay: -8s;">🐠</span>
+  <span class="fish" style="--y: 42vh; --dur: 30s; animation-delay: -14s;">🐡</span>
+  <span class="fish" style="--y: 85vh; --dur: 24s; animation-delay: -20s;">🐟</span>
+
+  <div class="lotus reject" id="lotus-left">
+    驳<span class="sub">West · Reject</span>
+  </div>
+  <div class="lotus approve" id="lotus-right">
+    准<span class="sub">East · Approve</span>
+  </div>
+
+  <div class="scroll req-card">
+    <div class="app" id="s-app"></div>
+    <div class="intent" id="s-intent"></div>
+    <div class="reason" id="s-reason"></div>
+    <div><span class="req-risk" id="s-risk"></span></div>
+  </div>
+
+  <canvas id="ripples"></canvas>
+</div>
+
+<div class="instruction">击水为誓 · 左岸驳 · 右岸准</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  const canvas = document.getElementById('ripples');
+  const ctx = canvas.getContext('2d');
+  const pond = document.getElementById('pond');
+  let ripples = [];
+  let committed = false;
+
+  function resize() {
+    canvas.width = innerWidth * devicePixelRatio;
+    canvas.height = innerHeight * devicePixelRatio;
+    canvas.style.width = innerWidth + 'px';
+    canvas.style.height = innerHeight + 'px';
+    ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  }
+  resize();
+  addEventListener('resize', resize);
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('s-app').textContent = r.app;
+    document.getElementById('s-intent').textContent = r.intent;
+    document.getElementById('s-reason').textContent = r.reason;
+    const risk = document.getElementById('s-risk');
+    risk.textContent = '风险 · ' + window.riskLabel(r.risk);
+    risk.className = 'req-risk ' + r.risk;
+  }
+  loadReq();
+
+  function draw() {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    ripples = ripples.filter(r => {
+      r.r += 2.4;
+      r.o -= 0.012;
+      if (r.o <= 0) return false;
+      ctx.strokeStyle = `rgba(${r.color}, ${r.o})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2);
+      ctx.stroke();
+      return true;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  pond.addEventListener('click', (e) => {
+    if (committed) return;
+    const x = e.clientX, y = e.clientY;
+    const right = x > innerWidth / 2;
+    const color = right ? '232, 195, 107' : '192, 42, 42';
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        ripples.push({ x, y, r: 10, o: 0.9 - i * 0.12, color });
+      }, i * 100);
+    }
+    document.getElementById(right ? 'lotus-right' : 'lotus-left').classList.add('active');
+    committed = true;
+    setTimeout(() => window.cast(right ? 'approve' : 'reject'), 900);
+  });
+
+  window.nextRequest = () => {
+    committed = false;
+    document.querySelectorAll('.lotus').forEach(l => l.classList.remove('active'));
+    loadReq();
+  };
+</script>
+</body>
+</html>

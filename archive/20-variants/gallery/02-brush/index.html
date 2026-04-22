@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0f06">
+<title>判官笔 · Vermilion Brush</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%F0%9F%96%8B%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 50% 20%, #3b2812 0%, #120904 70%, #080302 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stage {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 680px;
+    padding: 30px 24px;
+    text-align: center;
+  }
+
+  .paper {
+    position: relative;
+    margin: 20px auto;
+    width: min(560px, 88vw);
+    aspect-ratio: 4/3;
+    background:
+      radial-gradient(ellipse at center, #f2e1b8 0%, #c9a35a 100%);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7), inset 0 0 100px rgba(90,58,24,0.3);
+    border: 1px solid #7a5510;
+    overflow: hidden;
+    touch-action: none;
+    cursor: crosshair;
+  }
+  .paper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(180deg, transparent 0 24px, rgba(90,58,24,0.08) 24px 25px),
+      radial-gradient(circle at 15% 20%, rgba(90,58,24,0.15), transparent 30%),
+      radial-gradient(circle at 85% 80%, rgba(90,58,24,0.15), transparent 30%);
+    pointer-events: none;
+  }
+
+  .paper-content {
+    position: relative;
+    z-index: 2;
+    padding: 30px 28px;
+    text-align: left;
+    pointer-events: none;
+  }
+  .paper-app {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #8b1a1a;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .paper-intent {
+    font-family: var(--font-brush);
+    font-size: 22px;
+    color: var(--ink);
+    line-height: 1.5;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .paper-reason {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 80%;
+  }
+  .paper-risk {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 3px;
+    padding: 3px 8px;
+    border: 1px solid;
+    border-radius: 2px;
+  }
+  .paper-risk.low { color: #2d7a4a; border-color: #2d7a4a; }
+  .paper-risk.med { color: #aa5520; border-color: #aa5520; }
+  .paper-risk.high { color: #8b1a1a; border-color: #8b1a1a; }
+
+  canvas.ink-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .brush-pot {
+    position: relative;
+    margin: 10px auto 0;
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .brush {
+    width: 14px;
+    height: 110px;
+    background: linear-gradient(180deg, #3b2812 0%, #1a0f06 100%);
+    border-radius: 2px;
+    position: relative;
+    cursor: grab;
+    transition: transform 0.2s;
+  }
+  .brush:hover { transform: translateY(-6px); }
+  .brush::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -28px;
+    width: 16px;
+    height: 36px;
+    margin-left: -8px;
+    background: linear-gradient(180deg, #4a3218 0%, #8b1a1a 60%, #5a0808 100%);
+    border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
+  .brush.jade::before {
+    background: linear-gradient(180deg, #4a3218 0%, #2d7a4a 60%, #1a4a20 100%);
+  }
+  .brush-label {
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-brush);
+    font-size: 13px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+  .brush .brush-label { color: #c02a2a; }
+  .brush.jade .brush-label { color: #5ec083; }
+
+  .brush.selected {
+    transform: translateY(-14px);
+    filter: drop-shadow(0 0 12px var(--gold-hi));
+  }
+
+  .instruction {
+    margin-top: 48px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232,195,107,0.55);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">判官笔</div><div class="en">Vermilion Brush</div></div>
+
+<div class="stage">
+  <div class="paper" id="paper">
+    <span class="paper-risk" id="paper-risk"></span>
+    <div class="paper-content">
+      <div class="paper-app" id="paper-app"></div>
+      <div class="paper-intent" id="paper-intent"></div>
+      <div class="paper-reason" id="paper-reason"></div>
+    </div>
+    <canvas class="ink-canvas" id="canvas"></canvas>
+  </div>
+
+  <div class="brush-pot">
+    <div class="brush jade" data-ink="approve">
+      <div class="brush-label">朱砂 · 准</div>
+    </div>
+    <div class="brush" data-ink="reject">
+      <div class="brush-label">墨汁 · 驳</div>
+    </div>
+  </div>
+
+  <div class="instruction">拈笔 · 于纸上落下你的裁断</div>
+</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  const paper = document.getElementById('paper');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const brushes = document.querySelectorAll('.brush');
+
+  // reversed — jade brush = approve per user visual convention (朱砂)
+  // Swap so red brush is approve (as in real imperial 朱批)
+  brushes[0].setAttribute('data-ink', 'approve');
+  brushes[0].classList.remove('jade');
+  brushes[0].querySelector('.brush-label').textContent = '朱砂 · 准';
+  brushes[0].querySelector('.brush-label').style.color = '#c02a2a';
+  brushes[1].setAttribute('data-ink', 'reject');
+  brushes[1].classList.add('jade');
+  brushes[1].style.filter = '';
+  brushes[1].querySelector('.brush-label').textContent = '靛墨 · 驳';
+  brushes[1].querySelector('.brush-label').style.color = '#4a7aff';
+
+  let selectedInk = null;
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('paper-app').textContent = r.app;
+    document.getElementById('paper-intent').textContent = r.intent;
+    document.getElementById('paper-reason').textContent = r.reason;
+    const risk = document.getElementById('paper-risk');
+    risk.textContent = '风险 · ' + window.riskLabel(r.risk);
+    risk.className = 'paper-risk ' + r.risk;
+  }
+  loadReq();
+
+  function resize() {
+    const rect = paper.getBoundingClientRect();
+    canvas.width = rect.width * devicePixelRatio;
+    canvas.height = rect.height * devicePixelRatio;
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  brushes.forEach(b => {
+    b.addEventListener('click', () => {
+      brushes.forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+      selectedInk = b.getAttribute('data-ink');
+      paper.style.cursor = 'crosshair';
+    });
+  });
+
+  function getPos(e) {
+    const rect = paper.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+  }
+
+  function start(e) {
+    if (!selectedInk) return;
+    drawing = true;
+    const p = getPos(e);
+    lastX = p.x; lastY = p.y;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    e.preventDefault();
+  }
+
+  function move(e) {
+    if (!drawing || !selectedInk) return;
+    const p = getPos(e);
+    ctx.strokeStyle = selectedInk === 'approve' ? 'rgba(180, 24, 24, 0.95)' : 'rgba(30, 50, 120, 0.95)';
+    ctx.lineWidth = 6 + Math.random() * 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.shadowColor = ctx.strokeStyle;
+    ctx.shadowBlur = 4;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+    e.preventDefault();
+  }
+
+  function end() {
+    if (!drawing) return;
+    drawing = false;
+    // Commit verdict 800ms after last stroke
+    clearTimeout(window._committing);
+    window._committing = setTimeout(() => {
+      const verdict = selectedInk;
+      window.cast(verdict);
+    }, 700);
+  }
+
+  paper.addEventListener('mousedown', start);
+  paper.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  paper.addEventListener('touchstart', start, { passive: false });
+  paper.addEventListener('touchmove', move, { passive: false });
+  paper.addEventListener('touchend', end);
+
+  window.nextRequest = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    brushes.forEach(x => x.classList.remove('selected'));
+    selectedInk = null;
+    loadReq();
+  };
+</script>
+</body>
+</html>

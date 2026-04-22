@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0f06">
+<title>铜镜 · Bronze Mirror</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='78' font-size='88'%3E%F0%9F%AA%9E%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/base.css">
+<style>
+  body {
+    background: radial-gradient(ellipse at center, #2a1a0f 0%, #0a0604 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1400px;
+  }
+
+  .stage {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .side-hint {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-brush);
+    font-size: 64px;
+    letter-spacing: 8px;
+    opacity: 0.15;
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+  .side-hint.left { left: 4%; color: #c02a2a; }
+  .side-hint.right { right: 4%; color: #e9c36b; }
+  .side-hint.active { opacity: 0.8; transform: translateY(-50%) scale(1.1); }
+
+  .mirror-frame {
+    position: relative;
+    width: min(400px, 70vw);
+    height: min(520px, 80vh);
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.3, 1);
+    touch-action: none;
+  }
+  .mirror-frame:active { cursor: grabbing; }
+
+  .mirror {
+    position: absolute;
+    inset: 0;
+    border-radius: 50% 50% 12% 12% / 60% 60% 12% 12%;
+    background:
+      radial-gradient(ellipse at 30% 20%, #e9c36b 0%, #b8892a 40%, #7a5510 70%, #3b2812 100%);
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.8),
+      inset 0 4px 12px rgba(255, 220, 160, 0.3),
+      inset 0 -8px 20px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+  }
+
+  .mirror::before {
+    content: '';
+    position: absolute;
+    inset: 8%;
+    border-radius: inherit;
+    background:
+      radial-gradient(ellipse at 40% 30%, rgba(255, 240, 200, 0.3) 0%, transparent 40%),
+      radial-gradient(ellipse at 60% 70%, rgba(60, 40, 20, 0.4) 0%, transparent 40%),
+      linear-gradient(135deg, #8b6510 0%, #4a3218 50%, #1a0f06 100%);
+  }
+
+  .mirror::after {
+    content: '';
+    position: absolute;
+    inset: 12%;
+    border-radius: inherit;
+    border: 2px solid rgba(232, 195, 107, 0.4);
+    background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.4) 100%);
+  }
+
+  .reflection {
+    position: absolute;
+    inset: 14%;
+    border-radius: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 24px;
+    text-align: center;
+    color: var(--parch-hi);
+    z-index: 2;
+  }
+
+  .refl-app {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold-hi);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+  .refl-intent {
+    font-family: var(--font-brush);
+    font-size: 20px;
+    color: var(--parch-hi);
+    letter-spacing: 2px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    text-shadow: 0 0 20px rgba(232, 195, 107, 0.4);
+  }
+  .refl-reason {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #b49564;
+    font-style: italic;
+    margin-bottom: 12px;
+    opacity: 0.85;
+  }
+  .refl-risk {
+    display: inline-block;
+    padding: 3px 10px;
+    font-family: var(--font-display);
+    font-size: 9px;
+    letter-spacing: 2px;
+    border: 1px solid;
+    border-radius: 2px;
+  }
+  .refl-risk.low { color: var(--jade-hi); border-color: var(--jade); }
+  .refl-risk.med { color: var(--ember); border-color: #aa5520; }
+  .refl-risk.high { color: var(--wax-hi); border-color: var(--wax); }
+
+  .handle {
+    position: absolute;
+    bottom: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 150px;
+    background:
+      linear-gradient(180deg, #8b6510 0%, #b8892a 40%, #5a3a08 100%);
+    border-radius: 4px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+  }
+  .handle::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    width: 40px;
+    height: 20px;
+    margin-left: -20px;
+    background: linear-gradient(180deg, #b8892a 0%, #5a3a08 100%);
+    border-radius: 4px;
+  }
+
+  .indicator {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+  }
+  .indicator span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(232, 195, 107, 0.2);
+    transition: background 0.2s;
+  }
+  .indicator span.on {
+    background: var(--gold-hi);
+    box-shadow: 0 0 8px var(--gold-hi);
+  }
+
+  .instruction {
+    margin-top: 200px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(232, 195, 107, 0.55);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="chamber-name"><div class="cn">铜镜</div><div class="en">Bronze Mirror</div></div>
+<div class="side-hint left" id="hint-left">驳</div>
+<div class="side-hint right" id="hint-right">准</div>
+
+<div class="stage">
+  <div class="mirror-frame" id="frame">
+    <div class="mirror">
+      <div class="reflection req-card">
+        <div class="refl-app" id="r-app"></div>
+        <div class="refl-intent" id="r-intent"></div>
+        <div class="refl-reason" id="r-reason"></div>
+        <span class="refl-risk" id="r-risk"></span>
+      </div>
+      <div class="indicator">
+        <span id="dot-l"></span><span id="dot-c" class="on"></span><span id="dot-r"></span>
+      </div>
+    </div>
+    <div class="handle"></div>
+  </div>
+  <div class="instruction">拖曳倾斜 · 左驳右准 · 过三十度即裁</div>
+</div>
+
+<script src="../_shared/pool.js"></script>
+<script src="../_shared/common.js"></script>
+<script>
+  const frame = document.getElementById('frame');
+  const hintL = document.getElementById('hint-left');
+  const hintR = document.getElementById('hint-right');
+  const dotL = document.getElementById('dot-l');
+  const dotC = document.getElementById('dot-c');
+  const dotR = document.getElementById('dot-r');
+
+  let tilt = 0;
+  let dragging = false;
+  let startX = 0;
+  let committed = false;
+
+  function loadReq() {
+    const r = window.pickRequest();
+    document.getElementById('r-app').textContent = r.app;
+    document.getElementById('r-intent').textContent = r.intent;
+    document.getElementById('r-reason').textContent = r.reason;
+    const risk = document.getElementById('r-risk');
+    risk.textContent = '风险 · ' + window.riskLabel(r.risk);
+    risk.className = 'refl-risk ' + r.risk;
+  }
+  loadReq();
+
+  function updateTilt() {
+    frame.style.transform = `rotateY(${tilt}deg) rotateZ(${tilt / 6}deg)`;
+    hintL.classList.toggle('active', tilt < -15);
+    hintR.classList.toggle('active', tilt > 15);
+    dotL.classList.toggle('on', tilt < -10);
+    dotR.classList.toggle('on', tilt > 10);
+    dotC.classList.toggle('on', Math.abs(tilt) < 10);
+  }
+
+  function startDrag(e) {
+    if (committed) return;
+    dragging = true;
+    startX = (e.touches ? e.touches[0].clientX : e.clientX) - tilt * 2;
+    frame.style.transition = 'none';
+    e.preventDefault();
+  }
+
+  function moveDrag(e) {
+    if (!dragging) return;
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    tilt = Math.max(-60, Math.min(60, (x - startX) / 2));
+    updateTilt();
+    if (Math.abs(tilt) > 40 && !committed) {
+      committed = true;
+      const verdict = tilt > 0 ? 'approve' : 'reject';
+      setTimeout(() => window.cast(verdict), 200);
+    }
+  }
+
+  function endDrag() {
+    if (!dragging) return;
+    dragging = false;
+    if (committed) return;
+    frame.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1)';
+    tilt = 0;
+    updateTilt();
+  }
+
+  frame.addEventListener('mousedown', startDrag);
+  document.addEventListener('mousemove', moveDrag);
+  document.addEventListener('mouseup', endDrag);
+  frame.addEventListener('touchstart', startDrag, { passive: false });
+  document.addEventListener('touchmove', moveDrag, { passive: false });
+  document.addEventListener('touchend', endDrag);
+
+  window.nextRequest = () => {
+    committed = false;
+    tilt = 0;
+    frame.style.transition = 'transform 0.5s';
+    updateTilt();
+    loadReq();
+  };
+</script>
+</body>
+</html>
