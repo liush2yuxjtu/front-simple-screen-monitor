@@ -150,6 +150,17 @@
     transition: width 0.55s cubic-bezier(0.32, 0.72, 0, 1), height 0.55s cubic-bezier(0.32, 0.72, 0, 1), border-radius 0.55s cubic-bezier(0.32, 0.72, 0, 1), top 0.55s cubic-bezier(0.32, 0.72, 0, 1);
     user-select: none;
   }
+  .island:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 1px rgba(0,229,255,0.45),
+      0 0 0 4px rgba(0,229,255,0.08),
+      0 0 28px rgba(0,229,255,0.18),
+      0 2px 10px rgba(0,0,0,0.8);
+  }
+  .island.dragging {
+    transition: none;
+  }
 
   .island.notif { width: 340px; height: 37px; border-radius: 22px; }
   .island.expanded { width: 370px; height: 480px; border-radius: 38px; top: 58px; box-shadow: 0 0 0 1px rgba(0,229,255,0.3), 0 0 30px rgba(0,229,255,0.15), 0 8px 40px rgba(0,0,0,0.6); }
@@ -190,7 +201,24 @@
   .swipe-arrow.right { background: rgba(118,255,3,0.15); border: 1.5px solid rgba(118,255,3,0.35); }
   .swipe-arrow.right svg { width: 16px; height: 16px; fill: var(--lime); }
   .swipe-track { flex: 1; height: 4px; background: rgba(0,229,255,0.08); border-radius: 2px; margin: 0 12px; position: relative; }
+  .swipe-track::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1px;
+    height: 12px;
+    transform: translate(-50%, -50%);
+    background: rgba(0,229,255,0.22);
+    box-shadow: 0 0 10px rgba(0,229,255,0.12);
+  }
   .swipe-thumb { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; border-radius: 50%; background: var(--text); box-shadow: 0 0 12px rgba(0,229,255,0.3); transition: left 0.05s, background 0.2s; left: 50%; }
+  .island.dragging .swipe-thumb {
+    transition: none;
+    box-shadow:
+      0 0 0 1px rgba(224,247,250,0.45),
+      0 0 18px rgba(0,229,255,0.35);
+  }
 
   .state-confirm { padding: 0 22px; gap: 10px; justify-content: center; align-items: center; }
   .state-confirm .check-glyph { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
@@ -328,7 +356,7 @@
 
     <main class="home">
       <div class="home-title">灵动岛 · Activity Monitor</div>
-      <div class="home-sub">Swipe Left = Block · Swipe Right = Allow</div>
+      <div class="home-sub">Swipe to decide · Left = BLOCK · Right = ALLOW</div>
 
       <div class="tally-row">
         <div class="tcell allow">
@@ -349,8 +377,8 @@
         <h4>How it works</h4>
         <div class="hint-steps">
           <span><span class="hint-num">1</span>Activity detected → pill expands</span>
-          <span><span class="hint-num">2</span>Swipe LEFT → block this app</span>
-          <span><span class="hint-num">3</span>Swipe RIGHT → allow this app</span>
+          <span><span class="hint-num">2</span>Swipe LEFT or press A / ← → BLOCK</span>
+          <span><span class="hint-num">3</span>Swipe RIGHT or press D / → → ALLOW</span>
         </div>
       </div>
 
@@ -434,7 +462,7 @@
     }
   ];
 
-  const state = { current: null, allowed: 0, blocked: 0, locked: false, timer: null, total: 0, islandState: 'compact' };
+  const state = { current: null, allowed: 0, blocked: 0, locked: false, timer: null, islandState: 'compact' };
 
   const island = document.getElementById('island');
   const stateNotif = document.getElementById('state-notif');
@@ -514,9 +542,8 @@
     if (state.current) return;
     const r = REQUESTS[Math.floor(Math.random() * REQUESTS.length)];
     state.current = r;
-    state.total++;
     setIslandState('notif', { intent: r.intent });
-    setTimeout(() => { if (state.islandState === 'notif') expand(true); }, 1200);
+    setTimeout(() => { if (state.islandState === 'notif') expand(); }, 1200);
   }
 
   function expand(fromUserGesture = false) {
@@ -570,7 +597,13 @@
 
   function scheduleNext(ms) { clearTimeout(state.timer); state.timer = setTimeout(summon, ms); }
 
-  function onDragStart(clientX) { if (state.islandState !== 'expanded' || state.locked) return; isDragging = true; touchStartX = clientX; touchCurrentX = clientX; }
+  function onDragStart(clientX) {
+    if (state.islandState !== 'expanded' || state.locked) return;
+    isDragging = true;
+    island.classList.add('dragging');
+    touchStartX = clientX;
+    touchCurrentX = clientX;
+  }
   function onDragMove(clientX) {
     if (!isDragging) return;
     touchCurrentX = clientX;
@@ -585,6 +618,7 @@
   function onDragEnd() {
     if (!isDragging) return;
     isDragging = false;
+    island.classList.remove('dragging');
     const delta = touchCurrentX - touchStartX;
     if (delta < -SWIPE_THRESHOLD) block();
     else if (delta > SWIPE_THRESHOLD) allow();
@@ -605,8 +639,8 @@
     if (!state.current) { if (k === ' ') { e.preventDefault(); clearTimeout(state.timer); summon(); } return; }
     if (state.islandState === 'notif' && (k === 'enter' || k === ' ')) { e.preventDefault(); expand(true); }
     else if (state.islandState === 'expanded') {
-      if (k === 'arrowright' || k === 'a') allow();
-      else if (k === 'arrowleft' || k === 'd') block();
+      if (k === 'arrowleft' || k === 'a') block();
+      else if (k === 'arrowright' || k === 'd') allow();
       else if (k === 'escape') collapseToNotif();
     }
   });
