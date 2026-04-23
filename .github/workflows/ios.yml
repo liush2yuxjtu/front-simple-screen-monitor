@@ -1,0 +1,71 @@
+name: iOS CI
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/ios.yml"
+      - "island-swipe/ios/**"
+  push:
+    branches:
+      - main
+      - master
+      - "codex/**"
+    paths:
+      - ".github/workflows/ios.yml"
+      - "island-swipe/ios/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: XCTest
+    runs-on: macos-15
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Select Xcode 16.4
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
+      - name: Show Toolchain
+        run: |
+          xcodebuild -version
+          xcrun simctl list devices available
+
+      - name: Resolve iPhone Simulator
+        id: simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          udid="$(
+            xcrun simctl list devices available |
+              awk -F '[()]' '
+                /iPhone 16 \(/ { print $2; found = 1; exit }
+                /iPhone 16 Pro \(/ && candidate == "" { candidate = $2 }
+                /iPhone 15 \(/ && candidate == "" { candidate = $2 }
+                END { if (!found && candidate != "") print candidate }
+              '
+          )"
+
+          if [[ -z "$udid" ]]; then
+            echo "No supported iPhone simulator found." >&2
+            xcrun simctl list devices available >&2
+            exit 1
+          fi
+
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+
+      - name: Run Tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project island-swipe/ios/ActivityMonitorApp.xcodeproj \
+            -scheme ActivityMonitorApp \
+            -destination "id=${{ steps.simulator.outputs.udid }}"

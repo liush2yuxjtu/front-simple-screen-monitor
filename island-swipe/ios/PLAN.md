@@ -160,13 +160,15 @@ As of eng review (2026-04-23), implementation at `ActivityMonitorApp/` covers:
   for left/right threshold commits, below-threshold reset, total invariant,
   decision overshoot, history cap, non-swipe action phase guards, and
   persistence round-trip.
+- `.github/workflows/ios.yml` — GitHub Actions XCTest workflow for iOS changes,
+  pinned to macOS 15 + Xcode 16.4.
 
 Plan's proposed `Resources/` directory is not used; no asset shipped yet.
 
 ## NOT in scope (explicitly deferred)
 
-- **CI pipeline (GitHub Actions).** Local `xcodebuild test` now works, but no
-  remote CI workflow is configured yet.
+- **Release CI/CD.** Unit-test CI exists, but archive/export, signing, TestFlight,
+  and release automation are not configured yet.
 - **Distribution (TestFlight / code signing / fastlane).** Simulator-only.
   Real-device validation of haptics requires signing. See `TODOS.md` TODO-1.
 - **Full accessibility certification.** Baseline VoiceOver labels, values,
@@ -205,11 +207,11 @@ Resolved in current refinement branch:
 | Codex Review  | `/codex review`      | Independent 2nd opinion         | 0    | —                     | — (declined inline)          |
 | Eng Review    | `/plan-eng-review`   | Architecture & tests (required) | 1    | resolved_local         | 7 issues resolved + tests    |
 | Design Review | `/plan-design-review`| UI/UX gaps                      | 1    | local_manual_partial    | 2 fixed, accessibility baseline added |
-| DX Review     | `/plan-devex-review` | Developer experience gaps       | 1    | local_manual_partial    | README added, CI still deferred |
+| DX Review     | `/plan-devex-review` | Developer experience gaps       | 1    | local_manual_partial    | README + XCTest CI added |
 
 **UNRESOLVED:** 0 — all 7 findings reached a decision and were implemented.
 **VERDICT:** ENG resolved_local — refactor queue completed; local Simulator
-build, launch, screenshot, and XCTest verification passed. Remote CI,
+build, launch, screenshot, and XCTest verification passed. Release CI/CD,
 distribution, and full real-device accessibility QA remain deferred.
 
 ## Local DX review (2026-04-23)
@@ -217,8 +219,9 @@ distribution, and full real-device accessibility QA remain deferred.
 The scripted `/plan-devex-review` entrypoint was not available in this
 environment. Manual DX check found no iOS onboarding doc, so
 `island-swipe/ios/README.md` now records requirements, build/test/run commands,
-test coverage, and current limits. Remote CI remains deferred because the repo
-has no workflow yet and GitHub runner selection should be validated separately.
+test coverage, and current limits. `.github/workflows/ios.yml` now runs XCTest
+for iOS changes on macOS 15 with Xcode 16.4. The workflow still needs a real
+GitHub run after push/PR to validate hosted-runner behavior.
 
 ## Local design review (2026-04-23)
 

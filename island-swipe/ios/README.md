@@ -32,6 +32,12 @@ xcodebuild test \
 The XCTest suite covers swipe threshold decisions, history capping, non-swipe
 decision action availability, and session snapshot persistence.
 
+## CI
+
+`.github/workflows/ios.yml` runs the same XCTest suite on iOS-related pushes and
+pull requests. It pins the GitHub-hosted macOS 15 runner to Xcode 16.4 and
+selects an available iPhone simulator before running `xcodebuild test`.
+
 ## Run In Simulator
 
 ```bash
@@ -50,8 +56,8 @@ open -a Simulator
 
 ## Current Limits
 
-- Simulator-only prototype. TestFlight, signing, and real-device haptic
-  validation still need Apple Developer account setup.
+- Simulator-only prototype. TestFlight, signing, release automation, and
+  real-device haptic validation still need Apple Developer account setup.
 - Baseline VoiceOver and Dynamic Type support exist, but real-device VoiceOver
   QA is still required before public distribution.
 - `project.yml` is kept as project metadata, but `ActivityMonitorApp.xcodeproj`
