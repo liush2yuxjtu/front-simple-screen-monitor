@@ -19,7 +19,8 @@ enum IslandPhase: Equatable {
 }
 
 struct MonitorSessionState: Equatable {
-    static let dragClamp = 148.0
+    static let dragClamp: Double = 148
+    static let decisionOvershoot: Double = 132
 
     var currentActivity: MonitorActivity?
     var phase: IslandPhase = .idle
@@ -52,7 +53,7 @@ struct MonitorSessionState: Equatable {
     }
 
     mutating func updateDrag(translation: Double) {
-        guard currentActivity != nil else {
+        guard currentActivity != nil, phase == .expanded || phase == .dragging else {
             return
         }
         dragOffset = max(-Self.dragClamp, min(Self.dragClamp, translation))
@@ -72,7 +73,7 @@ struct MonitorSessionState: Equatable {
         threshold: Double,
         now: Date = .init()
     ) -> MonitorDecision? {
-        guard let activity = currentActivity else {
+        guard let activity = currentActivity, phase == .expanded || phase == .dragging else {
             return nil
         }
 
@@ -103,7 +104,7 @@ struct MonitorSessionState: Equatable {
         now: Date
     ) -> MonitorDecision {
         lastDecision = decision
-        dragOffset = decision.directionSign * 132
+        dragOffset = decision.directionSign * Self.decisionOvershoot
 
         switch decision {
         case .allow:

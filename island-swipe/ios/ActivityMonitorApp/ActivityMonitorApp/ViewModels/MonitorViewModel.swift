@@ -10,14 +10,17 @@ final class MonitorViewModel: ObservableObject {
     private let activities = ActivityCatalog.samples
     private let haptics = HapticsClient()
 
-    private var autoExpandTask: Task<Void, Never>?
-    private var nextCycleTask: Task<Void, Never>?
+    private nonisolated(unsafe) var autoExpandTask: Task<Void, Never>?
+    private nonisolated(unsafe) var resetTask: Task<Void, Never>?
+    private nonisolated(unsafe) var presentTask: Task<Void, Never>?
     private var cursor = 0
     private var hasStarted = false
+    private var lastThresholdSide: Int = 0
 
     deinit {
         autoExpandTask?.cancel()
-        nextCycleTask?.cancel()
+        resetTask?.cancel()
+        presentTask?.cancel()
     }
 
     func bootstrap() {
@@ -25,35 +28,57 @@ final class MonitorViewModel: ObservableObject {
             return
         }
         hasStarted = true
-        scheduleNextCycle(after: 0.45)
+        schedulePresent(after: Timings.bootstrapDelay)
     }
 
     func expandNow() {
         autoExpandTask?.cancel()
-        withAnimation(.spring(response: 0.46, dampingFraction: 0.86)) {
+        withAnimation(AnimationTokens.islandExpand) {
             session.expandIfNeeded()
         }
     }
 
     func updateDrag(_ translation: CGFloat) {
         autoExpandTask?.cancel()
-        withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.86, blendDuration: 0.15)) {
+        withAnimation(AnimationTokens.dragResponsive) {
             session.updateDrag(translation: Double(translation))
+        }
+
+        let side: Int
+        if translation >= decisionThreshold {
+            side = 1
+        } else if translation <= -decisionThreshold {
+            side = -1
+        } else {
+            side = 0
+        }
+
+        if side != lastThresholdSide {
+            if side != 0 {
+                haptics.tick()
+            }
+            lastThresholdSide = side
         }
     }
 
     func endDrag(_ translation: CGFloat) {
         autoExpandTask?.cancel()
-        var resolvedDecision: MonitorDecision?
+        let priorSide = lastThresholdSide
+        lastThresholdSide = 0
 
-        withAnimation(.spring(response: 0.25, dampingFraction: 0.84)) {
-            resolvedDecision = session.commitDecision(
-                for: Double(translation),
-                threshold: Double(decisionThreshold)
-            )
+        let resolvedDecision = session.commitDecision(
+            for: Double(translation),
+            threshold: Double(decisionThreshold)
+        )
+
+        withAnimation(AnimationTokens.decisionCommit) {
+            objectWillChange.send()
         }
 
         guard let decision = resolvedDecision else {
+            if priorSide == 0 && abs(translation) > 12 {
+                haptics.cancel()
+            }
             return
         }
 
@@ -61,9 +86,9 @@ final class MonitorViewModel: ObservableObject {
         scheduleResetAfterDecision()
     }
 
-    private func scheduleNextCycle(after seconds: Double) {
-        nextCycleTask?.cancel()
-        nextCycleTask = Task { [weak self] in
+    private func schedulePresent(after seconds: TimeInterval) {
+        presentTask?.cancel()
+        presentTask = Task { [weak self] in
             guard let self else {
                 return
             }
@@ -87,7 +112,7 @@ final class MonitorViewModel: ObservableObject {
         let activity = activities[cursor % activities.count]
         cursor += 1
 
-        withAnimation(.spring(response: 0.46, dampingFraction: 0.88)) {
+        withAnimation(AnimationTokens.activityPresent) {
             session.present(activity)
         }
 
@@ -101,13 +126,13 @@ final class MonitorViewModel: ObservableObject {
                 return
             }
 
-            try? await Task.sleep(nanoseconds: 1_200_000_000)
+            try? await Task.sleep(nanoseconds: Timings.autoExpandNanos)
             guard !Task.isCancelled else {
                 return
             }
 
             await MainActor.run {
-                withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) {
+                withAnimation(AnimationTokens.autoExpand) {
                     self.session.expandIfNeeded()
                 }
             }
@@ -115,30 +140,22 @@ final class MonitorViewModel: ObservableObject {
     }
 
     private func scheduleResetAfterDecision() {
-        nextCycleTask?.cancel()
-        nextCycleTask = Task { [weak self] in
+        resetTask?.cancel()
+        resetTask = Task { [weak self] in
             guard let self else {
                 return
             }
 
-            try? await Task.sleep(nanoseconds: 900_000_000)
+            try? await Task.sleep(nanoseconds: Timings.resetClearNanos)
             guard !Task.isCancelled else {
                 return
             }
 
             await MainActor.run {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.9)) {
+                withAnimation(AnimationTokens.decisionReset) {
                     self.session.clearCurrent()
                 }
-            }
-
-            try? await Task.sleep(nanoseconds: 500_000_000)
-            guard !Task.isCancelled else {
-                return
-            }
-
-            await MainActor.run {
-                self.presentNextActivity()
+                self.schedulePresent(after: Timings.nextActivityDelay)
             }
         }
     }

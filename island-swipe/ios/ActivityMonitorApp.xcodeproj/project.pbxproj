@@ -17,6 +17,7 @@
 		7EB4F071E23BB2CBE12A5397 /* MonitorStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58EE17EEB131EE8A85A0B0ED /* MonitorStateMachine.swift */; };
 		8605D2330247BB6C9D51258C /* TerminalNoirTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027BE328DB7EF3BE3D9B990B /* TerminalNoirTheme.swift */; };
 		A8CED721EA15BCC07893062A /* MonitorDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FD2130BF3103898BB8D4ED /* MonitorDashboardView.swift */; };
+		A9A8BE1ECA0D574C0EF57BBC /* MotionTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CCD3B0640B365F2CB77628 /* MotionTokens.swift */; };
 		D03F5E18FCC536EC94AB40FC /* ActivityCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734A741FAA320A9700ADC45E /* ActivityCatalog.swift */; };
 		EC4717745405E8972FA6C36A /* MonitorActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5834E3BC7E2C60FB68A28CC /* MonitorActivity.swift */; };
 		F401ECE9FCEC48EF3CA6EBF3 /* HistoryPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D93DEA9378BD232CCF766AA /* HistoryPanelView.swift */; };
@@ -35,6 +36,7 @@
 		90345A299049EDB0CEC832B6 /* HapticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsClient.swift; sourceTree = "<group>"; };
 		A3FD2130BF3103898BB8D4ED /* MonitorDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorDashboardView.swift; sourceTree = "<group>"; };
 		C15222F8196E66C708B6C991 /* DynamicIslandMonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicIslandMonitorView.swift; sourceTree = "<group>"; };
+		D1CCD3B0640B365F2CB77628 /* MotionTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionTokens.swift; sourceTree = "<group>"; };
 		D3C0ACC965EA4157CE6EC1C6 /* StatsPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsPanelView.swift; sourceTree = "<group>"; };
 		E5834E3BC7E2C60FB68A28CC /* MonitorActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorActivity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -43,6 +45,7 @@
 		22D889120BE89E9E4F0C13DB /* Theme */ = {
 			isa = PBXGroup;
 			children = (
+				D1CCD3B0640B365F2CB77628 /* MotionTokens.swift */,
 				027BE328DB7EF3BE3D9B990B /* TerminalNoirTheme.swift */,
 			);
 			path = Theme;
@@ -194,6 +197,7 @@
 				A8CED721EA15BCC07893062A /* MonitorDashboardView.swift in Sources */,
 				7EB4F071E23BB2CBE12A5397 /* MonitorStateMachine.swift in Sources */,
 				308503015BE9AA3C8D66A8E4 /* MonitorViewModel.swift in Sources */,
+				A9A8BE1ECA0D574C0EF57BBC /* MotionTokens.swift in Sources */,
 				28CB49CF66813DF07931A788 /* StatsPanelView.swift in Sources */,
 				8605D2330247BB6C9D51258C /* TerminalNoirTheme.swift in Sources */,
 			);

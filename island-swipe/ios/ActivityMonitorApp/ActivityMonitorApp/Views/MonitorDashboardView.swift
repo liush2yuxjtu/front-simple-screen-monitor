@@ -85,7 +85,7 @@ private struct TerminalNoirBackdrop: View {
                 .blur(radius: 120)
                 .offset(x: 130, y: 300)
 
-            Canvas(rendersAsynchronously: true) { context, size in
+            Canvas(rendersAsynchronously: false) { context, size in
                 var vertical = Path()
                 stride(from: 0.0, through: size.width, by: 40).forEach { x in
                     vertical.move(to: CGPoint(x: x, y: 0))
@@ -101,6 +101,7 @@ private struct TerminalNoirBackdrop: View {
                 context.stroke(vertical, with: .color(TerminalNoirTheme.cyan.opacity(0.035)), lineWidth: 0.5)
                 context.stroke(horizontal, with: .color(TerminalNoirTheme.cyan.opacity(0.03)), lineWidth: 0.5)
             }
+            .drawingGroup()
         }
     }
 }

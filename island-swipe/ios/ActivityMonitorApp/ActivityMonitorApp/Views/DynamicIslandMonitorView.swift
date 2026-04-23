@@ -60,8 +60,8 @@ struct DynamicIslandMonitorView: View {
             onTapNotification()
         }
         .gesture(dragGesture, including: session.phase.allowsDrag ? .all : .none)
-        .animation(.spring(response: 0.45, dampingFraction: 0.85), value: session.phase)
-        .animation(.interactiveSpring(response: 0.22, dampingFraction: 0.84), value: session.dragOffset)
+        .animation(AnimationTokens.phaseTransition, value: session.phase)
+        .animation(AnimationTokens.dragFeedback, value: session.dragOffset)
     }
 
     private var islandLayout: IslandLayout {
@@ -294,12 +294,24 @@ private struct SwipeHintView: View {
         max(-1, min(1, dragOffset / threshold))
     }
 
+    private var pastThreshold: Bool {
+        abs(dragOffset) >= threshold
+    }
+
+    private var knobTint: Color {
+        if !pastThreshold {
+            return TerminalNoirTheme.text
+        }
+        return dragOffset > 0 ? TerminalNoirTheme.lime : TerminalNoirTheme.red
+    }
+
     var body: some View {
         HStack(spacing: 10) {
             SwipeDirectionView(
                 title: "BLOCK",
                 symbol: "xmark",
-                tint: TerminalNoirTheme.red
+                tint: TerminalNoirTheme.red,
+                armed: dragOffset <= -threshold
             )
 
             GeometryReader { proxy in
@@ -312,19 +324,25 @@ private struct SwipeHintView: View {
                         .frame(height: 4)
 
                     Circle()
-                        .fill(TerminalNoirTheme.text)
+                        .fill(knobTint)
                         .frame(width: 20, height: 20)
-                        .shadow(color: TerminalNoirTheme.cyan.opacity(0.32), radius: 10)
+                        .scaleEffect(pastThreshold ? 1.25 : 1.0)
+                        .shadow(
+                            color: knobTint.opacity(pastThreshold ? 0.75 : 0.32),
+                            radius: pastThreshold ? 16 : 10
+                        )
                         .offset(x: travel + clampedProgress * travel)
+                        .animation(AnimationTokens.thresholdArm, value: pastThreshold)
                 }
                 .padding(.horizontal, inset)
             }
-            .frame(height: 24)
+            .frame(height: 28)
 
             SwipeDirectionView(
                 title: "ALLOW",
                 symbol: "checkmark",
-                tint: TerminalNoirTheme.lime
+                tint: TerminalNoirTheme.lime,
+                armed: dragOffset >= threshold
             )
         }
     }
@@ -334,32 +352,38 @@ private struct SwipeDirectionView: View {
     let title: String
     let symbol: String
     let tint: Color
+    let armed: Bool
 
     var body: some View {
         VStack(spacing: 6) {
             ZStack {
                 Circle()
-                    .fill(tint.opacity(0.14))
+                    .fill(tint.opacity(armed ? 0.32 : 0.14))
                     .overlay {
                         Circle()
-                            .stroke(tint.opacity(0.28), lineWidth: 1)
+                            .stroke(tint.opacity(armed ? 0.9 : 0.28), lineWidth: armed ? 1.5 : 1)
                     }
+                    .shadow(color: tint.opacity(armed ? 0.55 : 0), radius: armed ? 14 : 0)
 
                 Image(systemName: symbol)
                     .font(.system(size: 12, weight: .bold))
                     .foregroundStyle(tint)
             }
             .frame(width: 34, height: 34)
+            .scaleEffect(armed ? 1.15 : 1.0)
 
             Text(title)
                 .font(.system(size: 10, weight: .bold, design: .monospaced))
-                .foregroundStyle(tint.opacity(0.9))
+                .foregroundStyle(tint.opacity(armed ? 1.0 : 0.9))
         }
+        .animation(AnimationTokens.directionArm, value: armed)
     }
 }
 
 private struct ConfirmationIslandContent: View {
     let decision: MonitorDecision
+
+    @State private var appeared = false
 
     private var tint: Color {
         switch decision {
@@ -371,21 +395,38 @@ private struct ConfirmationIslandContent: View {
     }
 
     var body: some View {
-        HStack(spacing: 10) {
-            Circle()
-                .fill(tint)
-                .frame(width: 22, height: 22)
-                .overlay {
-                    Image(systemName: decision.symbolName)
-                        .font(.system(size: 11, weight: .black))
-                        .foregroundStyle(decision == .allow ? Color.black : Color.white)
-                }
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(tint.opacity(0.22))
+                    .frame(width: 38, height: 38)
+                    .blur(radius: 2)
+                    .scaleEffect(appeared ? 1.0 : 0.5)
+
+                Circle()
+                    .fill(tint)
+                    .frame(width: 26, height: 26)
+                    .overlay {
+                        Image(systemName: decision.symbolName)
+                            .font(.system(size: 13, weight: .black))
+                            .foregroundStyle(decision == .allow ? Color.black : Color.white)
+                    }
+                    .scaleEffect(appeared ? 1.0 : 0.3)
+                    .shadow(color: tint.opacity(0.55), radius: 10)
+            }
 
             Text(decision.rawValue)
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .font(.system(size: 14, weight: .heavy, design: .monospaced))
                 .foregroundStyle(TerminalNoirTheme.text)
-                .tracking(1.8)
+                .tracking(2.2)
+                .opacity(appeared ? 1.0 : 0.0)
+                .offset(x: appeared ? 0 : -6)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear {
+            withAnimation(AnimationTokens.confirmationPop) {
+                appeared = true
+            }
+        }
     }
 }
