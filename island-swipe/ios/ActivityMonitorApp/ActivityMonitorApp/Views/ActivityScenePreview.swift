@@ -197,7 +197,7 @@ private struct ChatScenePreview: View {
                 .fill(TerminalNoirTheme.surface.opacity(0.88))
                 .overlay(alignment: .leading) {
                     HStack(spacing: 0) {
-                        Text("should we after work together")
+                        Text("wanna grab drinks after work?")
                             .font(.system(size: 10, weight: .medium, design: .monospaced))
                             .foregroundStyle(TerminalNoirTheme.text)
 
