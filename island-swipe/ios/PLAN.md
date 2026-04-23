@@ -205,12 +205,20 @@ Resolved in current refinement branch:
 | Codex Review  | `/codex review`      | Independent 2nd opinion         | 0    | —                     | — (declined inline)          |
 | Eng Review    | `/plan-eng-review`   | Architecture & tests (required) | 1    | resolved_local         | 7 issues resolved + tests    |
 | Design Review | `/plan-design-review`| UI/UX gaps                      | 1    | local_manual_partial    | 2 fixed, accessibility baseline added |
-| DX Review     | `/plan-devex-review` | Developer experience gaps       | 0    | —                     | —                            |
+| DX Review     | `/plan-devex-review` | Developer experience gaps       | 1    | local_manual_partial    | README added, CI still deferred |
 
 **UNRESOLVED:** 0 — all 7 findings reached a decision and were implemented.
 **VERDICT:** ENG resolved_local — refactor queue completed; local Simulator
 build, launch, screenshot, and XCTest verification passed. Remote CI,
 distribution, and full real-device accessibility QA remain deferred.
+
+## Local DX review (2026-04-23)
+
+The scripted `/plan-devex-review` entrypoint was not available in this
+environment. Manual DX check found no iOS onboarding doc, so
+`island-swipe/ios/README.md` now records requirements, build/test/run commands,
+test coverage, and current limits. Remote CI remains deferred because the repo
+has no workflow yet and GitHub runner selection should be validated separately.
 
 ## Local design review (2026-04-23)
 
