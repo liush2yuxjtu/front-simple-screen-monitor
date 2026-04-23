@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A10000000000000000000001 /* MonitorSessionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* MonitorSessionStateTests.swift */; };
+		B20000000000000000000001 /* MonitorSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000002 /* MonitorSessionStore.swift */; };
 		15D5F1DDA4ADA225FD254B31 /* HintPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D9DEC105EE0282323DE95 /* HintPanelView.swift */; };
 		216C36436DBE25259154576A /* ActivityMonitorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F7EF20D43385A41A4E253F /* ActivityMonitorApp.swift */; };
 		25C0C6C184EDFCE5DC9A8687 /* HapticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90345A299049EDB0CEC832B6 /* HapticsClient.swift */; };
@@ -39,6 +40,7 @@
 		0D93DEA9378BD232CCF766AA /* HistoryPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryPanelView.swift; sourceTree = "<group>"; };
 		A10000000000000000000002 /* MonitorSessionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorSessionStateTests.swift; sourceTree = "<group>"; };
 		A10000000000000000000003 /* ActivityMonitorAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ActivityMonitorAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B20000000000000000000002 /* MonitorSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorSessionStore.swift; sourceTree = "<group>"; };
 		228DB59BE923D0DCD5B29373 /* ActivityMonitorApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ActivityMonitorApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37F7EF20D43385A41A4E253F /* ActivityMonitorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityMonitorApp.swift; sourceTree = "<group>"; };
 		565E545727A6015BD74684AE /* MonitorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorViewModel.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				90345A299049EDB0CEC832B6 /* HapticsClient.swift */,
+				B20000000000000000000002 /* MonitorSessionStore.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				15D5F1DDA4ADA225FD254B31 /* HintPanelView.swift in Sources */,
 				F401ECE9FCEC48EF3CA6EBF3 /* HistoryPanelView.swift in Sources */,
 				EC4717745405E8972FA6C36A /* MonitorActivity.swift in Sources */,
+				B20000000000000000000001 /* MonitorSessionStore.swift in Sources */,
 				A8CED721EA15BCC07893062A /* MonitorDashboardView.swift in Sources */,
 				7EB4F071E23BB2CBE12A5397 /* MonitorStateMachine.swift in Sources */,
 				308503015BE9AA3C8D66A8E4 /* MonitorViewModel.swift in Sources */,

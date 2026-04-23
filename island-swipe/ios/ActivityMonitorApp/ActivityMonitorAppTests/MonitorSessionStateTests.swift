@@ -96,4 +96,50 @@ final class MonitorSessionStateTests: XCTestCase {
         XCTAssertEqual(session.history.first?.date, Date(timeIntervalSince1970: Double(MonitorSessionState.historyLimit + 1)))
         XCTAssertEqual(session.history.last?.date, Date(timeIntervalSince1970: 2))
     }
+
+    func testSnapshotRestoresCountersAndHistoryOnly() {
+        var session = MonitorSessionState()
+        session.present(activity)
+        session.expandIfNeeded()
+        _ = session.commitDecision(
+            for: MonitorSessionState.decisionThreshold,
+            threshold: MonitorSessionState.decisionThreshold,
+            now: Date(timeIntervalSince1970: 42)
+        )
+
+        let restored = MonitorSessionSnapshot(session: session).restoredSession()
+
+        XCTAssertEqual(restored.allowedCount, 1)
+        XCTAssertEqual(restored.blockedCount, 0)
+        XCTAssertEqual(restored.history.count, 1)
+        XCTAssertNil(restored.currentActivity)
+        XCTAssertEqual(restored.phase, .idle)
+        XCTAssertEqual(restored.dragOffset, 0)
+        XCTAssertNil(restored.lastDecision)
+    }
+
+    func testSessionStoreRoundTripsSnapshot() throws {
+        let suiteName = "ActivityMonitorAppTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer {
+            defaults.removePersistentDomain(forName: suiteName)
+        }
+
+        let store = MonitorSessionStore(defaults: defaults, key: "session")
+        let snapshot = MonitorSessionSnapshot(
+            allowedCount: 2,
+            blockedCount: 1,
+            history: [
+                MonitorHistoryEntry(
+                    activity: activity,
+                    decision: .block,
+                    date: Date(timeIntervalSince1970: 100)
+                )
+            ]
+        )
+
+        store.save(snapshot)
+
+        XCTAssertEqual(store.load(), snapshot)
+    }
 }

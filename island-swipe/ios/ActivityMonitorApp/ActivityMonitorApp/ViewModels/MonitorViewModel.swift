@@ -9,6 +9,7 @@ final class MonitorViewModel: ObservableObject {
 
     private let activities = ActivityCatalog.samples
     private let haptics = HapticsClient()
+    private let sessionStore = MonitorSessionStore()
 
     private nonisolated(unsafe) var autoExpandTask: Task<Void, Never>?
     private nonisolated(unsafe) var resetTask: Task<Void, Never>?
@@ -28,6 +29,11 @@ final class MonitorViewModel: ObservableObject {
             return
         }
         hasStarted = true
+
+        if let snapshot = sessionStore.load() {
+            session = snapshot.restoredSession()
+        }
+
         schedulePresent(after: Timings.bootstrapDelay)
     }
 
@@ -74,8 +80,7 @@ final class MonitorViewModel: ObservableObject {
             return
         }
 
-        haptics.play(decision)
-        scheduleResetAfterDecision()
+        finishDecision(decision)
     }
 
     func requestDecision(_ decision: MonitorDecision) {
@@ -92,7 +97,12 @@ final class MonitorViewModel: ObservableObject {
             return
         }
 
-        haptics.play(resolvedDecision)
+        finishDecision(resolvedDecision)
+    }
+
+    private func finishDecision(_ decision: MonitorDecision) {
+        haptics.play(decision)
+        sessionStore.save(session)
         scheduleResetAfterDecision()
     }
 

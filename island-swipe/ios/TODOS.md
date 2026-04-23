@@ -1,4 +1,4 @@
-# iOS App · Deferred TODOs
+# iOS App · TODOs / Resolved Follow-ups
 
 Recorded during `/plan-eng-review` on 2026-04-23.
 
@@ -29,14 +29,16 @@ real-device validation, no external demo share.
 
 ---
 
-## TODO-2: State persistence across launches
+## DONE-2: State persistence across launches
+
+**Status:** Done on 2026-04-23.
 
 **What:** Persist `MonitorSessionState.history`, `allowedCount`, `blockedCount`
-across app launches via `UserDefaults` JSON (or lightweight Core Data).
+across app launches via a `UserDefaults` JSON snapshot.
 
-**Why:** Current state is in-memory. Demo users may expect their decisions to
-persist across a cold-start. Also required as data foundation for any future
-analytics / streak / trend feature.
+**Why:** Demo users may expect their decisions to persist across a cold-start.
+Also required as data foundation for any future analytics / streak / trend
+feature.
 
 **Pros:**
 - Session continuity UX.
@@ -49,12 +51,15 @@ analytics / streak / trend feature.
 - Testing surface expands.
 
 **Context:**
-- `MonitorDecision`, `RiskLevel`, `SceneKind` already `Codable`.
-- `MonitorActivity` + `MonitorHistoryEntry` need `Codable` conformance.
-- Natural insertion point: `MonitorViewModel.bootstrap()` reads; each
-  `commitDecision` writes.
+- `MonitorActivity`, `MonitorDecision`, `RiskLevel`, `SceneKind`, and
+  `MonitorHistoryEntry` now conform to `Codable`.
+- `MonitorSessionStore` stores only counters and history, intentionally leaving
+  current activity, phase, drag offset, and last decision transient.
+- `MonitorViewModel.bootstrap()` restores the snapshot; completed decisions save
+  the snapshot before the next activity cycle.
+- XCTest covers snapshot restoration and `UserDefaults` round-trip.
 
-**Depends on / blocked by:** None.
+**Depends on / blocked by:** Complete.
 
 ---
 

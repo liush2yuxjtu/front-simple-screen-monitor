@@ -1,6 +1,6 @@
 import Foundation
 
-struct MonitorActivity: Identifiable, Equatable {
+struct MonitorActivity: Identifiable, Equatable, Codable {
     enum RiskLevel: String, CaseIterable, Codable {
         case low
         case medium
@@ -57,7 +57,7 @@ struct MonitorActivity: Identifiable, Equatable {
     }
 }
 
-enum MonitorDecision: String, Equatable {
+enum MonitorDecision: String, Equatable, Codable {
     case allow = "ALLOWED"
     case block = "BLOCKED"
 
@@ -80,10 +80,21 @@ enum MonitorDecision: String, Equatable {
     }
 }
 
-struct MonitorHistoryEntry: Identifiable, Equatable {
-    let id = UUID()
+struct MonitorHistoryEntry: Identifiable, Equatable, Codable {
+    let id: UUID
     let activity: MonitorActivity
     let decision: MonitorDecision
     let date: Date
-}
 
+    init(
+        id: UUID = UUID(),
+        activity: MonitorActivity,
+        decision: MonitorDecision,
+        date: Date
+    ) {
+        self.id = id
+        self.activity = activity
+        self.decision = decision
+        self.date = date
+    }
+}

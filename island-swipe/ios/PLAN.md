@@ -152,11 +152,14 @@ As of eng review (2026-04-23), implementation at `ActivityMonitorApp/` covers:
   `Views/HintPanelView.swift`, `Views/ActivityScenePreview.swift` — secondary
   panels.
 - `Support/HapticsClient.swift` — UIKit-gated `play` / `tick` / `cancel`.
+- `Support/MonitorSessionStore.swift` — `UserDefaults` snapshot persistence for
+  counters and history.
 - `Theme/TerminalNoirTheme.swift` — color tokens, Dynamic Type-aware
   monospace typography helper, hex-init Color extension.
 - `ActivityMonitorAppTests/MonitorSessionStateTests.swift` — XCTest coverage
   for left/right threshold commits, below-threshold reset, total invariant,
-  decision overshoot, and history cap.
+  decision overshoot, history cap, non-swipe action phase guards, and
+  persistence round-trip.
 
 Plan's proposed `Resources/` directory is not used; no asset shipped yet.
 
@@ -166,8 +169,6 @@ Plan's proposed `Resources/` directory is not used; no asset shipped yet.
   remote CI workflow is configured yet.
 - **Distribution (TestFlight / code signing / fastlane).** Simulator-only.
   Real-device validation of haptics requires signing. See `TODOS.md` TODO-1.
-- **State persistence across launches.** Counters + history in-memory only.
-  See `TODOS.md` TODO-2.
 - **Full accessibility certification.** Baseline VoiceOver labels, values,
   hints, non-swipe decision actions, and Dynamic Type-aware typography are in
   place. Real-device VoiceOver QA and deeper large-text tuning remain deferred.
@@ -209,8 +210,7 @@ Resolved in current refinement branch:
 **UNRESOLVED:** 0 — all 7 findings reached a decision and were implemented.
 **VERDICT:** ENG resolved_local — refactor queue completed; local Simulator
 build, launch, screenshot, and XCTest verification passed. Remote CI,
-distribution, persistence, and full real-device accessibility QA remain
-deferred.
+distribution, and full real-device accessibility QA remain deferred.
 
 ## Local design review (2026-04-23)
 
