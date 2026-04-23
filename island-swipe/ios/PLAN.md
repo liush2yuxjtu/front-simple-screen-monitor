@@ -200,10 +200,34 @@ Resolved in current refinement branch:
 | CEO Review    | `/plan-ceo-review`   | Scope & strategy                | 0    | —                     | —                            |
 | Codex Review  | `/codex review`      | Independent 2nd opinion         | 0    | —                     | — (declined inline)          |
 | Eng Review    | `/plan-eng-review`   | Architecture & tests (required) | 1    | resolved_local         | 7 issues resolved + tests    |
-| Design Review | `/plan-design-review`| UI/UX gaps                      | 0    | —                     | —                            |
+| Design Review | `/plan-design-review`| UI/UX gaps                      | 1    | local_manual_issues    | 3 follow-up polish issues    |
 | DX Review     | `/plan-devex-review` | Developer experience gaps       | 0    | —                     | —                            |
 
 **UNRESOLVED:** 0 — all 7 findings reached a decision and were implemented.
 **VERDICT:** ENG resolved_local — refactor queue completed; local Simulator
 build, launch, screenshot, and XCTest verification passed. Remote CI,
 distribution, persistence, and accessibility remain deferred.
+
+## Local design review (2026-04-23)
+
+The scripted `/plan-design-review` entrypoint was not available in this
+environment, so this pass used the Simulator run and recorded demo video at
+`/Users/liushiyu/Movies/activity-monitor-demo-final-2026-04-23.mp4`.
+
+**Verdict:** Visual direction is coherent and demo-ready. Terminal Noir palette,
+functional copy, Dynamic-Island-style pill, and swipe affordance all match
+`island-swipe/DESIGN.md`. No blocker for prototype/demo.
+
+Follow-up polish queue:
+
+1. **First-run idle state is visually under-explained.** The idle island shows
+   abstract pulse bars before the first activity appears. Add a compact
+   `MONITORING` / `WATCHING SCREEN` label or reduce the initial idle dwell for
+   public demos.
+2. **Swipe affordance depends on reading small helper text.** The expanded
+   island has a strong knob and endpoint labels, but no microcopy directly on
+   the control. Consider adding `DRAG TO DECIDE` above the track or a subtle
+   left/right shimmer while idle.
+3. **Accessibility and Dynamic Type remain the major design debt.** Fixed
+   monospaced sizes and swipe-only interaction preserve the visual concept but
+   are not ready for public distribution. This aligns with `TODOS.md` TODO-3.
