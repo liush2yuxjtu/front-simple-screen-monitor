@@ -126,7 +126,8 @@ ActivityMonitorApp/
 6. Runs on iPhone 15 / 15 Pro sim, iOS 17+.
 
 Gates 1, 2, and 4 are covered by
-`ActivityMonitorAppTests/MonitorSessionStateTests.swift`.
+`ActivityMonitorAppTests/MonitorSessionStateTests.swift`; the same suite also
+covers the phase guard for non-swipe decision actions.
 Gates 3 and 5 were visually verified in Simulator after launching the app.
 Gate 6 verified locally on available Simulator runtime:
 `xcodebuild test -project island-swipe/ios/ActivityMonitorApp.xcodeproj -scheme ActivityMonitorApp -destination 'platform=iOS Simulator,name=iPhone 16'`.
@@ -151,7 +152,8 @@ As of eng review (2026-04-23), implementation at `ActivityMonitorApp/` covers:
   `Views/HintPanelView.swift`, `Views/ActivityScenePreview.swift` — secondary
   panels.
 - `Support/HapticsClient.swift` — UIKit-gated `play` / `tick` / `cancel`.
-- `Theme/TerminalNoirTheme.swift` — color tokens, hex-init Color extension.
+- `Theme/TerminalNoirTheme.swift` — color tokens, Dynamic Type-aware
+  monospace typography helper, hex-init Color extension.
 - `ActivityMonitorAppTests/MonitorSessionStateTests.swift` — XCTest coverage
   for left/right threshold commits, below-threshold reset, total invariant,
   decision overshoot, and history cap.
@@ -166,9 +168,10 @@ Plan's proposed `Resources/` directory is not used; no asset shipped yet.
   Real-device validation of haptics requires signing. See `TODOS.md` TODO-1.
 - **State persistence across launches.** Counters + history in-memory only.
   See `TODOS.md` TODO-2.
-- **Accessibility (VoiceOver labels, Dynamic Type, non-swipe alternative).**
-  Swipe-only interaction with fixed-size monospaced typography. See
-  `TODOS.md` TODO-3.
+- **Full accessibility certification.** Baseline VoiceOver labels, values,
+  hints, non-swipe decision actions, and Dynamic Type-aware typography are in
+  place. Real-device VoiceOver QA and deeper large-text tuning remain deferred.
+  See `TODOS.md` TODO-3.
 - **Localization.** Strings `ALLOW` / `BLOCK` / `MONITOR` hardcoded English;
   title is mixed zh/en literal. Acceptable for prototype demo.
 
@@ -200,13 +203,14 @@ Resolved in current refinement branch:
 | CEO Review    | `/plan-ceo-review`   | Scope & strategy                | 0    | —                     | —                            |
 | Codex Review  | `/codex review`      | Independent 2nd opinion         | 0    | —                     | — (declined inline)          |
 | Eng Review    | `/plan-eng-review`   | Architecture & tests (required) | 1    | resolved_local         | 7 issues resolved + tests    |
-| Design Review | `/plan-design-review`| UI/UX gaps                      | 1    | local_manual_issues    | 3 follow-up polish issues    |
+| Design Review | `/plan-design-review`| UI/UX gaps                      | 1    | local_manual_partial    | 2 fixed, accessibility baseline added |
 | DX Review     | `/plan-devex-review` | Developer experience gaps       | 0    | —                     | —                            |
 
 **UNRESOLVED:** 0 — all 7 findings reached a decision and were implemented.
 **VERDICT:** ENG resolved_local — refactor queue completed; local Simulator
 build, launch, screenshot, and XCTest verification passed. Remote CI,
-distribution, persistence, and accessibility remain deferred.
+distribution, persistence, and full real-device accessibility QA remain
+deferred.
 
 ## Local design review (2026-04-23)
 
@@ -218,16 +222,26 @@ environment, so this pass used the Simulator run and recorded demo video at
 functional copy, Dynamic-Island-style pill, and swipe affordance all match
 `island-swipe/DESIGN.md`. No blocker for prototype/demo.
 
+Follow-up polish implemented after this pass:
+
+- First-run idle pill now shows explicit `MONITORING` copy instead of abstract
+  capsules.
+- Expanded island now includes a visible `DRAG TO DECIDE` affordance above the
+  swipe rail.
+- Core monitor flow now exposes VoiceOver label/value/hint text plus custom
+  `Allow` / `Block` actions, guarded to notification/expanded/dragging phases.
+- Monospaced typography now uses `@ScaledMetric` through `terminalFont(...)`;
+  Simulator screenshots were checked at `large` and `accessibility-large`
+  content sizes.
+
 Follow-up polish queue:
 
-1. **First-run idle state is visually under-explained.** The idle island shows
-   abstract pulse bars before the first activity appears. Add a compact
-   `MONITORING` / `WATCHING SCREEN` label or reduce the initial idle dwell for
-   public demos.
-2. **Swipe affordance depends on reading small helper text.** The expanded
-   island has a strong knob and endpoint labels, but no microcopy directly on
-   the control. Consider adding `DRAG TO DECIDE` above the track or a subtle
-   left/right shimmer while idle.
-3. **Accessibility and Dynamic Type remain the major design debt.** Fixed
-   monospaced sizes and swipe-only interaction preserve the visual concept but
-   are not ready for public distribution. This aligns with `TODOS.md` TODO-3.
+1. **DONE: First-run idle state is visually under-explained.** The idle island
+   now shows `MONITORING` before the first activity appears.
+2. **DONE: Swipe affordance depends on reading small helper text.** The
+   expanded island now labels the control with `DRAG TO DECIDE`.
+3. **PARTIAL: Accessibility and Dynamic Type remain the major design debt.**
+   VoiceOver labels, hints, values, custom Allow / Block actions, and
+   Dynamic Type-aware monospaced typography now cover the core flow. Very-large
+   text tuning and real-device VoiceOver QA remain before public distribution.
+   This aligns with `TODOS.md` TODO-3.

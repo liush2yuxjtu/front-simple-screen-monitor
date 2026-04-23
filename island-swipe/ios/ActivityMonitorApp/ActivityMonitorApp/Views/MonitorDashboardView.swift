@@ -18,23 +18,27 @@ struct MonitorDashboardView: View {
                             availableWidth: min(contentWidth, 370),
                             onTapNotification: viewModel.expandNow,
                             onDragChanged: viewModel.updateDrag,
-                            onDragEnded: viewModel.endDrag
+                            onDragEnded: viewModel.endDrag,
+                            onDecisionRequested: viewModel.requestDecision
                         )
                         .padding(.top, max(proxy.safeAreaInsets.top + 8, 26))
 
                         VStack(spacing: 8) {
                             Text("灵动岛 · Activity Monitor")
-                                .font(.system(size: 18, weight: .semibold, design: .monospaced))
+                                .terminalFont(size: 18, weight: .semibold, relativeTo: .title3)
                                 .foregroundStyle(TerminalNoirTheme.text)
                                 .tracking(1.8)
 
                             Text("Swipe to decide · Left = BLOCK · Right = ALLOW")
-                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .terminalFont(size: 11, weight: .medium, relativeTo: .footnote)
                                 .foregroundStyle(TerminalNoirTheme.muted)
                                 .tracking(1.2)
                                 .multilineTextAlignment(.center)
                         }
                         .frame(maxWidth: contentWidth)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Activity Monitor")
+                        .accessibilityHint("Swipe activity cards left to block or right to allow.")
 
                         StatsPanelView(session: viewModel.session)
                             .frame(maxWidth: contentWidth)
@@ -105,4 +109,3 @@ private struct TerminalNoirBackdrop: View {
         }
     }
 }
-

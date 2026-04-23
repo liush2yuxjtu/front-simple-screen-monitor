@@ -89,7 +89,7 @@ private struct BrowserScenePreview: View {
                     .fill(TerminalNoirTheme.surface.opacity(0.9))
                     .overlay(alignment: .leading) {
                         Text("youtube.com")
-                            .font(.system(size: 9, weight: .medium, design: .monospaced))
+                            .terminalFont(size: 9, weight: .medium, relativeTo: .caption2)
                             .foregroundStyle(TerminalNoirTheme.muted)
                             .padding(.leading, 8)
                     }
@@ -127,7 +127,7 @@ private struct TerminalScenePreview: View {
                     .background(TerminalNoirTheme.red.opacity(0.18))
             }
         }
-        .font(.system(size: 11, weight: .medium, design: .monospaced))
+        .terminalFont(size: 11, weight: .medium, relativeTo: .footnote)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
@@ -140,7 +140,7 @@ private struct MailScenePreview: View {
                 .frame(height: 28)
                 .overlay(alignment: .leading) {
                     Text("To: recruiting@anthropic.com")
-                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                        .terminalFont(size: 9, weight: .medium, relativeTo: .caption2)
                         .foregroundStyle(TerminalNoirTheme.muted)
                         .padding(.leading, 10)
                 }
@@ -155,7 +155,7 @@ private struct MailScenePreview: View {
                 Text("|")
                     .foregroundStyle(TerminalNoirTheme.cyan)
             }
-            .font(.system(size: 11, weight: .medium, design: .monospaced))
+            .terminalFont(size: 11, weight: .medium, relativeTo: .footnote)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
@@ -176,7 +176,7 @@ private struct CodeScenePreview: View {
                 .padding(.vertical, 3)
                 .background(TerminalNoirTheme.cyan.opacity(0.08), in: RoundedRectangle(cornerRadius: 6, style: .continuous))
         }
-        .font(.system(size: 10, weight: .medium, design: .monospaced))
+        .terminalFont(size: 10, weight: .medium, relativeTo: .caption)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 
@@ -190,7 +190,7 @@ private struct ChatScenePreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("#dm · @liuwei")
-                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                .terminalFont(size: 10, weight: .medium, relativeTo: .caption)
                 .foregroundStyle(TerminalNoirTheme.muted)
 
             RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -198,11 +198,11 @@ private struct ChatScenePreview: View {
                 .overlay(alignment: .leading) {
                     HStack(spacing: 0) {
                         Text("wanna grab drinks after work?")
-                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .terminalFont(size: 10, weight: .medium, relativeTo: .caption)
                             .foregroundStyle(TerminalNoirTheme.text)
 
                         Text("|")
-                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                            .terminalFont(size: 10, weight: .bold, relativeTo: .caption)
                             .foregroundStyle(TerminalNoirTheme.cyan)
                     }
                     .padding(.horizontal, 10)
@@ -225,7 +225,7 @@ private struct SocialScenePreview: View {
                 .frame(height: 64)
                 .overlay(alignment: .leading) {
                     Text("Heard our next quarter strategy... [182 chars]")
-                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .terminalFont(size: 10, weight: .medium, relativeTo: .caption)
                         .foregroundStyle(TerminalNoirTheme.text)
                         .padding(.horizontal, 10)
                 }
@@ -233,7 +233,7 @@ private struct SocialScenePreview: View {
             HStack {
                 Spacer()
                 Text("Post →")
-                    .font(.system(size: 10, weight: .bold, design: .monospaced))
+                    .terminalFont(size: 10, weight: .bold, relativeTo: .caption)
                     .foregroundStyle(TerminalNoirTheme.cyan)
             }
         }

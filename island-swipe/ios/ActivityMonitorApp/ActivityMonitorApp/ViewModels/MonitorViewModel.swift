@@ -78,6 +78,24 @@ final class MonitorViewModel: ObservableObject {
         scheduleResetAfterDecision()
     }
 
+    func requestDecision(_ decision: MonitorDecision) {
+        autoExpandTask?.cancel()
+        session.expandIfNeeded()
+
+        let translation = CGFloat(decision.directionSign) * (decisionThreshold + 1)
+        let resolvedDecision = session.commitDecision(
+            for: Double(translation),
+            threshold: Double(decisionThreshold)
+        )
+
+        guard let resolvedDecision else {
+            return
+        }
+
+        haptics.play(resolvedDecision)
+        scheduleResetAfterDecision()
+    }
+
     private func schedulePresent(after seconds: TimeInterval) {
         presentTask?.cancel()
         presentTask = Task { [weak self] in

@@ -16,6 +16,15 @@ enum IslandPhase: Equatable {
             return false
         }
     }
+
+    var allowsDecisionRequest: Bool {
+        switch self {
+        case .notification, .expanded, .dragging:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 struct MonitorSessionState: Equatable {

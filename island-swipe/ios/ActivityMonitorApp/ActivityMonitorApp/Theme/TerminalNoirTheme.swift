@@ -23,3 +23,27 @@ extension Color {
     }
 }
 
+private struct TerminalFontModifier: ViewModifier {
+    let weight: Font.Weight
+
+    @ScaledMetric private var scaledSize: CGFloat
+
+    init(size: CGFloat, weight: Font.Weight, relativeTo textStyle: Font.TextStyle) {
+        self.weight = weight
+        _scaledSize = ScaledMetric(wrappedValue: size, relativeTo: textStyle)
+    }
+
+    func body(content: Content) -> some View {
+        content.font(.system(size: scaledSize, weight: weight, design: .monospaced))
+    }
+}
+
+extension View {
+    func terminalFont(
+        size: CGFloat,
+        weight: Font.Weight = .regular,
+        relativeTo textStyle: Font.TextStyle = .body
+    ) -> some View {
+        modifier(TerminalFontModifier(size: size, weight: weight, relativeTo: textStyle))
+    }
+}

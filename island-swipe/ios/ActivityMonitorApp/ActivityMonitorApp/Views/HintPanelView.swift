@@ -6,7 +6,7 @@ struct HintPanelView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("HOW IT WORKS")
-                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                .terminalFont(size: 10, weight: .semibold, relativeTo: .caption)
                 .foregroundStyle(TerminalNoirTheme.cyan)
                 .tracking(1.8)
 
@@ -23,6 +23,9 @@ struct HintPanelView: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .stroke(TerminalNoirTheme.border, lineWidth: 1)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("How it works")
+        .accessibilityHint("Activities expand into the pill. Swipe left beyond \(thresholdLabel) to block, or right beyond \(thresholdLabel) to allow.")
     }
 }
 
@@ -41,14 +44,16 @@ private struct HintStep: View {
                     }
 
                 Text("\(index)")
-                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .terminalFont(size: 9, weight: .bold, relativeTo: .caption2)
                     .foregroundStyle(TerminalNoirTheme.cyan)
             }
             .frame(width: 18, height: 18)
 
             Text(text)
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .terminalFont(size: 11, weight: .medium, relativeTo: .footnote)
                 .foregroundStyle(TerminalNoirTheme.muted)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Step \(index). \(text)")
     }
 }

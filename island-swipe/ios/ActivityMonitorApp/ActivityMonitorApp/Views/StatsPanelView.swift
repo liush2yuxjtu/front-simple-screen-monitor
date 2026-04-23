@@ -23,6 +23,8 @@ struct StatsPanelView: View {
                 tint: TerminalNoirTheme.cyan
             )
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Decision counters")
     }
 }
 
@@ -34,13 +36,13 @@ private struct StatCell: View {
     var body: some View {
         VStack(spacing: 6) {
             Text("\(value)")
-                .font(.system(size: 28, weight: .bold, design: .monospaced))
+                .terminalFont(size: 28, weight: .bold, relativeTo: .title2)
                 .foregroundStyle(tint)
                 .contentTransition(.numericText(value: Double(value)))
                 .animation(AnimationTokens.statsCount, value: value)
 
             Text(label)
-                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                .terminalFont(size: 10, weight: .medium, relativeTo: .caption2)
                 .foregroundStyle(TerminalNoirTheme.muted)
                 .tracking(1.4)
         }
@@ -56,5 +58,8 @@ private struct StatCell: View {
                 .fill(tint.opacity(0.3))
                 .frame(width: 74, height: 1)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label.capitalized)
+        .accessibilityValue("\(value)")
     }
 }

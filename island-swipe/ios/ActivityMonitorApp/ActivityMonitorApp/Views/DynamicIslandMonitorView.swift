@@ -7,6 +7,7 @@ struct DynamicIslandMonitorView: View {
     let onTapNotification: () -> Void
     let onDragChanged: (CGFloat) -> Void
     let onDragEnded: (CGFloat) -> Void
+    let onDecisionRequested: (MonitorDecision) -> Void
 
     var body: some View {
         let layout = islandLayout
@@ -60,6 +61,16 @@ struct DynamicIslandMonitorView: View {
             onTapNotification()
         }
         .gesture(dragGesture, including: session.phase.allowsDrag ? .all : .none)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityValue(accessibilityValue)
+        .accessibilityHint(accessibilityHint)
+        .modifier(
+            DecisionAccessibilityActions(
+                isEnabled: session.currentActivity != nil && session.phase.allowsDecisionRequest,
+                onDecisionRequested: onDecisionRequested
+            )
+        )
         .animation(AnimationTokens.phaseTransition, value: session.phase)
         .animation(AnimationTokens.dragFeedback, value: session.dragOffset)
     }
@@ -135,6 +146,67 @@ struct DynamicIslandMonitorView: View {
                 onDragEnded(value.translation.width)
             }
     }
+
+    private var accessibilityLabel: String {
+        guard let activity = session.currentActivity else {
+            return "Activity monitor is standing by"
+        }
+
+        return "Activity request from \(activity.appName): \(activity.intent). Reason: \(activity.reason)"
+    }
+
+    private var accessibilityValue: String {
+        switch session.phase {
+        case .idle:
+            return "Monitoring"
+        case .notification:
+            return "New activity detected"
+        case .expanded:
+            return "Awaiting decision"
+        case .dragging:
+            return "Decision gesture in progress"
+        case .accepted:
+            return "Allowed"
+        case .denied:
+            return "Blocked"
+        }
+    }
+
+    private var accessibilityHint: String {
+        guard session.currentActivity != nil else {
+            return "A new activity will appear here."
+        }
+
+        switch session.phase {
+        case .notification:
+            return "Double tap to expand. Use the ALLOW or BLOCK actions to decide without swiping."
+        case .expanded, .dragging:
+            return "Swipe left beyond \(Int(threshold)) points to block, swipe right to allow, or use the ALLOW and BLOCK actions."
+        case .accepted, .denied:
+            return "Decision recorded. The next activity will appear shortly."
+        case .idle:
+            return "A new activity will appear here."
+        }
+    }
+}
+
+private struct DecisionAccessibilityActions: ViewModifier {
+    let isEnabled: Bool
+    let onDecisionRequested: (MonitorDecision) -> Void
+
+    func body(content: Content) -> some View {
+        if isEnabled {
+            content
+                .accessibilityAction(named: Text("Allow")) {
+                    onDecisionRequested(.allow)
+                }
+                .accessibilityAction(named: Text("Block")) {
+                    onDecisionRequested(.block)
+                }
+        } else {
+            content
+        }
+    }
 }
 
 private struct IslandLayout {
@@ -148,20 +220,17 @@ private struct IdleIslandContent: View {
     @State private var pulse = false
 
     var body: some View {
-        HStack(spacing: 8) {
-            Capsule()
-                .fill(TerminalNoirTheme.cyan.opacity(0.35))
-                .frame(width: 26, height: 6)
-                .scaleEffect(x: pulse ? 1.0 : 0.82, y: 1.0)
-
+        HStack(spacing: 7) {
             Circle()
                 .fill(TerminalNoirTheme.cyan.opacity(0.8))
                 .frame(width: 6, height: 6)
                 .shadow(color: TerminalNoirTheme.cyan.opacity(0.35), radius: 6)
+                .scaleEffect(pulse ? 1.15 : 0.82)
 
-            Capsule()
-                .fill(TerminalNoirTheme.border.opacity(0.9))
-                .frame(width: 38, height: 6)
+            Text("MONITORING")
+                .terminalFont(size: 9, weight: .bold, relativeTo: .caption2)
+                .foregroundStyle(TerminalNoirTheme.cyan.opacity(0.9))
+                .tracking(1.2)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
@@ -187,13 +256,13 @@ private struct NotificationIslandContent: View {
             .frame(width: 24, height: 24)
 
             Text(activity.intent)
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .terminalFont(size: 11, weight: .medium, relativeTo: .footnote)
                 .foregroundStyle(TerminalNoirTheme.text)
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             Text("MON")
-                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                .terminalFont(size: 9, weight: .bold, relativeTo: .caption2)
                 .foregroundStyle(TerminalNoirTheme.cyan.opacity(0.9))
                 .tracking(1.4)
         }
@@ -225,12 +294,12 @@ private struct ExpandedIslandContent: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(activity.appName.uppercased())
-                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .terminalFont(size: 10, weight: .medium, relativeTo: .caption)
                         .foregroundStyle(TerminalNoirTheme.muted)
                         .tracking(1.6)
 
                     Text(activity.intent)
-                        .font(.system(size: 15, weight: .semibold, design: .monospaced))
+                        .terminalFont(size: 15, weight: .semibold, relativeTo: .headline)
                         .foregroundStyle(TerminalNoirTheme.text)
                         .lineLimit(2)
                 }
@@ -242,9 +311,10 @@ private struct ExpandedIslandContent: View {
 
             ActivityScenePreview(activity: activity)
                 .frame(height: 162)
+                .accessibilityHidden(true)
 
             Text(activity.reason)
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .terminalFont(size: 11, weight: .medium, relativeTo: .footnote)
                 .foregroundStyle(TerminalNoirTheme.muted)
                 .lineSpacing(3)
 
@@ -273,7 +343,7 @@ private struct RiskBadge: View {
 
     var body: some View {
         Text(risk.badgeText)
-            .font(.system(size: 9, weight: .bold, design: .monospaced))
+            .terminalFont(size: 9, weight: .bold, relativeTo: .caption2)
             .foregroundStyle(tint)
             .tracking(1.1)
             .padding(.horizontal, 8)
@@ -306,45 +376,69 @@ private struct SwipeHintView: View {
     }
 
     var body: some View {
-        HStack(spacing: 10) {
-            SwipeDirectionView(
-                title: "BLOCK",
-                symbol: "xmark",
-                tint: TerminalNoirTheme.red,
-                armed: dragOffset <= -threshold
-            )
+        VStack(spacing: 7) {
+            Text("DRAG TO DECIDE")
+                .terminalFont(size: 8, weight: .bold, relativeTo: .caption2)
+                .foregroundStyle(TerminalNoirTheme.cyan.opacity(0.78))
+                .tracking(1.5)
+                .frame(maxWidth: .infinity)
 
-            GeometryReader { proxy in
-                let inset: CGFloat = 12
-                let travel = (proxy.size.width - inset * 2 - 20) / 2
+            HStack(spacing: 10) {
+                SwipeDirectionView(
+                    title: "BLOCK",
+                    symbol: "xmark",
+                    tint: TerminalNoirTheme.red,
+                    armed: dragOffset <= -threshold
+                )
 
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(TerminalNoirTheme.border.opacity(0.5))
-                        .frame(height: 4)
+                GeometryReader { proxy in
+                    let inset: CGFloat = 12
+                    let travel = (proxy.size.width - inset * 2 - 20) / 2
 
-                    Circle()
-                        .fill(knobTint)
-                        .frame(width: 20, height: 20)
-                        .scaleEffect(pastThreshold ? 1.25 : 1.0)
-                        .shadow(
-                            color: knobTint.opacity(pastThreshold ? 0.75 : 0.32),
-                            radius: pastThreshold ? 16 : 10
-                        )
-                        .offset(x: travel + clampedProgress * travel)
-                        .animation(AnimationTokens.thresholdArm, value: pastThreshold)
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(TerminalNoirTheme.border.opacity(0.5))
+                            .frame(height: 4)
+
+                        Circle()
+                            .fill(knobTint)
+                            .frame(width: 20, height: 20)
+                            .scaleEffect(pastThreshold ? 1.25 : 1.0)
+                            .shadow(
+                                color: knobTint.opacity(pastThreshold ? 0.75 : 0.32),
+                                radius: pastThreshold ? 16 : 10
+                            )
+                            .offset(x: travel + clampedProgress * travel)
+                            .animation(AnimationTokens.thresholdArm, value: pastThreshold)
+                    }
+                    .padding(.horizontal, inset)
                 }
-                .padding(.horizontal, inset)
-            }
-            .frame(height: 28)
+                .frame(height: 28)
 
-            SwipeDirectionView(
-                title: "ALLOW",
-                symbol: "checkmark",
-                tint: TerminalNoirTheme.lime,
-                armed: dragOffset >= threshold
-            )
+                SwipeDirectionView(
+                    title: "ALLOW",
+                    symbol: "checkmark",
+                    tint: TerminalNoirTheme.lime,
+                    armed: dragOffset >= threshold
+                )
+            }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Drag to decide")
+        .accessibilityValue(accessibilityValue)
+        .accessibilityHint("Drag left to block or right to allow.")
+    }
+
+    private var accessibilityValue: String {
+        if dragOffset <= -threshold {
+            return "Block armed"
+        }
+
+        if dragOffset >= threshold {
+            return "Allow armed"
+        }
+
+        return "No decision armed"
     }
 }
 
@@ -373,7 +467,7 @@ private struct SwipeDirectionView: View {
             .scaleEffect(armed ? 1.15 : 1.0)
 
             Text(title)
-                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                .terminalFont(size: 10, weight: .bold, relativeTo: .caption)
                 .foregroundStyle(tint.opacity(armed ? 1.0 : 0.9))
         }
         .animation(AnimationTokens.directionArm, value: armed)
@@ -416,7 +510,7 @@ private struct ConfirmationIslandContent: View {
             }
 
             Text(decision.rawValue)
-                .font(.system(size: 14, weight: .heavy, design: .monospaced))
+                .terminalFont(size: 14, weight: .heavy, relativeTo: .headline)
                 .foregroundStyle(TerminalNoirTheme.text)
                 .tracking(2.2)
                 .opacity(appeared ? 1.0 : 0.0)

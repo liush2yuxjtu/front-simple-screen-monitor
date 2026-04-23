@@ -67,6 +67,15 @@ final class MonitorSessionStateTests: XCTestCase {
         XCTAssertEqual(session.dragOffset, 0)
     }
 
+    func testDecisionRequestAvailabilityMatchesInteractivePhases() {
+        XCTAssertFalse(IslandPhase.idle.allowsDecisionRequest)
+        XCTAssertTrue(IslandPhase.notification.allowsDecisionRequest)
+        XCTAssertTrue(IslandPhase.expanded.allowsDecisionRequest)
+        XCTAssertTrue(IslandPhase.dragging.allowsDecisionRequest)
+        XCTAssertFalse(IslandPhase.accepted.allowsDecisionRequest)
+        XCTAssertFalse(IslandPhase.denied.allowsDecisionRequest)
+    }
+
     func testHistoryIsCappedAtLimit() {
         var session = MonitorSessionState()
 
