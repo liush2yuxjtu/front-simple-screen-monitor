@@ -1,0 +1,33 @@
+# Claude Code worktrees + local state
+.claude/
+
+# macOS junk
+.DS_Store
+**/.DS_Store
+
+# iOS build artifacts
+island-swipe/ios/build-output/
+**/build/
+**/DerivedData/
+**/*.xcuserstate
+**/xcuserdata/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Local test scripts
+test_island_swipe.py
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
