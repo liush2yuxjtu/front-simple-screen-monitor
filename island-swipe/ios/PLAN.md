@@ -125,9 +125,13 @@ ActivityMonitorApp/
 5. Dark appearance default. No light-mode regression.
 6. Runs on iPhone 15 / 15 Pro sim, iOS 17+.
 
-Gates 1–5 verified manually (prototype scope; no XCTest target — see NOT in scope).
-Gate 6 verified by developer local `xcodebuild build -scheme ActivityMonitorApp
--destination 'platform=iOS Simulator,name=iPhone 15'`.
+Gates 1, 2, and 4 are covered by
+`ActivityMonitorAppTests/MonitorSessionStateTests.swift`.
+Gates 3 and 5 were visually verified in Simulator after launching the app.
+Gate 6 verified locally on available Simulator runtime:
+`xcodebuild test -project island-swipe/ios/ActivityMonitorApp.xcodeproj -scheme ActivityMonitorApp -destination 'platform=iOS Simulator,name=iPhone 16'`.
+The local machine does not currently expose an iPhone 15 / 15 Pro simulator;
+available phone coverage is iPhone 16 on iOS 18.6.
 
 ## What already exists
 
@@ -148,18 +152,16 @@ As of eng review (2026-04-23), implementation at `ActivityMonitorApp/` covers:
   panels.
 - `Support/HapticsClient.swift` — UIKit-gated `play` / `tick` / `cancel`.
 - `Theme/TerminalNoirTheme.swift` — color tokens, hex-init Color extension.
+- `ActivityMonitorAppTests/MonitorSessionStateTests.swift` — XCTest coverage
+  for left/right threshold commits, below-threshold reset, total invariant,
+  decision overshoot, and history cap.
 
 Plan's proposed `Resources/` directory is not used; no asset shipped yet.
 
 ## NOT in scope (explicitly deferred)
 
-- **XCTest target + state-machine unit tests.** `MonitorSessionState` is pure
-  Swift / Equatable and trivially testable, but scope kept prototype-only.
-  Non-negotiables (threshold=90pt, counter invariant, auto-expand=1.2s,
-  history cap=6) currently protected only by manual QA. Acceptance gates 1–5
-  unverifiable automatically. Revisit before public distribution.
-- **CI pipeline (`xcodebuild test` / GitHub Actions).** No automated build
-  verification for gate 6. Relies on developer local environment.
+- **CI pipeline (GitHub Actions).** Local `xcodebuild test` now works, but no
+  remote CI workflow is configured yet.
 - **Distribution (TestFlight / code signing / fastlane).** Simulator-only.
   Real-device validation of haptics requires signing. See `TODOS.md` TODO-1.
 - **State persistence across launches.** Counters + history in-memory only.
@@ -172,23 +174,23 @@ Plan's proposed `Resources/` directory is not used; no asset shipped yet.
 
 ## Review decisions (2026-04-23 eng review)
 
-Refactor queue; implement alongside current refinement branch:
+Resolved in current refinement branch:
 
-1. **Split `nextCycleTask` into `resetTask` + `presentTask`** — eliminate
+1. **DONE: Split `nextCycleTask` into `resetTask` + `presentTask`** — eliminate
    bootstrap × decision race in `MonitorViewModel.scheduleResetAfterDecision`.
-2. **Separate state commit from animation** — call
+2. **DONE: Separate state commit from animation** — call
    `session.commitDecision(...)` outside `withAnimation`; wrap only the
    post-commit visual trigger.
-3. **Extract `Timings` enum** — move `1.2s auto-expand`, `0.45s bootstrap`,
+3. **DONE: Extract `Timings` enum** — move `1.2s auto-expand`, `0.45s bootstrap`,
    `0.9s reset clear`, `0.5s next-activity delay` to a single module.
-4. **Mark Task handles `nonisolated(unsafe)`** — Swift 6 strict-concurrency
+4. **DONE: Mark Task handles `nonisolated(unsafe)`** — Swift 6 strict-concurrency
    readiness for `MonitorViewModel` `deinit`.
-5. **Extract `AnimationTokens`** — 8 scattered spring
+5. **DONE: Extract `AnimationTokens`** — 8 scattered spring
    `(response, dampingFraction)` pairs → named animations
    (e.g. `.islandOpen`, `.dragResponsive`, `.decisionPop`).
-6. **Name `decisionOvershoot = 132`** — replace magic literal in
+6. **DONE: Name `decisionOvershoot = 132`** — replace magic literal in
    `MonitorSessionState.apply`.
-7. **Cache Terminal Noir grid** — apply `.drawingGroup()` on `Canvas` or
+7. **DONE: Cache Terminal Noir grid** — apply `.drawingGroup()` on `Canvas` or
    render once into cached `Image` to avoid per-frame stride redraw.
 
 ## GSTACK REVIEW REPORT
@@ -197,12 +199,11 @@ Refactor queue; implement alongside current refinement branch:
 |---------------|----------------------|---------------------------------|------|-----------------------|------------------------------|
 | CEO Review    | `/plan-ceo-review`   | Scope & strategy                | 0    | —                     | —                            |
 | Codex Review  | `/codex review`      | Independent 2nd opinion         | 0    | —                     | — (declined inline)          |
-| Eng Review    | `/plan-eng-review`   | Architecture & tests (required) | 1    | issues_open (PLAN)    | 7 issues, 0 critical gaps    |
+| Eng Review    | `/plan-eng-review`   | Architecture & tests (required) | 1    | resolved_local         | 7 issues resolved + tests    |
 | Design Review | `/plan-design-review`| UI/UX gaps                      | 0    | —                     | —                            |
 | DX Review     | `/plan-devex-review` | Developer experience gaps       | 0    | —                     | —                            |
 
-**UNRESOLVED:** 0 — all 7 findings reached a decision.
-**VERDICT:** ENG issues_open — 7 refactor items queued (see Review decisions
-above). Acceptance gates unchanged. Prototype scope confirmed; tests / CI /
-distribution explicitly deferred to `TODOS.md`.
-
+**UNRESOLVED:** 0 — all 7 findings reached a decision and were implemented.
+**VERDICT:** ENG resolved_local — refactor queue completed; local Simulator
+build, launch, screenshot, and XCTest verification passed. Remote CI,
+distribution, persistence, and accessibility remain deferred.

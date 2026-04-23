@@ -36,3 +36,18 @@ targets:
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         SUPPORTS_MACCATALYST: NO
         SWIFT_EMIT_LOC_STRINGS: YES
+  ActivityMonitorAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: ActivityMonitorApp/ActivityMonitorAppTests
+    dependencies:
+      - target: ActivityMonitorApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.ActivityMonitorAppTests
+        PRODUCT_NAME: ActivityMonitorAppTests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ActivityMonitorApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ActivityMonitorApp"
+        BUNDLE_LOADER: "$(TEST_HOST)"

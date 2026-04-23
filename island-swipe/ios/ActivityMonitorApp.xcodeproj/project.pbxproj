@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A10000000000000000000001 /* MonitorSessionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* MonitorSessionStateTests.swift */; };
 		15D5F1DDA4ADA225FD254B31 /* HintPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D9DEC105EE0282323DE95 /* HintPanelView.swift */; };
 		216C36436DBE25259154576A /* ActivityMonitorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F7EF20D43385A41A4E253F /* ActivityMonitorApp.swift */; };
 		25C0C6C184EDFCE5DC9A8687 /* HapticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90345A299049EDB0CEC832B6 /* HapticsClient.swift */; };
@@ -23,9 +24,21 @@
 		F401ECE9FCEC48EF3CA6EBF3 /* HistoryPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D93DEA9378BD232CCF766AA /* HistoryPanelView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		A10000000000000000000009 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B1FA864F6979B492F9B17F5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 722061EF603F9D95947591CE;
+			remoteInfo = ActivityMonitorApp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		027BE328DB7EF3BE3D9B990B /* TerminalNoirTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalNoirTheme.swift; sourceTree = "<group>"; };
 		0D93DEA9378BD232CCF766AA /* HistoryPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryPanelView.swift; sourceTree = "<group>"; };
+		A10000000000000000000002 /* MonitorSessionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorSessionStateTests.swift; sourceTree = "<group>"; };
+		A10000000000000000000003 /* ActivityMonitorAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ActivityMonitorAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		228DB59BE923D0DCD5B29373 /* ActivityMonitorApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ActivityMonitorApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37F7EF20D43385A41A4E253F /* ActivityMonitorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityMonitorApp.swift; sourceTree = "<group>"; };
 		565E545727A6015BD74684AE /* MonitorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorViewModel.swift; sourceTree = "<group>"; };
@@ -41,6 +54,16 @@
 		E5834E3BC7E2C60FB68A28CC /* MonitorActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorActivity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		A10000000000000000000007 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
 		22D889120BE89E9E4F0C13DB /* Theme */ = {
 			isa = PBXGroup;
@@ -55,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				228DB59BE923D0DCD5B29373 /* ActivityMonitorApp.app */,
+				A10000000000000000000003 /* ActivityMonitorAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -115,8 +139,17 @@
 			isa = PBXGroup;
 			children = (
 				7A6BF5BE268CF3DA213F91CA /* ActivityMonitorApp */,
+				A10000000000000000000004 /* ActivityMonitorAppTests */,
 			);
 			path = ActivityMonitorApp;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000004 /* ActivityMonitorAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000002 /* MonitorSessionStateTests.swift */,
+			);
+			path = ActivityMonitorAppTests;
 			sourceTree = "<group>";
 		};
 		DAAF96239E1B9045EB467100 = {
@@ -130,6 +163,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		A10000000000000000000005 /* ActivityMonitorAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000000000000000000000C /* Build configuration list for PBXNativeTarget "ActivityMonitorAppTests" */;
+			buildPhases = (
+				A10000000000000000000006 /* Sources */,
+				A10000000000000000000007 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A10000000000000000000008 /* PBXTargetDependency */,
+			);
+			name = ActivityMonitorAppTests;
+			packageProductDependencies = (
+			);
+			productName = ActivityMonitorAppTests;
+			productReference = A10000000000000000000003 /* ActivityMonitorAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		722061EF603F9D95947591CE /* ActivityMonitorApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F8C83D681A95D49372781D8C /* Build configuration list for PBXNativeTarget "ActivityMonitorApp" */;
@@ -160,6 +212,10 @@
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
+					A10000000000000000000005 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 722061EF603F9D95947591CE;
+					};
 				};
 			};
 			buildConfigurationList = AB5CAD0BEB3DB0EA611D77B1 /* Build configuration list for PBXProject "ActivityMonitorApp" */;
@@ -177,11 +233,20 @@
 			projectRoot = "";
 			targets = (
 				722061EF603F9D95947591CE /* ActivityMonitorApp */,
+				A10000000000000000000005 /* ActivityMonitorAppTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A10000000000000000000006 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* MonitorSessionStateTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		954C9797DCA2F5ED51F218C1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -204,6 +269,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A10000000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 722061EF603F9D95947591CE /* ActivityMonitorApp */;
+			targetProxy = A10000000000000000000009 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		147952A33554100D38AD35A6 /* Debug */ = {
@@ -232,6 +305,46 @@
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
+		};
+		A1000000000000000000000A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ActivityMonitorAppTests;
+				PRODUCT_NAME = ActivityMonitorAppTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ActivityMonitorApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ActivityMonitorApp";
+			};
+			name = Debug;
+		};
+		A1000000000000000000000B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ActivityMonitorAppTests;
+				PRODUCT_NAME = ActivityMonitorAppTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ActivityMonitorApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ActivityMonitorApp";
+			};
+			name = Release;
 		};
 		663787AA4B3C0616FDE1EC29 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -391,6 +504,15 @@
 			buildConfigurations = (
 				EC527D0E54D7D9F68510FAAB /* Debug */,
 				663787AA4B3C0616FDE1EC29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A1000000000000000000000C /* Build configuration list for PBXNativeTarget "ActivityMonitorAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000000000000000000000A /* Debug */,
+				A1000000000000000000000B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
