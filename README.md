@@ -6,6 +6,15 @@ Backend snaps screen every 5s, guesses user intent, frontend asks for royal cons
 
 https://liush2yuxjtu.github.io/front-simple-screen-monitor/
 
+## Demo in 60 seconds
+
+AI can see your screen, so Activity Monitor asks before it acts. Swipe right to
+ALLOW, swipe left to BLOCK, and every decision updates the trust log.
+
+- Watch: https://liush2yuxjtu.github.io/front-simple-screen-monitor/assets/demo/activity-monitor-canonical-demo-2026-04-24T05-01-34.mp4
+- Try: https://liush2yuxjtu.github.io/front-simple-screen-monitor/island-swipe/
+- Current proof status: canonical proof clip is checked in for GitHub Pages static hosting.
+
 ## Four chambers
 
 | Path | 中文 | English | UI pattern |

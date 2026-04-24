@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "video": {
+    "label": "canonical-60-second-demo-local-2026-04-24T05-01-34",
+    "durationSeconds": 60,
+    "source": "/Users/liushiyu/Movies/activity-monitor-canonical-demo-2026-04-24T05-01-34.mp4",
+    "evidenceSource": "/Users/liushiyu/Movies/activity-monitor-canonical-demo-2026-04-24T05-01-34.evidence.json",
+    "publicUrl": "https://liush2yuxjtu.github.io/front-simple-screen-monitor/assets/demo/activity-monitor-canonical-demo-2026-04-24T05-01-34.mp4",
+    "publicAssetPath": "assets/demo/activity-monitor-canonical-demo-2026-04-24T05-01-34.mp4",
+    "publicAssetSizeBytes": 547068
+  },
+  "status": {
+    "plan": "D: Boil the Lake Hybrid",
+    "demoKitStatus": "PUBLIC_DEMO_READY_HOSTED_E2E_BLOCKED_NOT_DEPLOYED",
+    "dStatus": "PUBLIC_DEMO_READY_HOSTED_E2E_BLOCKED_NOT_DEPLOYED",
+    "e2eStatus": "HOSTED_E2E_BLOCKED_NOT_DEPLOYED",
+    "canonical60SecondVideo": "local recording complete",
+    "canonicalLocalSelfVerify": "ship 12/12",
+    "publicVideoLink": "local wiring ready; hosted asset returned 404 on 2026-04-24",
+    "publicEntryStatus": "Local README, root page, and island-swipe page link to the public static MP4 asset; hosted pages have not deployed those Watch links yet.",
+    "currentBestEvidence": "canonical local evidence plus hosted probe showing deployment is still needed",
+    "retainedVerdict": "ship",
+    "reason": "The canonical recording verifies as ship 12/12, but hosted e2e is blocked until the MP4 asset and Watch links are committed, pushed, and deployed."
+  },
+  "expected": {
+    "verdict": "ship",
+    "scoreRange": "9-12"
+  },
+  "scores": {
+    "problemUnderstoodWithin15Seconds": {
+      "score": 2,
+      "timestamp": "00:03",
+      "evidence": "Opening caption and screen context establish that AI screen access is powerful and risky."
+    },
+    "allowBlockInteractionClear": {
+      "score": 2,
+      "timestamp": "00:18",
+      "evidence": "The video shows a right swipe to ALLOW and a left swipe to BLOCK."
+    },
+    "aiPermissionLayerNeedClear": {
+      "score": 2,
+      "timestamp": "00:08",
+      "evidence": "The Dynamic-Island-style prompt appears before the AI action."
+    },
+    "visualDirectionMemorable": {
+      "score": 2,
+      "timestamp": "00:14",
+      "evidence": "The Terminal Noir phone UI and Dynamic Island treatment remain visible throughout the demo."
+    },
+    "decisionFeedbackObvious": {
+      "score": 2,
+      "timestamp": "00:39",
+      "evidence": "Green ALLOWED and red BLOCKED confirmations are held, with counters incrementing."
+    },
+    "viewerKnowsHowToTryOrExplain": {
+      "score": 2,
+      "timestamp": "00:57",
+      "evidence": "The final frame returns to the next request and keeps the try-it-next path visible."
+    },
+    "total": 12
+  },
+  "evidence": [
+    {
+      "timestamp": "00:03",
+      "agent": "Canonical Recording Script",
+      "verdict": "pass",
+      "note": "Screen context and permission risk are visible before the first prompt."
+    },
+    {
+      "timestamp": "00:10",
+      "agent": "Canonical Recording Script",
+      "verdict": "pass",
+      "note": "Permission prompt appears before the AI action."
+    },
+    {
+      "timestamp": "00:18",
+      "agent": "Canonical Recording Script",
+      "verdict": "pass",
+      "note": "Right swipe allows the request and ALLOWED increments."
+    },
+    {
+      "timestamp": "00:29",
+      "agent": "Canonical Recording Script",
+      "verdict": "pass",
+      "note": "High-risk terminal delete request is visible before action."
+    },
+    {
+      "timestamp": "00:39",
+      "agent": "Canonical Recording Script",
+      "verdict": "pass",
+      "note": "Left swipe blocks the request and BLOCKED increments."
+    },
+    {
+      "timestamp": "00:49",
+      "agent": "Canonical Recording Script",
+      "verdict": "pass",
+      "note": "Trust log shows the allow and block decisions."
+    },
+    {
+      "timestamp": "00:57",
+      "agent": "Canonical Recording Script",
+      "verdict": "pass",
+      "note": "Flow recovers to the next request with try-it-next path visible."
+    }
+  ],
+  "proofShots": [
+    { "shot": "screen observation", "timestamp": "00:03", "verdict": "pass", "fix": "" },
+    { "shot": "permission request", "timestamp": "00:10", "verdict": "pass", "fix": "" },
+    { "shot": "ALLOW right swipe and green confirmation", "timestamp": "00:18", "verdict": "pass", "fix": "" },
+    { "shot": "high-risk example", "timestamp": "00:29", "verdict": "pass", "fix": "" },
+    { "shot": "BLOCK left swipe and red denial", "timestamp": "00:39", "verdict": "pass", "fix": "" },
+    { "shot": "trust log or stats/history", "timestamp": "00:49", "verdict": "pass", "fix": "" },
+    { "shot": "recovery to the next request", "timestamp": "00:57", "verdict": "pass", "fix": "" }
+  ],
+  "stateChanges": [
+    { "timestamp": "00:03", "change": "screen context and AI permission risk are established" },
+    { "timestamp": "00:06", "change": "permission prompt appears" },
+    { "timestamp": "00:14", "change": "request allowed and allowed count increments" },
+    { "timestamp": "00:18", "change": "green allowed confirmation remains visible" },
+    { "timestamp": "00:23", "change": "high-risk terminal request appears" },
+    { "timestamp": "00:29", "change": "terminal delete command risk is readable" },
+    { "timestamp": "00:35", "change": "request blocked and blocked count increments" },
+    { "timestamp": "00:39", "change": "red blocked confirmation remains visible" },
+    { "timestamp": "00:44", "change": "decision history shows both choices" },
+    { "timestamp": "00:49", "change": "trust log and counters remain visible" },
+    { "timestamp": "00:54", "change": "flow returns to the next request" },
+    { "timestamp": "00:57", "change": "try-it-next path remains visible" }
+  ],
+  "strangerRetell": "AI asks permission before acting on your screen; swipe right to allow, swipe left to block, and the trust log records it.",
+  "tasks": [
+    "Keep the public MP4 linked from README, root page, and island-swipe page.",
+    "Commit, push, and wait for GitHub Pages deploy.",
+    "Run full hosted e2e after deploy and require root 200, island-swipe 200, public MP4 200, and hosted Watch links."
+  ]
+}
