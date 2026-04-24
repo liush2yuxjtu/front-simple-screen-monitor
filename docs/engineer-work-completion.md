@@ -14,8 +14,34 @@ Then run:
 claudefast -p "what would we do when we finish an engineer work ?"
 ```
 
+The correct answer to that finish-work probe must include the docs update, the
+finish-work probe, the read-only recent-work probe, and the named task/plan
+status probe.
+
 Keep updating docs until the `claudefast -p` probe returns the right answer for
 the finished engineer work.
+
+Always run a `claudefast -p` probe when finishing any work. Use read-only probes
+that ask what changed and what the current task or plan status is, for example:
+
+```bash
+claudefast -p "READ ONLY, tell me what we have done in recent commits and based on docs..."
+claudefast -p "what is {task/plan} status?"
+```
+
+## Engineer Work Completion Probe Plan Status
+
+Changed: engineer work completion now requires read-only `claudefast -p` probes
+at the end of any work, including a recent-work summary probe and a named
+task/plan status probe.
+
+Run it by finishing the normal implementation or docs task, updating the related
+docs, then running the probes shown above.
+
+Verify it by checking that the probes can answer from recent commits and docs,
+and that the named task/plan status answer matches the documented status.
+
+Status: `DOCUMENTED_AND_READY_TO_USE`.
 
 For an e2e example, the outer agent or human may run this status probe:
 
