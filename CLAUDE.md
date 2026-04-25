@@ -30,6 +30,7 @@ claudefast -p "what rules we shall follow in this project when edit the docs/ an
 ```
 
 For that prompt, the expected answer is exactly the single plain-text line above.
+The words `self verify` are mandatory and must not be omitted or rewritten.
 
 ## Engineer work completion
 
