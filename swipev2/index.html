@@ -243,6 +243,10 @@
       z-index: 10;
     }
 
+    .stack-zone.is-empty {
+      pointer-events: none;
+    }
+
     .card {
       position: absolute;
       left: 0;
@@ -723,7 +727,7 @@
       text-align: center;
       opacity: 0;
       transition: opacity 360ms ease, transform 360ms ease;
-      z-index: 6;
+      z-index: 16;
     }
 
     .empty-state.show {
@@ -887,7 +891,7 @@
           '保留微信浮层，到达后一键发送实时位置',
           '途中静默，避免再次解锁查看消息'
         ],
-        executeToast: '已进入：北京北站网约车乘车点路线'
+        executeToast: 'demo only · 已展示北京北站网约车路线草稿'
       },
       {
         source: '飞书 · 周会 OKR 同步',
@@ -912,7 +916,7 @@
           '麦克风默认关闭，摄像头交给用户决定',
           '浮层顶部保留议程标题与第几项'
         ],
-        executeToast: '已准备：静音入会'
+        executeToast: 'demo only · 已展示静音入会草稿'
       },
       {
         source: '美团 · 骑手即将到达',
@@ -937,7 +941,7 @@
           '提醒带门禁卡（基于历史习惯）',
           '3 分钟后再震一次，避免错过取餐'
         ],
-        executeToast: '已打开：骑手实时位置'
+        executeToast: 'demo only · 已展示骑手实时位置草稿'
       },
       {
         source: '短信 · 95588',
@@ -962,7 +966,7 @@
           '切回 Safari 上一个标签页',
           '自动聚焦验证码输入框并填入'
         ],
-        executeToast: '已填入：824591 → Safari 登录页'
+        executeToast: 'demo only · 已展示 824591 填入草稿'
       }
     ];
 
@@ -995,6 +999,7 @@
 
     function render() {
       stack.innerHTML = '';
+      stack.classList.toggle('is-empty', !queue.length);
       const visible = queue.slice(0, 4);
       // Render BACK-TO-FRONT so the front card (depth=0) is appended last
       // and paints on top. Back cards become silhouettes behind it.
