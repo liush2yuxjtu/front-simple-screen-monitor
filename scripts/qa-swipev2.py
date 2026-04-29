@@ -79,11 +79,11 @@ def run(base_url: str):
         expect(page.locator(".card[data-depth='0']")).to_be_visible()
         expect(page.locator(".action-title").last).to_contain_text("北京北站")
 
-        page.goto(base_url.rstrip("/") + "/")
+        page.goto(base_url.rstrip("/") + "/", wait_until="domcontentloaded")
         page.wait_for_load_state("domcontentloaded")
         expect(page.locator('a[href="swipev2/"]')).to_be_visible()
 
-        page.goto(base_url.rstrip("/") + "/gallery/")
+        page.goto(base_url.rstrip("/") + "/gallery/", wait_until="domcontentloaded")
         page.wait_for_load_state("domcontentloaded")
         expect(page.locator('a[href="../swipev2/"]')).to_be_visible()
 
