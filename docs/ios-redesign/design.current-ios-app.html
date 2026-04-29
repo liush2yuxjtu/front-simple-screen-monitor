@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Current iOS App</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <script src="./batch-03/navigation.js" defer></script>
+  <style>
+    :root{color-scheme:dark;--page:#0d0908;--panel:rgba(255,239,223,.08);--line:rgba(255,239,223,.16);--text:#fff4ea;--muted:rgba(255,244,234,.72);--phone-bg:linear-gradient(180deg,#100d0c,#2a1d17 58%,#0b0908);--phone-panel:rgba(255,228,205,.15);--phone-line:rgba(255,228,205,.2);--phone-text:#fff4ea;--phone-muted:rgba(255,244,234,.72);--accent:#d29a62;--accent-ink:#1a0f05}
+    .phone::before{background:#090706}.top-row{display:flex;justify-content:flex-start;gap:10px;flex-wrap:wrap}.note-pill{font:700 12px/1.45 var(--ui-font);padding:10px 14px;border-radius:999px;border:1px solid var(--phone-line);background:var(--phone-panel);color:var(--phone-text)}.skin-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.skin-row div{padding:12px 10px;border-radius:999px;text-align:center;font:700 12px/1 var(--ui-font);border:1px solid var(--phone-line);background:rgba(255,228,205,.09)}.skin-row div.active{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
+    .queue{display:grid;gap:12px}.queue-card{padding:14px 16px;border-radius:22px;border:1px solid rgba(255,228,205,.14);background:rgba(255,228,205,.08)}.queue-card strong{display:block;font:800 20px/1.06 var(--display-font);letter-spacing:-.04em;margin-top:8px}.queue-ghost{opacity:.42}
+    .meta-strip{display:flex;justify-content:space-between;gap:10px;font:700 12px/1 var(--ui-font);color:var(--phone-muted)}.quote-stream{display:grid;gap:10px}.quote{padding:12px 14px;border-radius:18px;background:rgba(255,245,232,.12)}.chip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.chip-grid div{padding:11px 12px;border-radius:999px;text-align:center;font:700 12px/1 var(--ui-font);background:rgba(255,245,232,.11)}.chip-grid div.primary{background:#d29a62;color:#1a0f05}
+  </style>
+</head>
+<body data-nav-index="0">
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">Batch 00</a>
+      <h1>Current iOS App</h1>
+      <p class="lede">这是当前 `swipeV2` iOS app 的最终设计参考页：同一套锁屏行动流结构，内建 `Bronze / Coral / Steel` 三套 skin。当前 app 已经去掉 `Swipe guide`、`Fallback` 和 quick action 菜单，只保留主卡、背景队列预览、quotes 和 chips。</p>
+      <div class="meta">
+        <span>Batch 00</span>
+        <span>Final app reference</span>
+        <span>3 built-in skins</span>
+      </div>
+      <div class="swatches">
+        <i style="background:#d29a62"></i>
+        <i style="background:#e47f6b"></i>
+        <i style="background:#c8b5ff"></i>
+        <i style="background:#fff4ea"></i>
+      </div>
+      <ul class="bullet-list">
+        <li>产品目标来自 `product_design.md` 和 `proposal.md`：把通知流改成行动流。</li>
+        <li>当前实现把 shortlist 真的做进了原生 app，而不是只停留在 mock。</li>
+        <li>chip 与 toast 明确是 demo only，不接真实代理动作和集成。</li>
+      </ul>
+      <div class="notes"><strong>Final Current App Design</strong>四张主卡仍是北京北站、飞书会议、外卖、短信验证码；方向动作仍然是左丢掉、右执行、上依据、下稍后，但显式辅助卡已经拿掉，备用操作路径只保留给无障碍 action。</div>
+    </section>
+    <section class="stage">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="mesh"></div>
+          <div class="grain"></div>
+          <div class="phone-top">
+            <div class="clock">13:42</div>
+            <div class="top-row">
+              <div class="rail-pill">朝阳区 · 锁屏</div>
+              <div class="note-pill">夜间调度台，适合做默认主皮肤。</div>
+            </div>
+            <div class="skin-row">
+              <div class="active">Bronze</div>
+              <div>Coral</div>
+              <div>Steel</div>
+            </div>
+          </div>
+          <section class="queue">
+            <article class="queue-card queue-ghost">
+              <div class="meta-strip"><span>飞书 · 周会 OKR 同步</span><span>中高置信</span></div>
+              <strong>静音入会，跳过等候室。</strong>
+            </article>
+            <article class="queue-card queue-ghost">
+              <div class="meta-strip"><span>美团 · 骑手即将到达</span><span>高置信</span></div>
+              <strong>准备下楼取餐。</strong>
+            </article>
+          </section>
+          <section class="stack">
+            <article class="card">
+              <div class="section-label">当前最可能行动</div>
+              <div class="title">去北京北站网约车乘车点接人</div>
+              <div class="caption">不是消息摘要，而是把下一步动作直接提前到锁屏正中央。当前只让首卡完整展开，后卡压回背景队列。</div>
+            </article>
+            <div class="quote-stream">
+              <div class="quote">“我已经到北京北站了，你到哪了？”</div>
+              <div class="quote">“上车点不好找，到了联系我。”</div>
+            </div>
+            <div class="chip-grid">
+              <div class="primary">一键打车</div>
+              <div>乘车点攻略</div>
+              <div>地铁换乘</div>
+              <div>到达回复</div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

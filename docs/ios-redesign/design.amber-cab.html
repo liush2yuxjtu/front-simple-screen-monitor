@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amber Cab</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root{--display-font:"DIN Alternate","Avenir Next Condensed","PingFang SC",sans-serif;--body-font:"Charter","Songti SC",serif;--page:#14110f;--panel:rgba(241,234,220,.08);--line:rgba(241,234,220,.13);--text:#f1eadc;--muted:rgba(241,234,220,.74);--phone-bg:linear-gradient(180deg,#1c1814,#12100f 68%,#0d0b0a);--phone-panel:rgba(39,33,28,.8);--phone-line:rgba(241,234,220,.14);--phone-text:#f6efe3;--phone-muted:rgba(246,239,227,.72);--accent:#d6a43a;--accent-ink:#1b1510}
+    .fare{position:absolute;left:-12px;top:320px;padding:10px 12px;border-radius:0 14px 14px 0;background:linear-gradient(90deg,#f0c858,#d6a43a);color:#1b1510;font:800 11px/1 var(--ui-font);letter-spacing:.18em;text-transform:uppercase;box-shadow:0 8px 24px rgba(214,164,58,.24)} .ticket{display:grid;gap:12px;background:linear-gradient(180deg,rgba(39,33,28,.96),rgba(29,24,21,.96))} .ticket .band{background:rgba(255,255,255,.04)} .ticket-head{display:flex;justify-content:space-between;gap:12px} .fare-row{display:grid;grid-template-columns:1fr auto;gap:12px} .dock{gap:8px;padding:8px;border-radius:28px;background:rgba(255,255,255,.04)} .dock-button{padding:13px 10px}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">Batch 01</a>
+      <h1>Amber Cab</h1>
+      <p class="lede">夜间出行工具感最强的一套。它把行动卡拆成票头、证据和执行区，像一张会发光的行程单。</p>
+      <div class="meta"><span>Night transit</span><span>Single-hand</span><span>Strong transactions</span></div>
+      <div class="swatches"><i style="background:#151311"></i><i style="background:#24201c"></i><i style="background:#d6a43a"></i><i style="background:#f1eadc"></i></div>
+      <ul class="bullet-list"><li>主卡像票据，信息分带清楚，适合打车、会议、验证码等强事务动作。</li><li>高置信标签直接贴在卡边，像夜间反光贴。</li><li>底部 rail 做粗胶囊，像 iOS 原生大控件。</li></ul>
+      <div class="notes"><strong>SwiftUI Mapping</strong>卡片分为票头、证据、执行区三段，空状态用“车已到站”的利落语言收尾。</div>
+    </section>
+    <section class="stage">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="mesh"></div><div class="grain"></div><div class="fare">High certainty</div>
+          <div class="phone-top"><div class="clock">09:34</div><div class="rail-pill">夜间行动流 · 5G</div></div>
+          <section class="hero"><div class="hero-title">13:42</div><div class="hero-copy">像在路口做决定。信息要亮，操作要大，拖泥带水的解释一律后置。</div></section>
+          <section class="stack">
+            <article class="card ticket"><div class="ticket-head"><div class="section-label">行程单 · 微信会议 2 分钟后开始</div><div class="chip primary">Meet now</div></div><div class="title">提前打开会议并静音入场</div><div class="fare-row"><div class="band"><div class="section-label">证据</div><div class="caption">日历提醒 + 最近一次静音入会习惯 + 耳机已连接</div></div><div class="band"><div class="section-label">耗时</div><div class="caption">8s</div></div></div><div class="band"><div class="section-label">执行区</div><div class="chips"><div class="chip primary">静音入会</div><div class="chip">先看议程</div><div class="chip">提醒两分钟后</div><div class="chip">忽略本次</div></div></div></article>
+            <article class="sheet"><div class="section-label">Motion note</div><div class="caption">左右滑动更快，执行后底部 rail 短暂提亮，不依赖 toast 独自表达。</div></article>
+          </section>
+          <nav class="dock"><div class="dock-button">丢掉</div><div class="dock-button primary">执行</div><div class="dock-button">依据</div><div class="dock-button">稍后</div></nav>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

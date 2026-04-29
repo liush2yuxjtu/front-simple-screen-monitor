@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swipe Feedback Lab</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root{--page:#12100d;--panel:rgba(255,238,218,.08);--line:rgba(255,238,218,.16);--text:#fff3e5;--muted:rgba(255,243,229,.72);--phone-bg:linear-gradient(180deg,#140f0d,#271912 56%,#090706);--phone-panel:rgba(255,232,202,.14);--phone-line:rgba(255,232,202,.22);--phone-text:#fff4e9;--phone-muted:rgba(255,244,233,.7);--accent:#d99a58;--accent-ink:#1b0e05}
+    .stage-shell{position:relative;display:grid;place-items:center}.phone{min-height:880px;touch-action:none}.phone-top{display:block}.lock-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;color:var(--phone-muted);font:700 12px/1 var(--ui-font)}.time{font:800 58px/1 var(--display-font);margin-top:28px}.feedback-hud{position:relative;z-index:3;margin:16px 4px 0;display:grid;gap:10px}.decision{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--phone-line);border-radius:22px;background:rgba(255,232,202,.12);font:800 13px/1.1 var(--ui-font)}.decision b{color:var(--active,#d99a58)}.meter{height:8px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}.meter i{display:block;height:100%;width:var(--power,0%);background:var(--active,#d99a58);transition:width .08s linear}
+    .arena{position:relative;z-index:2;margin-top:18px;height:520px}.target{position:absolute;display:grid;place-items:center;border:1px solid var(--phone-line);border-radius:18px;background:rgba(255,232,202,.08);color:var(--phone-muted);font:800 12px/1.2 var(--ui-font);transition:.16s ease}.target.active{background:color-mix(in srgb,var(--active) 24%,rgba(255,232,202,.08));color:var(--phone-text);transform:scale(1.04)}.target.top{left:72px;right:72px;top:0;height:54px}.target.bottom{left:72px;right:72px;bottom:0;height:54px}.target.left{left:0;top:146px;width:62px;height:168px}.target.right{right:0;top:146px;width:62px;height:168px}.card{position:absolute;left:50%;top:50%;width:292px;min-height:356px;transform:translate(-50%,-50%);cursor:grab;user-select:none;transition:box-shadow .14s ease,background .14s ease,border-color .14s ease}.card.dragging{cursor:grabbing;transition:none}.card::after{content:"";position:absolute;inset:-8px;border-radius:34px;border:2px solid color-mix(in srgb,var(--active) var(--halo,0%),transparent);pointer-events:none}.card-head{display:flex;justify-content:space-between;gap:10px;color:var(--phone-muted);font:800 11px/1 var(--ui-font)}.card-title{font:800 34px/1.02 var(--display-font);margin:18px 0 10px}.card-copy{color:var(--phone-muted);line-height:1.5}.quote{margin-top:16px}.chips{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}.receipt{position:relative;z-index:3;margin:12px 4px 0;padding:12px 14px;border-radius:20px;border:1px solid var(--phone-line);background:rgba(0,0,0,.18);color:var(--phone-muted);font:700 12px/1.45 var(--ui-font)}.swatches i:nth-child(1){background:#e85c52}.swatches i:nth-child(2){background:#d99a58}.swatches i:nth-child(3){background:#8fb7ff}.swatches i:nth-child(4){background:#72c98b}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">iOS Redesign</a>
+      <h1>Swipe Feedback Lab</h1>
+      <p class="lede">给 `swipeV2` iOS app 的四向手势加更清楚的反馈：拖动时先显示方向，再显示力度，过阈值后把文案切成“松手执行”。</p>
+      <div class="meta"><span>Interactive web prototype</span><span>Clear release threshold</span><span>Maps to SwiftUI drag state</span></div>
+      <div class="swatches"><i></i><i></i><i></i><i></i></div>
+      <ul class="bullet-list">
+        <li>左、右、上、下四个目标区常驻，但只有当前方向高亮。</li>
+        <li>顶部 HUD 实时展示动作、力度百分比和是否已过提交阈值。</li>
+        <li>卡片边框、投影、目标区和 HUD 同步换色，避免只靠位移判断。</li>
+      </ul>
+      <div class="notes"><strong>Native mapping</strong>SwiftUI 里可从 `dragOffset` 派生 `direction`、`progress`、`isCommitted`，再把颜色、label、accessibility value 和 haptic pre-warm 都绑在同一状态上。</div>
+    </section>
+    <section class="stage stage-shell">
+      <div class="phone-wrap">
+        <div class="phone" id="phone">
+          <div class="mesh"></div><div class="grain"></div>
+          <div class="phone-top">
+            <div class="lock-row"><span>13:42</span><span>锁屏 · Bronze</span></div>
+            <div class="time">Swipe</div>
+          </div>
+          <div class="feedback-hud">
+            <div class="decision"><span id="verb">轻拖卡片选择方向</span><b id="state">未提交</b></div>
+            <div class="meter"><i id="meter"></i></div>
+          </div>
+          <div class="arena" id="arena">
+            <div class="target top" data-dir="up">上滑 · 看依据</div>
+            <div class="target right" data-dir="right">右滑 · 执行</div>
+            <div class="target bottom" data-dir="down">下滑 · 稍后</div>
+            <div class="target left" data-dir="left">左滑 · 丢掉</div>
+            <article class="card" id="card">
+              <div class="card-head"><span>微信 · 林林</span><span>高置信</span></div>
+              <div class="card-title">去北京北站网约车乘车点接人。</div>
+              <p class="card-copy">拖动时，反馈需要比卡片位移更早出现；过阈值后，用户应该不用猜松手会发生什么。</p>
+              <div class="quote">“我已经到北京北站了，你到哪了？”</div>
+              <div class="chips"><div class="chip primary">一键打车</div><div class="chip">乘车点攻略</div></div>
+            </article>
+          </div>
+          <div class="receipt" id="receipt">结果会在松手后显示。短拖会回弹，不改变卡堆。</div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const card=document.getElementById("card"),arena=document.getElementById("arena"),verb=document.getElementById("verb"),state=document.getElementById("state"),meter=document.getElementById("meter"),receipt=document.getElementById("receipt"),phone=document.getElementById("phone");
+    const labels={left:["左滑丢掉","#e85c52"],right:["右滑执行","#d99a58"],up:["上滑看依据","#8fb7ff"],down:["下滑稍后","#72c98b"],none:["轻拖卡片选择方向","#d99a58"]};
+    let start=null,last={x:0,y:0};const threshold=112;
+    function direction(x,y){if(Math.max(Math.abs(x),Math.abs(y))<10)return"none";return Math.abs(x)>Math.abs(y)?(x>0?"right":"left"):(y>0?"down":"up")}
+    function paint(x=0,y=0,done=false){const dir=direction(x,y),dist=Math.min(Math.hypot(x,y),threshold),pct=Math.round(dist/threshold*100),commit=pct>=100&&dir!=="none",data=labels[dir];phone.style.setProperty("--active",data[1]);phone.style.setProperty("--power",pct+"%");phone.style.setProperty("--halo",pct+"%");card.style.transform=`translate(calc(-50% + ${x}px),calc(-50% + ${y}px)) rotate(${x/18}deg)`;verb.textContent=commit?`${data[0]} · 松手确认`:data[0];state.textContent=commit?"已过阈值":`${pct}%`;meter.style.width=pct+"%";document.querySelectorAll(".target").forEach(el=>el.classList.toggle("active",el.dataset.dir===dir&&dir!=="none"));if(done)receipt.textContent=commit?`已触发：${data[0]}。原生版应同时给 haptic、toast 和卡堆动画。`:"短拖已回弹：不改变卡堆。"}
+    function move(e){if(!start)return;const p=e.touches?e.touches[0]:e;last={x:p.clientX-start.x,y:p.clientY-start.y};paint(last.x,last.y)}
+    function end(){if(!start)return;start=null;card.classList.remove("dragging");paint(last.x,last.y,true);setTimeout(()=>paint(0,0,false),commitDelay(last));last={x:0,y:0}}
+    function commitDelay(v){return Math.hypot(v.x,v.y)>=threshold?1150:500}
+    card.addEventListener("mousedown",e=>{start={x:e.clientX,y:e.clientY};card.classList.add("dragging")});card.addEventListener("touchstart",e=>{const p=e.touches[0];start={x:p.clientX,y:p.clientY};card.classList.add("dragging")},{passive:true});window.addEventListener("mousemove",move);window.addEventListener("touchmove",move,{passive:true});window.addEventListener("mouseup",end);window.addEventListener("touchend",end);paint();
+  </script>
+</body>
+</html>

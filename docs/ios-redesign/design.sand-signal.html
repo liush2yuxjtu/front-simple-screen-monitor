@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sand Signal</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <script src="./batch-03/navigation.js" defer></script>
+  <style>
+    :root{color-scheme:light;--display-font:"Canela","Iowan Old Style","Songti SC",serif;--body-font:"Baskerville","Songti SC",serif;--page:#e6dccd;--panel:rgba(65,57,50,.08);--line:rgba(65,57,50,.14);--text:#413932;--muted:rgba(65,57,50,.72);--phone-bg:linear-gradient(180deg,#f6efe3,#efe6d8 72%,#e8decf);--phone-panel:rgba(255,252,246,.78);--phone-line:rgba(65,57,50,.12);--phone-text:#413932;--phone-muted:rgba(65,57,50,.68);--accent:#8d9a5a;--accent-ink:#fffdf7}
+    .phone::before{background:#514741} .airy{display:grid;gap:16px} .airy .card,.airy .sheet{background:rgba(255,252,246,.76);box-shadow:none} .toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;background:rgba(255,255,255,.5)} .toolbar div{padding:10px 0;border-radius:999px;text-align:center;font:700 12px/1 var(--ui-font);color:#413932;background:rgba(65,57,50,.05)} .toolbar div.primary{background:#8d9a5a;color:#fffdf7}
+  </style>
+</head>
+<body data-nav-index="1">
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">Batch 01</a>
+      <h1>Sand Signal</h1>
+      <p class="lede">把压迫感降下来，把呼吸感拉开。它更像日间长期使用的工具，而不是只为舞台服务的夜间演示稿。</p>
+      <div class="meta"><span>Day mode</span><span>Low pressure</span><span>Long-term product</span></div>
+      <div class="swatches"><i style="background:#e8decf"></i><i style="background:#f6efe3"></i><i style="background:#8d9a5a"></i><i style="background:#413932"></i></div>
+      <ul class="bullet-list"><li>主卡更薄，层次靠留白而不是厚玻璃和强阴影。</li><li>detail 以内容可读性优先，动作区像日历工具条。</li><li>如果目标是长期真实使用，这套最稳。</li></ul>
+      <div class="notes"><strong>SwiftUI Mapping</strong>支持明亮背景与深色文字组合，把 `LockWallpaperView` 改成柔和日间纹理。</div>
+    </section>
+    <section class="stage">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="mesh"></div><div class="grain"></div>
+          <div class="phone-top"><div class="clock">09:34</div><div class="rail-pill">Quiet signal · 3 items compressed</div></div>
+          <section class="hero"><div class="hero-title">13:42</div><div class="hero-copy">白天模式下，行动流应该像一个可靠的整理器，而不是不断抢焦点的警报器。</div></section>
+          <section class="stack airy">
+            <article class="card"><div class="section-label">会议提醒 · 12 分钟后</div><div class="title">先把会议置顶，再稍后打开</div><div class="caption">这不是必须立即执行的动作，所以它应该看起来更轻、更可延后。</div><div class="two-up"><div class="band"><div class="section-label">priority</div><div class="caption">Medium</div></div><div class="band"><div class="section-label">reason</div><div class="caption">下一步明确，但无立即风险。</div></div></div></article>
+            <article class="sheet"><div class="section-label">Readable detail</div><div class="caption">只保留必要的位移动画，下滑稍后做轻微回弹，不制造额外戏剧感。</div></article>
+          </section>
+          <div class="toolbar"><div>丢掉</div><div class="primary">执行</div><div>依据</div><div>稍后</div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graphite Mint</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root{--display-font:"Avenir Next Condensed","SF Pro Display","PingFang SC",sans-serif;--body-font:"Iowan Old Style","Songti SC",serif;--page:#101412;--panel:rgba(238,242,234,.08);--line:rgba(238,242,234,.12);--text:#eef2ea;--muted:rgba(238,242,234,.72);--phone-bg:linear-gradient(180deg,#151918,#101312 66%,#0d100f);--phone-panel:rgba(33,39,37,.82);--phone-line:rgba(238,242,234,.12);--phone-text:#eef4ef;--phone-muted:rgba(238,244,239,.7);--accent:#8ec3a1;--accent-ink:#112018}
+    .hero{padding-top:18px} .hero-title{font-size:68px} .inspection{display:grid;grid-template-columns:1.2fr .8fr;gap:10px} .inspection .mini-window{background:rgba(255,255,255,.04)} .status-strip{max-width:290px} .meter b{background:linear-gradient(90deg,#8ec3a1 0 88%,rgba(255,255,255,.08) 88%)}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">Batch 01</a>
+      <h1>Graphite Mint</h1>
+      <p class="lede">把感性表达压低，把可信度、状态与执行结果做得更系统。它最像可以直接长成原生 SwiftUI 成品的一套。</p>
+      <div class="meta"><span>System tool</span><span>Calm precision</span><span>Low implementation risk</span></div>
+      <div class="swatches"><i style="background:#151817"></i><i style="background:#212725"></i><i style="background:#8ec3a1"></i><i style="background:#eef2ea"></i></div>
+      <ul class="bullet-list"><li>顶部时间和信号区收紧，让重心完全让给主卡。</li><li>主卡内用微型统计条代替一部分长解释，避免 web-demo 味。</li><li>detail sheet 改成 inspection panel，toast 改成薄条状态带。</li></ul>
+      <div class="notes"><strong>SwiftUI Mapping</strong>合并 `StatusBarView` 和 `HeaderView`，把 `ToastView` 收成状态薄条。</div>
+    </section>
+    <section class="stage">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="mesh"></div><div class="grain"></div>
+          <div class="phone-top"><div class="clock">09:34</div><div class="rail-pill">System mode · 5G · 78%</div></div>
+          <section class="hero"><div class="hero-kicker">Action stream · graphite mint</div><div class="hero-title">13:42</div><div class="hero-copy">AI 只准备下一步，不替你越权执行。所有状态都要简短、可核对、可落地。</div></section>
+          <div class="status-strip">Toast as status strip · 286ms · no dramatic motion</div>
+          <section class="stack">
+            <article class="card"><div class="section-label">美团 · 约 300m</div><div class="title">准备下楼取餐</div><div class="caption">不是外卖摘要，而是一个低风险、低摩擦、现在就能做的动作。</div><div class="stat-grid"><div class="metric"><span class="stat-name">到达</span><span class="value">03m</span></div><div class="metric"><span class="stat-name">方向</span><span class="value">S</span></div><div class="metric"><span class="stat-name">风险</span><span class="value">Low</span></div></div></article>
+            <article class="inspection"><div class="sheet"><div class="section-label">Inspection note</div><div class="caption">先给判断，再给证据。解释像检查面板，而不是营销浮层。</div></div><div class="mini-window meter"><div class="section-label">confidence</div><div class="progress"><b></b><div class="caption">92% 来自位置、外卖状态、最近三分钟无活跃聊天。</div></div></div></article>
+          </section>
+          <nav class="dock"><div class="dock-button">丢掉</div><div class="dock-button primary">执行</div><div class="dock-button">依据</div><div class="dock-button">稍后</div></nav>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

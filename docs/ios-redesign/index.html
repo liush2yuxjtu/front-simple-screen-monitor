@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>swipev2 iOS redesign batch 01</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root { --page:#14110f; --panel:rgba(255,243,225,.08); --line:rgba(255,243,225,.14); --text:#f8efdf; --muted:rgba(248,239,223,.75); }
+    .tone-red{--tone:#c96b4b;--tone-bg:linear-gradient(180deg,#2a1d19,#181110)} .tone-jade{--tone:#8fbf6c;--tone-bg:linear-gradient(180deg,#172018,#121714)}
+    .tone-amber{--tone:#d6a43a;--tone-bg:linear-gradient(180deg,#201a15,#14110f)} .tone-paper{--tone:#b84f3e;--tone-bg:linear-gradient(180deg,#f5ecde,#eee0cb);--ink:#2d2723}
+    .tone-mint{--tone:#8ec3a1;--tone-bg:linear-gradient(180deg,#1a1f1d,#141816)} .tone-copper{--tone:#bf7b46;--tone-bg:linear-gradient(180deg,#231917,#16110f)}
+    .tone-sand{--tone:#8d9a5a;--tone-bg:linear-gradient(180deg,#f0e6d7,#e4d9c8);--ink:#413932} .tone-olive{--tone:#a3b36a;--tone-bg:linear-gradient(180deg,#1c1f17,#151710)}
+    .preview{background:var(--tone-bg);color:var(--ink,#fbf5eb)} .preview-band{background:color-mix(in srgb,var(--tone) 22%, transparent)}
+    .preview-card{display:grid;gap:10px} .preview-card b{font:800 22px/1 var(--display-font);letter-spacing:-.05em}
+    .preview-card p{font-size:13px;line-height:1.45;color:color-mix(in srgb,var(--ink,#fbf5eb) 68%, transparent)} .preview-strip{height:8px;border-radius:999px;background:linear-gradient(90deg,var(--tone) 0 64%,rgba(255,255,255,.08) 64%)}
+  </style>
+</head>
+<body>
+  <main class="gallery">
+    <section class="gallery-hero panel">
+      <div class="eyebrow">Batch 01 · swipev2 ios redesign</div>
+      <h1>同一个行动流，重写成 8 套 UI 语法</h1>
+      <p class="lede">`docs/ios-redesign/design.current-ios-app.html` 是当前 `swipeV2` iOS app 的最终设计参考页。当前 app 已经切到 `Bronze / Coral / Steel` 三套内建 skins；这里的 Batch 01、Batch 02、Batch 03 仍然只是 redesign 探索，用来比较“如果后续重做，还能往哪里走”。</p>
+      <div class="meta"><span>当前 final app + redesign drafts</span><span>Batch 00 到 Batch 03</span><span>每页都对应一份 design md</span></div>
+      <div class="top-actions"><a class="tile-link" href="./design.current-ios-app.html">打开 Batch 00 · 当前 final iOS app</a><a class="tile-link" href="./design.swipe-feedback.html">打开 Swipe Feedback Lab</a><a class="tile-link" href="./design.swipe-feedback-16.html">打开 Swipe Feedback 16</a><a class="tile-link" href="./design.skin-shortlist.md">查看 3-skin 已落地说明</a><a class="tile-link" href="./batch-00-status.md">查看 Batch 00 状态</a><a class="tile-link" href="./batch-01-status.md">查看 Batch 01 状态</a><a class="tile-link" href="./batch-02/index.html">打开 Batch 02 · Sand Signal 衍生稿</a><a class="tile-link" href="./batch-03/index.html">打开 Batch 03 · current app + winners + rebatch</a><a class="tile-link" href="./batch-03-status.md">查看 Batch 03 状态</a><a class="tile-link" href="../swipev2-ios.md">查看当前 iOS demo 状态</a></div>
+    </section>
+    <section class="catalog">
+      <article class="catalog-card panel"><div class="preview tone-red"><div class="preview-band"></div><div class="preview-card"><b>Red Clay</b><p>厚陶片、暖压感、横向决策台，适合“现在就做决定”的城市夜间任务。</p><div class="preview-strip"></div></div></div><strong>最强 demo 冲击力</strong><p>把行动卡做成命令前室，强调重量、阻尼和执行决心。</p><div class="catalog-links"><a class="tile-link" href="./design.red-clay.html">打开 HTML</a><a class="tile-link" href="./design.red-clay.md">查看说明</a></div></article>
+      <article class="catalog-card panel"><div class="preview tone-jade"><div class="preview-band"></div><div class="preview-card"><b>Jade Radar</b><p>坐标系、扫描线、路线分镜。它不像通知中心，更像实时判断系统。</p><div class="preview-strip"></div></div></div><strong>最贴合“行动流”叙事</strong><p>位置驱动任务会很自然地长在这套语言上。</p><div class="catalog-links"><a class="tile-link" href="./design.jade-radar.html">打开 HTML</a><a class="tile-link" href="./design.jade-radar.md">查看说明</a></div></article>
+      <article class="catalog-card panel"><div class="preview tone-amber"><div class="preview-band"></div><div class="preview-card"><b>Amber Cab</b><p>夜间出行票据、反光贴、粗胶囊 rail，单手处置感最明确。</p><div class="preview-strip"></div></div></div><strong>最像行动工具</strong><p>打车、会议、验证码这类强事务场景会非常清楚。</p><div class="catalog-links"><a class="tile-link" href="./design.amber-cab.html">打开 HTML</a><a class="tile-link" href="./design.amber-cab.md">查看说明</a></div></article>
+      <article class="catalog-card panel"><div class="preview tone-paper"><div class="preview-band"></div><div class="preview-card"><b>Ink Paper</b><p>浅色纸面、旁批、堆叠引用区，把 AI 判断变成可审阅稿件。</p><div class="preview-strip"></div></div></div><strong>最像认知助手</strong><p>不是警报系统，而是一张能批改、能展开解释的执行批注。</p><div class="catalog-links"><a class="tile-link" href="./design.ink-paper.html">打开 HTML</a><a class="tile-link" href="./design.ink-paper.md">查看说明</a></div></article>
+      <article class="catalog-card panel"><div class="preview tone-mint"><div class="preview-band"></div><div class="preview-card"><b>Graphite Mint</b><p>冷静精密、薄条状态带、inspection panel，更接近系统成品。</p><div class="preview-strip"></div></div></div><strong>最容易直接落 SwiftUI</strong><p>保留高级感，但把 web-demo 味压到最低。</p><div class="catalog-links"><a class="tile-link" href="./design.graphite-mint.html">打开 HTML</a><a class="tile-link" href="./design.graphite-mint.md">查看说明</a></div></article>
+      <article class="catalog-card panel"><div class="preview tone-copper"><div class="preview-band"></div><div class="preview-card"><b>Copper Grid</b><p>网格任务台、闭环铜条、why-now 小窗，更像 agent 控制台。</p><div class="preview-strip"></div></div></div><strong>最像操作系统控制面板</strong><p>对技术观众和产品 demo 都有很高辨识度。</p><div class="catalog-links"><a class="tile-link" href="./design.copper-grid.html">打开 HTML</a><a class="tile-link" href="./design.copper-grid.md">查看说明</a></div></article>
+      <article class="catalog-card panel"><div class="preview tone-sand"><div class="preview-band"></div><div class="preview-card"><b>Sand Signal</b><p>留白、细线、明亮背景、亲和工具条，更适合长期真实使用。</p><div class="preview-strip"></div></div></div><strong>最稳的长期产品化方向</strong><p>大屏冲击力弱一点，但日常使用压力也最低。</p><div class="catalog-links"><a class="tile-link" href="./design.sand-signal.html">打开 HTML</a><a class="tile-link" href="./design.sand-signal.md">查看说明</a></div></article>
+      <article class="catalog-card panel"><div class="preview tone-olive"><div class="preview-band"></div><div class="preview-card"><b>Olive Pulse</b><p>公共信息系统、ticker、任务轨道条，方向感非常强。</p><div class="preview-strip"></div></div></div><strong>最适合从 demo 走向系统工具</strong><p>如果要做 iOS / macOS 统一语言，这套非常有机会。</p><div class="catalog-links"><a class="tile-link" href="./design.olive-pulse.html">打开 HTML</a><a class="tile-link" href="./design.olive-pulse.md">查看说明</a></div></article>
+    </section>
+  </main>
+</body>
+</html>

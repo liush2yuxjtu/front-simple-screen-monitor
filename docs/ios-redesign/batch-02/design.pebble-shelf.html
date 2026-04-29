@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pebble Shelf</title>
+  <link rel="stylesheet" href="../design.shared.css" />
+  <style>:root{color-scheme:light;--page:#e9e3db;--panel:rgba(87,81,74,.08);--line:rgba(87,81,74,.14);--text:#57514a;--muted:rgba(87,81,74,.72);--phone-bg:linear-gradient(180deg,#faf6f0,#efe8df 72%,#e3d9ce);--phone-panel:rgba(255,252,247,.78);--phone-line:rgba(87,81,74,.11);--phone-text:#57514a;--phone-muted:rgba(87,81,74,.68);--accent:#90976a;--accent-ink:#fcfbf8}.phone::before{background:#68625b}.stacked{position:relative;padding-top:18px}.ghost{position:absolute;left:20px;right:20px;height:110px;border-radius:26px;border:1px solid var(--phone-line);background:rgba(87,81,74,.04)}.ghost.g1{top:0}.ghost.g2{top:8px;left:28px;right:28px}.toolbar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:rgba(255,255,255,.52)}.toolbar div{padding:10px 0;border-radius:999px;text-align:center;font:700 12px/1 var(--ui-font);background:rgba(87,81,74,.05)}.toolbar .primary{background:#90976a;color:#fcfbf8}</style>
+</head>
+<body>
+  <main class="board"><section class="side panel"><a class="back" href="./index.html">Batch 02</a><h1>Pebble Shelf</h1><p class="lede">把 Sand Signal 改成更明确的托盘和搁架语法。重点不只是当前动作，而是整个轻量队列的存在感。</p><div class="meta"><span>Queue</span><span>Multi-task</span><span>Shelf grammar</span></div><div class="swatches"><i style="background:#ece6dd"></i><i style="background:#faf6f0"></i><i style="background:#90976a"></i><i style="background:#57514a"></i></div><ul class="bullet-list"><li>显式露出背后队列，而不是只看一张主卡。</li><li>稍后动作像把卡放回下一层搁架。</li><li>很适合解释 Action Stream 是一条流。</li></ul><div class="notes"><strong>SwiftUI Mapping</strong>需要更明显的背卡可见性，适合扩展成多任务托盘视图。</div></section><section class="stage"><div class="phone-wrap"><div class="phone"><div class="mesh"></div><div class="grain"></div><div class="phone-top"><div class="clock">Queue</div><div class="rail-pill">3 pending · low pressure</div></div><section class="hero"><div class="hero-title">13:42</div><div class="hero-copy">当前动作重要，但背后的下一张、下下一张也应该被用户感知到。</div></section><section class="stack stacked"><div class="ghost g1"></div><div class="ghost g2"></div><article class="card"><div class="section-label">Top shelf</div><div class="title">先展示骑手位置</div><div class="caption">这类生活任务更像被放在托盘上轮流处理。</div></article></section><div class="toolbar"><div>丢掉</div><div class="primary">执行</div><div>依据</div><div>稍后</div></div></div></div></section></main>
+</body>
+</html>

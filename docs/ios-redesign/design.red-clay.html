@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Clay</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root{--display-font:"Avenir Next Condensed","DIN Condensed","PingFang SC",sans-serif;--body-font:"Charter","Songti SC",serif;--page:#1a120f;--panel:rgba(244,229,211,.08);--line:rgba(244,229,211,.14);--text:#f4e5d3;--muted:rgba(244,229,211,.76);--phone-bg:linear-gradient(180deg,#291b18,#1d1412 68%,#110c0b);--phone-panel:rgba(71,41,34,.68);--phone-line:rgba(244,229,211,.12);--phone-text:#f8ead9;--phone-muted:rgba(248,234,217,.72);--accent:#c96b4b;--accent-ink:#1e120f}
+    .phone{box-shadow:0 42px 120px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.08),inset 0 -28px 60px rgba(0,0,0,.22)} .kiln{position:absolute;inset:auto -8% -10% -8%;height:42%;background:radial-gradient(circle at 50% 0,rgba(201,107,75,.34),transparent 60%)} .slab{display:grid;gap:12px;padding:18px;border-radius:30px;background:linear-gradient(180deg,rgba(70,41,35,.94),rgba(44,28,25,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -18px 24px rgba(0,0,0,.16)} .slab::after{content:"";display:block;height:1px;background:linear-gradient(90deg,transparent,rgba(244,229,211,.34),transparent)} .ledge{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center} .ledge .chip{justify-self:end;background:rgba(201,107,75,.18)} .dock{grid-template-columns:1.05fr 1.15fr .9fr .9fr;background:rgba(30,18,15,.42);padding:8px;border-radius:28px;border:1px solid rgba(244,229,211,.12)} .drawer{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03))} .drawer .timeline li{border-left-color:rgba(201,107,75,.36)}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">Batch 01</a>
+      <h1>Red Clay</h1>
+      <p class="lede">把行动卡做成厚陶片和决策台。它不是通知聚合，而是“命令执行前的一次人为确认”。</p>
+      <div class="meta"><span>Warm pressure</span><span>Premium urgency</span><span>Demo-first</span></div>
+      <div class="swatches"><i style="background:#231816"></i><i style="background:#342522"></i><i style="background:#c96b4b"></i><i style="background:#f4e5d3"></i></div>
+      <ul class="bullet-list"><li>大时间、短胶囊、厚边界，把“现在就决定”做成主体氛围。</li><li>主卡被压成一整块陶片，引用区和行动区之间有明确压痕。</li><li>底部四向动作合并为一整条横向决策台，不再像四个分散按钮。</li></ul>
+      <div class="notes"><strong>SwiftUI Mapping</strong>把 `ActionProposalCard` 做厚、把 `GestureHintBar` 合并成单一 rail，把 detail 改成从底部抽出的暖色抽屉。</div>
+    </section>
+    <section class="stage">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="mesh"></div><div class="grain"></div><div class="kiln"></div>
+          <div class="phone-top"><div class="clock">09:34</div><div class="rail-pill">5G · 78%</div></div>
+          <section class="hero"><div class="hero-title">13:42</div><div class="hero-copy">命令前室只保留一个问题: 这件事要不要现在做。</div></section>
+          <div class="status-strip">Clay rail · 阻尼偏大 · 执行后只闪一次暖面</div>
+          <section class="stack">
+            <article class="slab"><div class="ticket-head">北京北站 · 滴滴出发口 B2</div><div class="ledge"><div class="title">直接展示网约车上车点</div><div class="chip primary">High certainty</div></div><div class="quote">末班高铁到站后 7 分钟内，用户通常先看出口，再切换打车路线。系统不再给摘要，而是给上车动作。</div><div class="two-up"><div class="band"><div class="section-label">evidence</div><div class="caption">短信到站提醒 + 地图搜索 + 最近一次打车入口</div></div><div class="band"><div class="section-label">why now</div><div class="caption">你已经走到站外，剩下的是确认而不是规划。</div></div></div></article>
+            <article class="sheet drawer"><div class="section-label">Drawer detail</div><ul class="timeline"><li>显示北京北站西广场当前上车点。</li><li>保留“稍后”作为下一张卡的归位动作。</li><li>执行完成后 rail 提亮，不靠夸张 toast。</li></ul></article>
+          </section>
+          <nav class="dock"><div class="dock-button">丢掉</div><div class="dock-button primary">执行</div><div class="dock-button">依据</div><div class="dock-button">稍后</div></nav>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

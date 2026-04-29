@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ink Paper</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root{color-scheme:light;--display-font:"Iowan Old Style","Palatino Linotype","Songti SC",serif;--body-font:"Baskerville","Songti SC",serif;--page:#ece2d3;--panel:rgba(68,55,46,.08);--line:rgba(68,55,46,.14);--text:#2d2723;--muted:rgba(45,39,35,.72);--phone-bg:linear-gradient(180deg,#f7f0e2,#efe4d0 68%,#e6d8c2);--phone-panel:rgba(255,251,244,.82);--phone-line:rgba(57,49,42,.12);--phone-text:#2d2723;--phone-muted:rgba(45,39,35,.68);--accent:#b84f3e;--accent-ink:#fff9f1}
+    .paper-stack{display:grid;gap:10px} .paper{background:rgba(255,255,255,.72);box-shadow:0 12px 24px rgba(95,74,61,.08)} .paper-strip{background:rgba(184,79,62,.08)} .margin-note{border-left:3px solid rgba(184,79,62,.42)} .dock{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px} .dock-button{background:rgba(86,70,58,.06);color:#2d2723} .dock-button.primary{color:#fff9f1} .phone::before{background:#332b26}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">Batch 01</a>
+      <h1>Ink Paper</h1>
+      <p class="lede">这套不再模拟夜间系统，而是把锁屏变成一张可批注、可展开解释的高质量便笺。可信度来自可读性，不来自压迫感。</p>
+      <div class="meta"><span>Editorial desk</span><span>Readable reasoning</span><span>Light mode</span></div>
+      <div class="swatches"><i style="background:#f3ecde"></i><i style="background:#fbf7ef"></i><i style="background:#b84f3e"></i><i style="background:#2d2723"></i></div>
+      <ul class="bullet-list"><li>引用区做成纸条堆叠，行动标题像编辑批注而不是系统警报。</li><li>detail 就地展开，像旁批，不像 modal 抽屉。</li><li>更适合以后承载 reasoning 和审核动作。</li></ul>
+      <div class="notes"><strong>SwiftUI Mapping</strong>允许浅色 `preferredColorScheme`，让 quote block 变成浅色纸片，手势提示改成下沿纸签。</div>
+    </section>
+    <section class="stage">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="mesh"></div><div class="grain"></div>
+          <div class="phone-top"><div class="clock">周一 09:34</div><div class="rail-pill">锁屏草稿 · 已折叠 3 条通知</div></div>
+          <section class="hero"><div class="hero-title">13:42</div><div class="hero-copy">AI 不替你决策，它先把零散信号排成一张可审阅的执行批注。</div></section>
+          <section class="stack">
+            <article class="paper paper-stack"><div class="section-label">短信 · 95588</div><div class="paper-strip">【工商银行】您的验证码是 824591，60 秒内有效。</div><div class="title">把 824591 填进刚才的登录页</div><div class="caption">验证码不是消息，而是十秒内就该完成的动作草稿。</div><div class="margin-note">刚刚在 Safari 输入过手机号，所以系统把“切回登录页 → 长按复制 → 粘贴”折叠成一步。</div></article>
+            <article class="sheet"><div class="section-label">旁批展开</div><div class="timeline"><li>detail 只在原地翻起一角，不把整张纸盖住。</li><li>执行成功时只推进一条细色带，不做营销式浮层。</li><li>这套最适合以后继续加解释文本。</li></div></article>
+          </section>
+          <nav class="dock"><div class="dock-button">丢掉</div><div class="dock-button primary">执行</div><div class="dock-button">依据</div><div class="dock-button">稍后</div></nav>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

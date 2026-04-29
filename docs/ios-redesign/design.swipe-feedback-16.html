@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swipe Feedback 16</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root{--page:#0f0e0d;--panel:rgba(255,244,228,.07);--line:rgba(255,244,228,.15);--text:#fff4e6;--muted:rgba(255,244,230,.72)}
+    .gallery{width:min(1560px,calc(100vw - 36px))}.gallery-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:end}.count{font:900 120px/.78 var(--display-font);letter-spacing:-.08em;color:#e0a45e}.catalog{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.variant{--a:#d99a58;--b:#18100b;display:block;min-height:470px;padding:14px;border-radius:28px;background:linear-gradient(150deg,color-mix(in srgb,var(--a) 18%,#101010),var(--b));overflow:hidden;position:relative;cursor:pointer;transition:transform .18s ease,border-color .18s ease}.variant *{pointer-events:none}.variant:hover,.variant:focus-visible{transform:translateY(-4px);outline:2px solid var(--a);outline-offset:3px}.variant:before{content:"";position:absolute;inset:-12%;background:var(--wash);opacity:.9}.mini{position:relative;z-index:1;height:326px;border:1px solid rgba(255,255,255,.16);border-radius:30px;padding:14px;background:rgba(255,255,255,.08);box-shadow:inset 0 1px rgba(255,255,255,.12),0 20px 56px rgba(0,0,0,.26);overflow:hidden}.status{display:flex;justify-content:space-between;font:800 10px/1 var(--ui-font);color:rgba(255,255,255,.72)}.headline{margin:13px 0 0;font:900 22px/.92 var(--display-font);letter-spacing:-.05em}.metric{height:9px;margin-top:9px;border-radius:999px;background:rgba(255,255,255,.13);overflow:hidden}.metric i{display:block;width:78%;height:100%;background:var(--a)}.card{position:absolute;padding:14px;border:1px solid rgba(255,255,255,.2);border-radius:24px;background:rgba(255,255,255,.13);box-shadow:0 18px 42px rgba(0,0,0,.24);color:white}.card strong{display:block;font:900 20px/1 var(--display-font);letter-spacing:-.04em}.card span{display:block;margin-top:8px;color:rgba(255,255,255,.68);font:700 11px/1.35 var(--ui-font)}.mini>.target,.mini>.ribbon,.mini>.stamp,.mini>.drawer,.mini>.queue,.mini>.halo,.mini>.mapline,.mini>.ledger,.mini>.ticker,.mini>.split,.mini>.magnet,.mini>.receipt,.mini>.shelf,.mini>.beacon,.mini>.mask,.mini>.harbor{position:absolute;color:white;font:900 11px/1 var(--ui-font)}.mini>.target{display:grid;place-items:center;border:1px solid rgba(255,255,255,.2);background:color-mix(in srgb,var(--a) 34%,transparent)}.mini>.right{right:10px;top:116px;width:48px;height:120px;border-radius:16px}.mini>.left{left:10px;top:116px;width:48px;height:120px;border-radius:16px}.mini>.up{left:72px;right:72px;top:56px;height:40px;border-radius:999px}.mini>.down{left:72px;right:72px;bottom:18px;height:42px;border-radius:999px}.variant h2{position:relative;z-index:1;margin:13px 0 4px;font:900 23px/.95 var(--display-font);letter-spacing:-.05em}.variant p{position:relative;z-index:1;font:600 13px/1.45 var(--ui-font);color:rgba(255,255,255,.72)}.code{position:absolute;right:14px;bottom:14px;font:900 10px/1 var(--ui-font);letter-spacing:.12em;color:var(--a)}
+    .mini>.ribbon,.mini>.stamp,.mini>.drawer,.mini>.queue,.mini>.halo,.mini>.mapline,.mini>.ledger,.mini>.ticker,.mini>.split,.mini>.magnet,.mini>.receipt,.mini>.shelf,.mini>.beacon,.mini>.mask,.mini>.harbor{display:none}
+    .bloom .card{left:54px;right:28px;top:116px;transform:translateX(28px) rotate(4deg)}.bloom .halo{right:20px;top:126px;width:96px;height:96px;border-radius:50%;border:8px solid var(--a);box-shadow:0 0 38px var(--a)}
+    .corner .card{left:28px;right:54px;top:116px;transform:translateX(-28px) rotate(-4deg)}.corner .stamp{left:42px;top:92px;padding:9px 12px;border:2px solid var(--a);transform:rotate(-12deg)}
+    .drawer .card{left:36px;right:36px;top:142px}.drawer .drawer{left:28px;right:28px;top:58px;height:76px;border-radius:20px;background:color-mix(in srgb,var(--a) 30%,transparent);border:1px solid rgba(255,255,255,.2);display:grid;place-items:center}
+    .queue .card{left:42px;right:42px;top:96px;transform:translateY(30px)}.queue .queue{left:34px;right:34px;bottom:18px;height:58px;border-radius:20px;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--a) 38%,transparent) 0 26px,rgba(255,255,255,.08) 26px 36px)}
+    .rail .card{left:42px;right:64px;top:118px;transform:translateX(24px)}.rail .ribbon{right:14px;top:70px;bottom:20px;width:34px;border-radius:999px;background:linear-gradient(var(--a),transparent)}
+    .tear .card{left:34px;right:44px;top:118px;transform:translateX(-25px)}.tear .mask{left:16px;top:84px;bottom:52px;width:36px;background:repeating-linear-gradient(180deg,var(--a) 0 8px,transparent 8px 16px)}
+    .witness .card{left:40px;right:40px;top:154px}.witness .shelf{left:30px;right:30px;top:72px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.witness .shelf i{height:42px;border-radius:14px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.18)}
+    .moss .card{left:40px;right:40px;top:98px;transform:translateY(28px)}.moss .ticker{left:18px;right:18px;bottom:26px;height:24px;border-radius:999px;background:linear-gradient(90deg,var(--a) 68%,rgba(255,255,255,.1) 68%)}
+    .taxi .card{left:46px;right:30px;top:120px;transform:translateX(27px)}.taxi .mapline{left:24px;right:24px;top:80px;height:84px;border:2px dashed var(--a);border-left:0;border-bottom:0;border-radius:0 30px 0 0}
+    .quiet .card{left:30px;right:54px;top:118px;transform:translateX(-24px)}.quiet .split{left:18px;top:78px;bottom:34px;width:28px;border-radius:999px;background:linear-gradient(transparent,var(--a),transparent)}
+    .lift .card{left:42px;right:42px;top:142px;transform:translateY(-28px)}.lift .beacon{left:50%;top:54px;width:150px;height:150px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,var(--a),transparent 62%);opacity:.5}
+    .calendar .card{left:42px;right:42px;top:98px;transform:translateY(28px)}.calendar .ledger{left:28px;right:28px;bottom:20px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.calendar .ledger i{height:34px;border-radius:10px;background:rgba(255,255,255,.14)}
+    .command .card{left:34px;right:34px;top:118px}.command .halo{left:28px;right:28px;top:106px;height:128px;border-radius:32px;border:5px solid var(--a);clip-path:polygon(0 0,86% 0,86% 100%,0 100%)}
+    .redact .card{left:30px;right:56px;top:118px;transform:translateX(-26px)}.redact .mask{left:30px;right:64px;top:132px;height:94px;background:repeating-linear-gradient(180deg,var(--a) 0 13px,rgba(0,0,0,.24) 13px 22px);border-radius:20px}
+    .receipt .card{left:42px;right:42px;top:154px}.receipt .receipt{left:50px;right:50px;top:54px;height:92px;border-radius:16px;background:linear-gradient(180deg,#fff,var(--a));color:#172033;display:grid;place-items:center}
+    .harbor .card{left:42px;right:42px;top:98px;transform:translateY(28px)}.harbor .harbor{left:36px;right:36px;bottom:18px;height:68px;border-radius:36px 36px 18px 18px;background:radial-gradient(circle at 50% 0,var(--a),rgba(255,255,255,.08) 66%)}
+    .bloom .halo,.corner .stamp,.queue .queue,.rail .ribbon,.tear .mask,.moss .ticker,.taxi .mapline,.quiet .split,.lift .beacon,.command .halo,.redact .mask,.harbor .harbor{display:block}
+    @media(max-width:1180px){.catalog{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){.gallery-hero{grid-template-columns:1fr}.catalog{grid-template-columns:1fr}.count{font-size:72px}}
+  </style>
+</head>
+<body>
+  <main class="gallery">
+    <section class="gallery-hero panel">
+      <div><a class="back" href="./index.html">iOS Redesign</a><h1>Swipe Feedback 16</h1><p class="lede">16 个完全不同的 swipe feedback 方向。没有底部四按钮。方向、阈值和结果预期必须在卡片边缘、目标区或 HUD 里提前出现。</p><div class="meta"><span>No bottom fallback buttons</span><span>Four-way swipe clarity</span><span>Pick one for native SwiftUI</span></div></div>
+      <div class="count">16</div>
+    </section>
+    <section class="catalog" id="catalog"></section>
+  </main>
+  <script>
+    const designs=[
+      ["Pressure Bloom","bloom","#d99a58","#180f09","right","pressure-bloom","执行不是 toast，右侧热区会开花，卡片越过阈值时出现完整光环。"],
+      ["Corner Verdict","corner","#e85c52","#190d0d","left","corner-verdict","丢弃像盖章裁决，左上判决章先出现，再推动卡片离场。"],
+      ["Blue Evidence","drawer","#8fb7ff","#0c1320","up","blue-evidence","依据是顶部抽屉，不是新按钮。上滑时证据门缝先打开。"],
+      ["Green Delay","queue","#72c98b","#0d1710","down","green-delay","稍后变成队列槽，卡片下沉到下一轮，不像失败。"],
+      ["Copper Rail","rail","#c98243","#1b120d","right","copper-rail","右侧常驻 rail 显示执行目标，过线后 rail 从空心变实心。"],
+      ["Ink Rejection","tear","#f06d62","#151111","left","ink-rejection","左滑出现撕边，反馈比单纯红色更具体。"],
+      ["Glass Witness","witness","#a9d6ff","#10151a","up","glass-witness","上方证词窗先浮出，两条引用像玻璃证据片。"],
+      ["Moss Queue","moss","#95bd6b","#14170e","down","moss-queue","底部不是按钮，是回队尾 ticker，告诉用户动作会延后。"],
+      ["Taxi Confirm","taxi","#ffbf52","#201507","right","taxi-confirm","路线虚线和黄色执行区联动，适合打车这种即时行动。"],
+      ["Silent Dismiss","quiet","#d65d73","#180d12","left","silent-dismiss","低亮左侧分割线，少一点危险感，但仍明确是丢掉。"],
+      ["Signal Lift","lift","#79c7d8","#0b1719","up","signal-lift","雷达光束把卡片抬起来，适合 explain why。"],
+      ["Calendar Sink","calendar","#b1c96f","#17190c","down","calendar-sink","下方日历格吸收卡片，稍后=重新排程。"],
+      ["Command Halo","command","#d7a171","#150e09","right","command-halo","整张卡被执行 halo 包住，100% 前不会误提交。"],
+      ["Redacted Left","redact","#ef7564","#18100f","left","redacted-left","遮盖条覆盖卡片内容，表示这条提案被归档。"],
+      ["Receipt Pull","receipt","#9bbcff","#10131c","up","receipt-pull","依据页像收据从顶部拉出，适合需要解释信任的场景。"],
+      ["Soft Harbor","harbor","#7ec7a2","#0f1713","down","soft-harbor","稍后进入安全港，视觉温和但结果很清楚。"]
+    ];
+    const dirText={right:"执行",left:"丢掉",up:"依据",down:"稍后"};
+    const wash=a=>`radial-gradient(circle at 76% 18%,${a}66,transparent 30%),linear-gradient(135deg,rgba(255,255,255,.08),transparent 45%)`;
+    document.getElementById("catalog").innerHTML=designs.map((d,i)=>`<a class="variant ${d[1]}" href="./design.swipe-feedback-16-${d[5]}.html" aria-label="打开 ${d[0]} 详情页" style="--a:${d[2]};--b:${d[3]};--wash:${wash(d[2])}"><div class="mini"><div class="status"><span>13:42</span><span>${dirText[d[4]]} · 78%</span></div><div class="headline">${d[0]}</div><div class="metric"><i></i></div><div class="target ${d[4]}">${dirText[d[4]]}</div><div class="halo"></div><div class="stamp">${dirText[d[4]]}</div><div class="drawer">依据</div><div class="queue"></div><div class="ribbon"></div><div class="mask"></div><div class="shelf"><i></i><i></i></div><div class="ticker"></div><div class="mapline"></div><div class="split"></div><div class="beacon"></div><div class="ledger"><i></i><i></i><i></i><i></i><i></i></div><div class="receipt">WHY</div><div class="harbor"></div><div class="card"><strong>北京北站行动提案</strong><span>松手前就能看出方向、力度和结果。</span></div></div><h2>${String(i+1).padStart(2,"0")} · ${d[0]}</h2><p>${d[6]}</p><div class="code">${d[4].toUpperCase()}</div></a>`).join("");
+  </script>
+</body>
+</html>

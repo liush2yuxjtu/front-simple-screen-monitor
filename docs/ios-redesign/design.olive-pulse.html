@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Olive Pulse</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root{--display-font:"Avenir Next Condensed","DIN Condensed","PingFang SC",sans-serif;--body-font:"Charter","Songti SC",serif;--page:#13150f;--panel:rgba(236,231,215,.08);--line:rgba(236,231,215,.13);--text:#ece7d7;--muted:rgba(236,231,215,.73);--phone-bg:linear-gradient(180deg,#1a1d16,#13150f 68%,#0d100a);--phone-panel:rgba(33,36,27,.84);--phone-line:rgba(236,231,215,.12);--phone-text:#f1eddf;--phone-muted:rgba(241,237,223,.72);--accent:#a3b36a;--accent-ink:#181c12}
+    .ticker{display:flex;gap:10px;overflow:hidden;padding:10px 14px;border-radius:999px;border:1px solid var(--phone-line);background:rgba(255,255,255,.04);font:700 12px/1 var(--ui-font);letter-spacing:.12em;text-transform:uppercase;color:var(--phone-muted)} .ticker span{white-space:nowrap} .pulse{height:10px;border-radius:999px;background:linear-gradient(90deg,var(--accent),rgba(255,255,255,.08) 58%)} .track-card{display:grid;gap:12px} .track-bars{display:grid;gap:8px} .track-bars .band{background:rgba(255,255,255,.04)} .dock-button.primary{box-shadow:0 0 30px rgba(163,179,106,.16)}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">Batch 01</a>
+      <h1>Olive Pulse</h1>
+      <p class="lede">这套最像公共信息系统。它不讨好，不卖弄玻璃感，重点只有一个: 现在该做什么，剩余信息全部退到轨道条里。</p>
+      <div class="meta"><span>Public system</span><span>Task-first</span><span>Cross-platform friendly</span></div>
+      <div class="swatches"><i style="background:#181a14"></i><i style="background:#21241b"></i><i style="background:#a3b36a"></i><i style="background:#ece7d7"></i></div>
+      <ul class="bullet-list"><li>顶部胶囊像公共交通 ticker，方向感强。</li><li>主卡强调“现在做什么”，次级信息全部退到轨道条。</li><li>detail 用纵向时间线，而不是普通说明文块。</li></ul>
+      <div class="notes"><strong>SwiftUI Mapping</strong>在 `HeaderView` 引入 ticker 式动态标签，减弱卡片旋转，强化轨道位移。</div>
+    </section>
+    <section class="stage">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="mesh"></div><div class="grain"></div>
+          <div class="phone-top"><div class="clock">09:34</div><div class="rail-pill">Task board · 4 queued</div></div>
+          <section class="hero"><div class="ticker"><span>NOW DO THIS</span><span>LOW FRICTION</span><span>USER CONFIRMATION REQUIRED</span></div><div class="hero-title">先展示骑手位置</div><div class="hero-copy">行动比描述重要。解释不是消失，而是退到轨道里，等用户需要时再展开。</div></section>
+          <section class="stack">
+            <article class="card track-card"><div class="section-label">即时动作</div><div class="title">骑手还有 3 分钟到楼下</div><div class="pulse"></div><div class="track-bars"><div class="band"><div class="section-label">置信来源</div><div class="caption">地理围栏 + 外卖状态 + 最近一次取餐习惯</div></div><div class="band"><div class="section-label">下一步</div><div class="caption">执行后直接显示实时位置，不跳完整 App。</div></div></div></article>
+            <article class="sheet"><div class="section-label">Timeline detail</div><ul class="timeline"><li>00:00 骑手距你 300 米，进入上提阈值。</li><li>00:15 如果用户下滑稍后，卡片回到队尾。</li><li>00:30 执行时出现一条横向 pulse，不做柔软玻璃动效。</li></ul></article>
+          </section>
+          <nav class="dock"><div class="dock-button">丢掉</div><div class="dock-button primary">执行</div><div class="dock-button">依据</div><div class="dock-button">稍后</div></nav>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

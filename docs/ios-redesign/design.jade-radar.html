@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jade Radar</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root{--display-font:"DIN Alternate","Avenir Next Condensed","PingFang SC",sans-serif;--body-font:"Iowan Old Style","Songti SC",serif;--page:#121612;--panel:rgba(232,234,223,.08);--line:rgba(232,234,223,.13);--text:#e8eadf;--muted:rgba(232,234,223,.74);--phone-bg:linear-gradient(180deg,#161c16,#111612 65%,#0d120f);--phone-panel:rgba(33,42,33,.76);--phone-line:rgba(232,234,223,.14);--phone-text:#edf0e4;--phone-muted:rgba(237,240,228,.72);--accent:#8fbf6c;--accent-ink:#10150f}
+    .ring{background:radial-gradient(circle at 50% 28%,transparent 0 18%,rgba(143,191,108,.12) 18% 18.6%,transparent 18.6% 31%,rgba(143,191,108,.08) 31% 31.6%,transparent 31.6% 44%,rgba(143,191,108,.06) 44% 44.6%,transparent 44.6%)} .route-map{grid-template-columns:repeat(3,minmax(0,1fr))} .route-map .metric{background:rgba(143,191,108,.08)} .scan-line{position:relative;overflow:hidden} .scan-line::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(143,191,108,.18),transparent)} .steps{display:grid;gap:10px} .steps .route-step{background:rgba(255,255,255,.04)} .trail{position:absolute;right:34px;top:188px;width:96px;height:240px;border-right:1px dashed rgba(143,191,108,.42);border-bottom:1px dashed rgba(143,191,108,.24);border-radius:0 0 80px 0}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">Batch 01</a>
+      <h1>Jade Radar</h1>
+      <p class="lede">这套把“通知流变行动流”解释成坐标系校正。重点不是锁屏美感，而是当前路径、倒计时和干预级别。</p>
+      <div class="meta"><span>Navigation logic</span><span>Realtime correction</span><span>Route storyboard</span></div>
+      <div class="swatches"><i style="background:#141914"></i><i style="background:#1f2720"></i><i style="background:#8fbf6c"></i><i style="background:#e8eadf"></i></div>
+      <ul class="bullet-list"><li>顶部不讲情绪，直接给坐标感和状态带。</li><li>主卡下面三格状态条固定呈现置信度、倒计时、干预级别。</li><li>detail 不是普通说明，而是路线分镜。</li></ul>
+      <div class="notes"><strong>SwiftUI Mapping</strong>为 `HeaderView` 引入雷达式点阵分隔和状态带，把 `DetailSheetView` 改成 step route。</div>
+    </section>
+    <section class="stage">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="mesh"></div><div class="grain"></div><div class="ring"></div><div class="trail"></div>
+          <div class="phone-top"><div class="clock">coord 13:42</div><div class="rail-pill">西直门北口 · 300m</div></div>
+          <section class="hero"><div class="hero-kicker">Action stream as route correction</div><div class="hero-title">接人路线已收敛</div><div class="hero-copy">不是继续看通知，而是确认这一步是否该提前完成。</div></section>
+          <section class="stack">
+            <article class="card scan-line"><div class="section-label">美团骑手即将到达</div><div class="title">提前打开骑手实时位置</div><div class="caption">你距离取餐点 300 米，系统认为这张卡不该排在聊天消息后面。</div><div class="route-map"><div class="metric"><span class="stat-name">置信度</span><span class="value">92%</span></div><div class="metric"><span class="stat-name">倒计时</span><span class="value">03m</span></div><div class="metric"><span class="stat-name">干预级别</span><span class="value">L2</span></div></div></article>
+            <article class="sheet"><div class="section-label">Route storyboard</div><div class="steps"><div class="route-step">1 · 当前还在地铁口，先显示骑手位置而不是路线全图。</div><div class="route-step">2 · 如果下滑稍后，这张卡会回到队尾，不会消失。</div><div class="route-step">3 · 上滑 detail 时边框变成扫描线，强调它是路径解释。</div></div></article>
+          </section>
+          <nav class="dock"><div class="dock-button">丢掉</div><div class="dock-button primary">执行</div><div class="dock-button">依据</div><div class="dock-button">稍后</div></nav>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

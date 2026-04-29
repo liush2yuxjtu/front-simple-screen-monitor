@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Copper Grid</title>
+  <link rel="stylesheet" href="./design.shared.css" />
+  <style>
+    :root{--display-font:"DIN Alternate","Avenir Next Condensed","PingFang SC",sans-serif;--body-font:"Iowan Old Style","Songti SC",serif;--page:#14100f;--panel:rgba(239,224,205,.08);--line:rgba(239,224,205,.12);--text:#efe0cd;--muted:rgba(239,224,205,.72);--phone-bg:linear-gradient(180deg,#1b1513,#120f0d 70%,#0c0a09);--phone-panel:rgba(36,28,26,.86);--phone-line:rgba(239,224,205,.12);--phone-text:#f5e8d8;--phone-muted:rgba(245,232,216,.7);--accent:#bf7b46;--accent-ink:#1a120f}
+    .console{display:grid;grid-template-columns:1.15fr .85fr;gap:10px} .gridpane{display:grid;gap:10px} .gridpane .two-up{gap:10px} .copper-sweep{height:10px;border-radius:999px;background:linear-gradient(90deg,rgba(255,255,255,.08),var(--accent),rgba(255,255,255,.08))} .mini-window{display:grid;gap:10px} .dock{background:rgba(0,0,0,.22);padding:8px;border-radius:28px} .dock-button.primary{box-shadow:0 0 0 1px rgba(255,255,255,.04),0 0 24px rgba(191,123,70,.18)}
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="side panel">
+      <a class="back" href="./index.html">Batch 01</a>
+      <h1>Copper Grid</h1>
+      <p class="lede">最像 agent 控制台的一套。通知不再是卡片堆，而是进入网格化任务台和闭环执行链路。</p>
+      <div class="meta"><span>Industrial panel</span><span>Grid layout</span><span>Technical audience</span></div>
+      <div class="swatches"><i style="background:#181312"></i><i style="background:#241c1a"></i><i style="background:#bf7b46"></i><i style="background:#efe0cd"></i></div>
+      <ul class="bullet-list"><li>主卡被拆成网格，不像通知卡，像执行链路面板。</li><li>底部四向动作归入控制台，成为明确的操作面板。</li><li>右下角常驻一个 why-now 小窗，解释“为什么是现在”。</li></ul>
+      <div class="notes"><strong>SwiftUI Mapping</strong>把 `ActionProposalCard` 改成 grid-based layout，`GestureHintBar` 改成 segmented control 风格控制台。</div>
+    </section>
+    <section class="stage">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="mesh"></div><div class="grain"></div>
+          <div class="phone-top"><div class="clock">CTRL 09:34</div><div class="rail-pill">agent console · closed loop</div></div>
+          <section class="hero"><div class="hero-kicker">Grid-based execution board</div><div class="hero-title">Action queue</div><div class="hero-copy">不是看消息，而是在决定当前任务应该进哪个槽位。</div></section>
+          <section class="stack">
+            <article class="console"><div class="gridpane"><div class="card"><div class="section-label">任务槽位</div><div class="title">把验证码填回 Safari</div><div class="caption">把十秒操作链路压缩成一张确认卡。</div></div><div class="two-up"><div class="band"><div class="section-label">source</div><div class="caption">短信 + Safari</div></div><div class="band"><div class="section-label">latency</div><div class="caption">08s</div></div></div><div class="copper-sweep"></div></div><div class="mini-window"><div class="section-label">Why now</div><div class="quote">验证码剩余 52 秒，且你刚离开登录页不到 90 秒，所以系统把它上提。</div><div class="band"><div class="section-label">detail sheet</div><div class="caption">应做成 inspection board，而不是普通说明块。</div></div></div></article>
+            <article class="sheet"><div class="section-label">Motion</div><ul class="timeline"><li>执行后铜色条从右向左刷过，像闭环完成。</li><li>稍后动作像把卡片归档进新的槽位。</li><li>技术观众会更容易理解 agent 正在处理队列。</li></ul></article>
+          </section>
+          <nav class="dock"><div class="dock-button">丢掉</div><div class="dock-button primary">执行</div><div class="dock-button">依据</div><div class="dock-button">稍后</div></nav>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

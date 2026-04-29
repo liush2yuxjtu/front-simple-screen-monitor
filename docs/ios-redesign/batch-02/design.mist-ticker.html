@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mist Ticker</title>
+  <link rel="stylesheet" href="../design.shared.css" />
+  <style>:root{color-scheme:light;--page:#e2e5de;--panel:rgba(76,83,77,.08);--line:rgba(76,83,77,.14);--text:#4c534d;--muted:rgba(76,83,77,.72);--phone-bg:linear-gradient(180deg,#f5f6f2,#e9ece6 72%,#dce1d8);--phone-panel:rgba(251,252,249,.79);--phone-line:rgba(76,83,77,.11);--phone-text:#4c534d;--phone-muted:rgba(76,83,77,.68);--accent:#8a9d72;--accent-ink:#fbfbf8}.phone::before{background:#5d645f}.ticker{display:flex;gap:10px;padding:10px 14px;border-radius:999px;border:1px solid var(--phone-line);background:rgba(138,157,114,.12);font:700 12px/1 var(--ui-font);letter-spacing:.11em;text-transform:uppercase;white-space:nowrap}.refresh{height:8px;border-radius:999px;background:linear-gradient(90deg,#8a9d72 0 62%,rgba(76,83,77,.08) 62%)}</style>
+</head>
+<body>
+  <main class="board"><section class="side panel"><a class="back" href="./index.html">Batch 02</a><h1>Mist Ticker</h1><p class="lede">保留 Sand Signal 的明亮安静感，但加上一点公共信息流语法。它适合那些会频繁刷新、但不该变得焦躁的任务。</p><div class="meta"><span>Realtime</span><span>Light ticker</span><span>Transit-like</span></div><div class="swatches"><i style="background:#e6e9e2"></i><i style="background:#f5f6f2"></i><i style="background:#8a9d72"></i><i style="background:#4c534d"></i></div><ul class="bullet-list"><li>顶部 ticker 很轻，但会一直存在。</li><li>状态变化像信息牌刷新，不像厚重卡片位移。</li><li>适合外卖、路线、提醒流。</li></ul><div class="notes"><strong>SwiftUI Mapping</strong>更适合高频刷新任务，可把状态行做成轻 ticker。</div></section><section class="stage"><div class="phone-wrap"><div class="phone"><div class="mesh"></div><div class="grain"></div><div class="phone-top"><div class="clock">09:34</div><div class="rail-pill">Refreshable stream</div></div><section class="hero"><div class="ticker"><span>RIDER 300M</span><span>ETA 3M</span><span>USER CONFIRM</span></div><div class="hero-title">先展示骑手位置</div><div class="hero-copy">不是更吵，而是更持续、更轻量地提示状态正在变化。</div></section><section class="stack"><article class="card"><div class="section-label">Current refresh</div><div class="title">路线状态已经足够明确</div><div class="caption">如果不做这张卡，它也会继续温和刷新，而不是情绪化催促。</div><div class="refresh"></div></article><article class="sheet"><div class="section-label">Change log</div><div class="caption">顶部 ticker、短 pulse、轻刷新，是这支和原版 Sand Signal 的核心区别。</div></article></section><nav class="dock"><div class="dock-button">丢掉</div><div class="dock-button primary">执行</div><div class="dock-button">依据</div><div class="dock-button">稍后</div></nav></div></div></section></main>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>swipev2 iOS redesign batch 03</title>
+  <link rel="stylesheet" href="../design.shared.css" />
+  <link rel="stylesheet" href="../moss-agenda.family.css" />
+  <style>.current{background:linear-gradient(180deg,#132131,#0a1118);color:#eef4ff}.tone{background:linear-gradient(180deg,#fbfbf6,#e8eedc)}.t2{background:linear-gradient(180deg,#fcfbf5,#e5edd6)}.t3{background:linear-gradient(180deg,#fbfbf6,#ebefe3)}.t4{background:linear-gradient(180deg,#fbfaf5,#e7eddc)}.t5{background:linear-gradient(180deg,#fbfbf6,#e4ebd8)}.t6{background:linear-gradient(180deg,#fbfbf6,#e8ecdf)}.t7{background:linear-gradient(180deg,#fbfbf6,#e2e9d8)}.t8{background:linear-gradient(180deg,#fbfbf6,#e5ead9)}.t9{background:linear-gradient(180deg,#fbfbf6,#e7ecd8)}.preview{padding:16px;display:grid;gap:12px;align-content:space-between}.preview-card{padding:14px;display:grid;gap:8px}.preview-card b{font:800 22px/1 var(--display-font)}.preview-card p{margin:0;font-size:13px;line-height:1.45;color:rgba(56,66,51,.72)}.current .preview-card p{color:rgba(238,244,255,.78)}.catalog-card.active{outline:2px solid rgba(128,149,92,.55);outline-offset:2px}</style>
+</head>
+<body>
+  <main class="gallery">
+    <section class="gallery-hero panel">
+      <div class="eyebrow">Batch 03 · current app + winners + rebatch loop</div>
+      <h1>把 Batch 00 当前实现、Batch 01 / 02 赢家和 8 个 rebatch 接成一条环</h1>
+      <p class="lede">现在你可以从当前 iOS app 的深色原型出发，接着看 `Sand Signal` 和 `Moss Agenda` 这两次收敛，再进入后面的 8 张 rebatch。这样比较的不是孤立美术稿，而是产品语法如何一步步从当前实现长出来。</p>
+      <div class="meta"><span>1 current app</span><span>2 winners</span><span>8 rebatch variants</span></div>
+      <div class="top-actions"><a class="tile-link" href="../index.html">返回全部批次</a><a class="tile-link" href="../batch-03-status.md">查看 Batch 03 状态</a></div>
+    </section>
+    <section class="switcher panel">
+      <button id="prev" type="button">← Prev</button>
+      <div class="switch-copy"><div class="small">Version Switcher · ←/→</div><b id="current-name">Current iOS App</b><p id="current-copy">Batch 00，当前原生 iOS 原型基线：深色锁屏、玻璃卡片、四方向行动流。</p></div>
+      <a class="tile-link" id="open-current" href="/docs/ios-redesign/design.current-ios-app.html">打开当前版本</a>
+    </section>
+    <section class="catalog">
+      <article class="catalog-card panel active" data-name="Current iOS App" data-copy="Batch 00，当前原生 iOS 原型基线：深色锁屏、玻璃卡片、四方向行动流。" data-href="/docs/ios-redesign/design.current-ios-app.html"><div class="preview current"><div class="preview-band"></div><div class="preview-card"><b>Current iOS App</b><p>真实当前实现：dark lock screen + glass action stack。</p><div class="preview-accent"></div></div></div><strong>Batch 00 current app</strong><div class="catalog-links"><a class="tile-link" href="../design.current-ios-app.html">打开 HTML</a><a class="tile-link" href="../design.current-ios-app.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Sand Signal" data-copy="Batch 01 winner，白天、低压、长期可用，是整个后续分支的起点。" data-href="/docs/ios-redesign/design.sand-signal.html"><div class="preview tone"><div class="preview-band"></div><div class="preview-card"><b>Sand Signal</b><p>第一代赢家，定义了低压和长期产品感。</p><div class="preview-accent"></div></div></div><strong>Batch 01 winner</strong><div class="catalog-links"><a class="tile-link" href="../design.sand-signal.html">打开 HTML</a><a class="tile-link" href="../design.sand-signal.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Moss Agenda" data-copy="Batch 02 winner，把 Sand Signal 收敛成更像日程助手的版本。" data-href="/docs/ios-redesign/batch-02/design.moss-agenda.html"><div class="preview t2"><div class="preview-band"></div><div class="preview-card"><b>Moss Agenda</b><p>第二代赢家，正式把方向推向 agenda-first。</p><div class="preview-accent"></div></div></div><strong>Batch 02 winner</strong><div class="catalog-links"><a class="tile-link" href="../batch-02/design.moss-agenda.html">打开 HTML</a><a class="tile-link" href="../batch-02/design.moss-agenda.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Moss Triad" data-copy="把胜出方向折成三联账页，三模式第一次像并排纸条一样共存。" data-href="/docs/ios-redesign/batch-03/design.moss-triad.html"><div class="preview t3"><div class="preview-band"></div><div class="preview-card"><b>Moss Triad</b><p>三折页基准版，最能定义这次 rebatch 的新 thesis。</p><div class="preview-accent"></div></div></div><strong>新基准</strong><div class="catalog-links"><a class="tile-link" href="./design.moss-triad.html">打开 HTML</a><a class="tile-link" href="./design.moss-triad.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Yolo Sprint" data-copy="把低风险动作做成斜插急件纸条，快，但不吵。" data-href="/docs/ios-redesign/batch-03/design.yolo-sprint.html"><div class="preview t4"><div class="preview-band"></div><div class="preview-card"><b>Yolo Sprint</b><p>更像 rush slip，不像速度型控制面板。</p><div class="preview-accent"></div></div></div><strong>最快纸条</strong><div class="catalog-links"><a class="tile-link" href="./design.yolo-sprint.html">打开 HTML</a><a class="tile-link" href="./design.yolo-sprint.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Safe Harbor" data-copy="把依据陈列成安静的小证据架，先看清，再执行。" data-href="/docs/ios-redesign/batch-03/design.safe-harbor.html"><div class="preview t5"><div class="preview-band"></div><div class="preview-card"><b>Safe Harbor</b><p>证据被抬上桌面，但仍然保持轻和白。</p><div class="preview-accent"></div></div></div><strong>最稳证据感</strong><div class="catalog-links"><a class="tile-link" href="./design.safe-harbor.html">打开 HTML</a><a class="tile-link" href="./design.safe-harbor.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Approval Gate" data-copy="用半透明纸层先盖住动作，让许可变得自然。" data-href="/docs/ios-redesign/batch-03/design.approval-gate.html"><div class="preview t6"><div class="preview-band"></div><div class="preview-card"><b>Approval Gate</b><p>不是重门禁，而是轻薄的 vellum check sheet。</p><div class="preview-accent"></div></div></div><strong>最有层次</strong><div class="catalog-links"><a class="tile-link" href="./design.approval-gate.html">打开 HTML</a><a class="tile-link" href="./design.approval-gate.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Agenda Relay" data-copy="把 now-next-later 串成一条 ribbon，动作像被顺手传递。" data-href="/docs/ios-redesign/batch-03/design.agenda-relay.html"><div class="preview t7"><div class="preview-band"></div><div class="preview-card"><b>Agenda Relay</b><p>胜出方向的排程感被推到最自然的一版。</p><div class="preview-accent"></div></div></div><strong>最顺手</strong><div class="catalog-links"><a class="tile-link" href="./design.agenda-relay.html">打开 HTML</a><a class="tile-link" href="./design.agenda-relay.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Trust Ladder" data-copy="把信任梯度塞进页边，而不是塞满主卡正文。" data-href="/docs/ios-redesign/batch-03/design.trust-ladder.html"><div class="preview t8"><div class="preview-band"></div><div class="preview-card"><b>Trust Ladder</b><p>更像出版页边批注，而不是教学面板。</p><div class="preview-accent"></div></div></div><strong>最会解释</strong><div class="catalog-links"><a class="tile-link" href="./design.trust-ladder.html">打开 HTML</a><a class="tile-link" href="./design.trust-ladder.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Calendar Guard" data-copy="把一天夹进安静的活页夹，先守住边界，再谈主动。" data-href="/docs/ios-redesign/batch-03/design.calendar-guard.html"><div class="preview t9"><div class="preview-band"></div><div class="preview-card"><b>Calendar Guard</b><p>不是警报，而是 binder tabs 式的安静保护。</p><div class="preview-accent"></div></div></div><strong>最像工作产品</strong><div class="catalog-links"><a class="tile-link" href="./design.calendar-guard.html">打开 HTML</a><a class="tile-link" href="./design.calendar-guard.md">查看说明</a></div></article>
+      <article class="catalog-card panel" data-name="Soft Escalation" data-copy="风险升高时，纸条一层层往中心靠，不用大声提醒。" data-href="/docs/ios-redesign/batch-03/design.soft-escalation.html"><div class="preview tone"><div class="preview-band"></div><div class="preview-card"><b>Soft Escalation</b><p>把升级路径做成嵌套纸片，而不是抽象策略条。</p><div class="preview-accent"></div></div></div><strong>最有产品后劲</strong><div class="catalog-links"><a class="tile-link" href="./design.soft-escalation.html">打开 HTML</a><a class="tile-link" href="./design.soft-escalation.md">查看说明</a></div></article>
+    </section>
+  </main>
+  <script>
+    const cards=[...document.querySelectorAll(".catalog-card")],name=document.getElementById("current-name"),copy=document.getElementById("current-copy"),open=document.getElementById("open-current"),prev=document.getElementById("prev");let i=0;
+    const sync=()=>{cards.forEach((c,n)=>c.classList.toggle("active",n===i));const c=cards[i].dataset;name.textContent=c.name;copy.textContent=c.copy;open.href=c.href;cards[i].scrollIntoView({block:"nearest",behavior:"smooth"});};
+    prev.onclick=()=>{i=(i-1+cards.length)%cards.length;sync();};open.insertAdjacentHTML("afterend",'<button id="next" type="button">Next →</button>');const next=document.getElementById("next");
+    next.onclick=()=>{i=(i+1)%cards.length;sync();};cards.forEach((c,n)=>c.onclick=()=>{i=n;sync();});
+    document.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"){i=(i-1+cards.length)%cards.length;sync();}if(e.key==="ArrowRight"){i=(i+1)%cards.length;sync();}if(e.key==="Enter"){window.location.href=cards[i].dataset.href;}});
+  </script>
+</body>
+</html>
